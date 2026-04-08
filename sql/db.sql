@@ -34,7 +34,7 @@ CREATE TABLE products (
     master_id SERIAL NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     cost NUMERIC(10, 2) NOT NULL,
-    photo_paths TEXT[] NOT NULL DEFAULT '{"./default_missing.jpg"}',
+    photo_paths TEXT[],
     url TEXT,
     category_id INTEGER REFERENCES product_categories(id),
     supplier_id INTEGER NOT NULL REFERENCES suppliers(id),
