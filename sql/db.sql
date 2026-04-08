@@ -41,6 +41,21 @@ CREATE TABLE products (
     current_quantity INTEGER NOT NULL DEFAULT NULL
 );
 
+CREATE OR REPLACE FUNCTION set_current_quantity()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.current_quantity IS NULL THEN
+        NEW.current_quantity := NEW.initial_quantity;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_set_current_quantity
+    BEFORE INSERT ON products
+    FOR EACH ROW
+    EXECUTE FUNCTION set_current_quantity();
+
 CREATE TABLE delivery_orders(
     id TEXT NOT NULL PRIMARY KEY,
     date DATE NOT NULL
