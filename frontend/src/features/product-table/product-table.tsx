@@ -11,7 +11,7 @@ function ProductTable() {
             const { error, data } = await supabase
                 .from("products")
                 .select(`*, product_categories(name)`)
-                .order("id", { ascending: true });
+                .order("master_id", { ascending: true });
             if (error) {
                 console.error("Error retrieving products: ", error);
                 return;
@@ -21,14 +21,6 @@ function ProductTable() {
         getProducts();
     }, []);
 
-    const productList = products.map((product) => {
-        return (
-            <>
-                <ProductRow product={product} />
-            </>
-        );
-    });
-
     return (
         <table className="table is-bordered is-narrow is-hoverable is-full-width cell">
             <thead className="thead-dark">
@@ -36,14 +28,16 @@ function ProductTable() {
                     <th scope="col">Master</th>
                     <th scope="col">Name</th>
                     <th scope="col">Photos</th>
-                    <th scope="col">Cost</th>
-                    <th scope="col">URL</th>
                     <th scope="col">Category</th>
                     <th scope="col">Quant</th>
                     <th scope="col">Modify</th>
                 </tr>
             </thead>
-            <tbody>{productList}</tbody>
+            <tbody>
+                {products.map((product) => (
+                    <ProductRow product={product} key={product.master_id} />
+                ))}
+            </tbody>
         </table>
     );
 }

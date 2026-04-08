@@ -41,33 +41,29 @@ function ProductRow({ product }: { product: product }) {
     }
 
     return (
-        <tr key={product.id}>
-            <th scope="row">{product.id}</th>
+        <tr>
+            <th scope="row">{product.master_id}</th>
             <th>{product.name}</th>
             <th>
                 {product.photo_paths.map((path, key) => (
                     <img src={path} alt="MISSING IMAGE" key={key} />
                 ))}
             </th>
-            <th>${product.cost}</th>
-            <th>
-                <a href={product.url}>{product.url}</a>
-            </th>
             <th>{product.product_categories?.name}</th>
-            <th>{product.initial_quantity}</th>
+            <th>{product.current_quantity}</th>
             <th>
                 <form action={handleFormSubmission}>
-                    <input type="hidden" name="id" value={product.id} />
+                    <input type="hidden" name="id" value={product.master_id} />
                     <input
                         type="hidden"
                         name="previousQuantity"
-                        value={product.initial_quantity}
+                        value={product.current_quantity}
                     />
                     <input
                         type="number"
                         name="changeInValue"
                         max="10"
-                        min={`-${product.initial_quantity}`}
+                        min={`-${product.current_quantity}`}
                         placeholder="0"
                         required
                         className="input mb-1"
