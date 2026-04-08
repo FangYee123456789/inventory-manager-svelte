@@ -10,8 +10,11 @@ function ProductTable() {
         async function getProducts() {
             const { error, data } = await supabase
                 .from("products")
-                .select(`*, product_categories(name)`)
-                .order("master_id", { ascending: true });
+                .select(
+                    `masterID:master_id, name, photoPaths:photo_paths, quantity:current_quantity, category:product_categories(name)`,
+                )
+                .order("master_id", { ascending: true })
+                .returns<product[]>();
             if (error) {
                 console.error("Error retrieving products: ", error);
                 return;
@@ -35,7 +38,7 @@ function ProductTable() {
             </thead>
             <tbody>
                 {products.map((product) => (
-                    <ProductRow product={product} key={product.master_id} />
+                    <ProductRow product={product} key={product.masterID} />
                 ))}
             </tbody>
         </table>
