@@ -3,7 +3,6 @@ import { supabase } from "lib/supabase";
 import type { product } from "types/supabase";
 import ProductRow from "./components/product-row";
 import { sortProductsIntoEnabledDisabled } from "./lib/sortProducts";
-import type { returnType } from "./lib/sortProducts";
 
 function ProductTable() {
     const [enabledProducts, setEnabledProducts] = useState<product[]>([]);
@@ -24,10 +23,9 @@ function ProductTable() {
                 return;
             }
 
-            const sortedProducts: returnType =
-                sortProductsIntoEnabledDisabled(data);
-            setEnabledProducts(sortedProducts.enabledProducts);
-            setDisabledProducts(sortedProducts.disabledProducts);
+            const productArrayArray = sortProductsIntoEnabledDisabled(data);
+            setEnabledProducts(productArrayArray[0]);
+            setDisabledProducts(productArrayArray[1]);
         }
         getProducts();
     }, []);
