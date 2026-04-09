@@ -73,7 +73,7 @@ function ProductRow({ product }: { product: product }) {
                                 <input
                                     type="submit"
                                     value="Update"
-                                    className="button is-white"
+                                    className="button is-primary"
                                 />
                             </div>
                         </div>
