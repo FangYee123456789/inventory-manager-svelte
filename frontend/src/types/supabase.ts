@@ -8,3 +8,15 @@ export type product = {
     };
     isDisabled: boolean;
 };
+
+export type transaction = {
+    id: string;
+    creationTimestamp: Date;
+    logger: {
+        firstName: string;
+    };
+    product: {
+        name: string;
+    };
+    quantityChanged: number;
+};

@@ -3,6 +3,7 @@ import type { product } from "types/supabase";
 import ProductRow from "./components/product-row";
 import { sortProductsIntoEnabledDisabled } from "./lib/sortProducts";
 import { getAllProducts } from "./lib/supabase-calls";
+import { getAllTransactions } from "features/product-log/lib/supabase-calls";
 
 function ProductTable() {
     const [enabledProducts, setEnabledProducts] = useState<product[]>([]);
@@ -17,10 +18,11 @@ function ProductTable() {
             setDisabledProducts(sortedProductArray[1]);
         }
         fetchProducts();
+        getAllTransactions();
     }, []);
 
     return (
-        <table className="table is-bordered is-narrow is-hoverable is-full-width cell">
+        <table className="table is-bordered is-narrow is-hoverable is-full-width column">
             <thead className="thead-dark">
                 <tr>
                     <th scope="col">Master</th>
