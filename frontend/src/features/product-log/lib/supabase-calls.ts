@@ -11,7 +11,7 @@ export async function getAllTransactions(): Promise<transaction[]> {
             product:products(name),
             quantityChanged:quantity_changed`,
         )
-        .order("id", { ascending: true })
+        .order("created_at", { ascending: false })
         .returns<transaction[]>();
     if (error) {
         console.error("Error retrieving products: ", error);
