@@ -1,5 +1,5 @@
 export type product = {
-    masterID: number;
+    masterID: string;
     name: string;
     photoPaths: string[];
     quantity: number;
