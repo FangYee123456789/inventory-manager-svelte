@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import type { supplier } from "types/supabase";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
@@ -9,14 +10,15 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export async function getAllSuppliers() {
+export async function getAllSuppliers(): Promise<supplier[]> {
     const { error, data } = await supabase
         .from("suppliers")
         .select("*")
-        .order("id", { ascending: true });
+        .order("id", { ascending: true })
+        .returns<supplier[]>();
     if (error) {
         console.error("Error retrieving all suppliers: ", error);
-        return;
+        return [];
     }
     return data;
 }

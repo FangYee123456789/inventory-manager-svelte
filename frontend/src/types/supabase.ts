@@ -20,3 +20,8 @@ export type transaction = {
     };
     quantityChanged: number;
 };
+
+export type supplier = {
+    id: string;
+    name: string;
+};
