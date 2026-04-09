@@ -1,6 +1,6 @@
 import "bulma/css/bulma.min.css";
 import ProductTable from "features/product-table/product-table";
-import ProductLog from "features/product-log/product-log";
+import ProductLog from "features/transaction-log/transaction-log";
 
 function App() {
     return (

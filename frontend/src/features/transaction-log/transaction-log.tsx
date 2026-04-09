@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import LogCard from "./components/log-card";
+import LogCard from "./components/transaction-card";
 import type { transaction } from "types/supabase";
-import { getAllTransactions } from "./lib/supabase-calls";
+import { getAllTransactions } from "./lib/transactions-api";
 
-function ProductLog() {
+function TransactionLog() {
     const [transactions, setTransactions] = useState<transaction[]>([]);
 
     useEffect(() => {
@@ -23,4 +23,4 @@ function ProductLog() {
     );
 }
 
-export default ProductLog;
+export default TransactionLog;

@@ -3,7 +3,7 @@ import type { product } from "types/supabase";
 import ProductRow from "./components/product-row";
 import { sortProductsIntoEnabledDisabled } from "./lib/sortProducts";
 import { getAllProducts } from "./lib/supabase-calls";
-import { getAllTransactions } from "features/product-log/lib/supabase-calls";
+import { getAllTransactions } from "features/transaction-log/lib/transactions-api";
 
 function ProductTable() {
     const [enabledProducts, setEnabledProducts] = useState<product[]>([]);
