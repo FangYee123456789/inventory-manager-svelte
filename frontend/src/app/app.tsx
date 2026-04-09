@@ -4,7 +4,7 @@ import ProductLog from "features/product-log/product-log";
 
 function App() {
     return (
-        <main className="columns">
+        <main className="columns m-5">
             <ProductTable />
             <ProductLog />
         </main>
