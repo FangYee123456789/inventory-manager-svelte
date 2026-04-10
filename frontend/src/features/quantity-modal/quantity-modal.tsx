@@ -72,6 +72,7 @@ function QuantityModal({
 
             const newQuantity = validateQuantityInput(quantity, quantityChange);
             updateProductQuantity(selectedProductID, newQuantity);
+            window.location.reload();
         } else if (operation == "-") {
             insertNewTransaction(
                 loggerID,
@@ -83,6 +84,7 @@ function QuantityModal({
                 quantityChange * -1,
             );
             updateProductQuantity(selectedProductID, newQuantity);
+            window.location.reload();
         } else {
             console.error(
                 "How did you get here? No valid operation option submitted",
