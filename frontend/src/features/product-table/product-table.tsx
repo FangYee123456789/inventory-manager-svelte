@@ -57,6 +57,7 @@ function ProductTable() {
                             product={product}
                             key={product.masterID}
                             handleProductSelection={onSelectProduct}
+                            isDisabled={false}
                         />
                     ))}
                     {disabledProducts.map((product) => (
@@ -64,6 +65,7 @@ function ProductTable() {
                             product={product}
                             key={product.masterID}
                             handleProductSelection={onSelectProduct}
+                            isDisabled={true}
                         />
                     ))}
                 </tbody>

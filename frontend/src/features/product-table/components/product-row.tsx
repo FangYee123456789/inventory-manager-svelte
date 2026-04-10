@@ -6,9 +6,10 @@ interface props {
         productID: string,
         productQuantity: number,
     ) => void;
+    isDisabled: boolean;
 }
 
-function ProductRow({ product, handleProductSelection }: props) {
+function ProductRow({ product, handleProductSelection, isDisabled }: props) {
     return (
         <tr className={product.isDisabled ? "strike-through" : ""}>
             <th scope="row">{product.masterID}</th>
@@ -21,17 +22,19 @@ function ProductRow({ product, handleProductSelection }: props) {
             <th>{product.category?.name}</th>
             <th>{product.quantity}</th>
             <th>
-                <button
-                    className="button is-primary"
-                    onClick={() =>
-                        handleProductSelection(
-                            product.masterID,
-                            product.quantity,
-                        )
-                    }
-                >
-                    Modify
-                </button>
+                {!isDisabled && (
+                    <button
+                        className="button is-primary"
+                        onClick={() =>
+                            handleProductSelection(
+                                product.masterID,
+                                product.quantity,
+                            )
+                        }
+                    >
+                        Modify
+                    </button>
+                )}
             </th>
         </tr>
     );
