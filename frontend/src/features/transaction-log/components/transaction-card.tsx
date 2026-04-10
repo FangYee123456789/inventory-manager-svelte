@@ -1,9 +1,11 @@
 import type { transaction } from "types/supabase";
 import { formatRelative } from "date-fns";
+import { convertToSGTime } from "lib/format-dates";
 
 function TransactionCard({ transaction }: { transaction: transaction }) {
+    const sgDateTime = convertToSGTime(transaction.creationTimestamp);
     const formattedDateString = formatRelative(
-        transaction.creationTimestamp,
+        sgDateTime,
         new Date(),
     ).toString();
 
