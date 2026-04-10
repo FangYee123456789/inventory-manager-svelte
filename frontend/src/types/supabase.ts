@@ -19,9 +19,18 @@ export type transaction = {
         name: string;
     };
     quantityChanged: number;
+    deliveryID: string;
 };
 
 export type supplier = {
     id: string;
     name: string;
+};
+
+export type deliveryOrder = {
+    orderID: string;
+    orderDate: Date;
+    supplier: {
+        name: string;
+    };
 };

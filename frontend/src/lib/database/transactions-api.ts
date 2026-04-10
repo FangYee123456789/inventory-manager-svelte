@@ -9,7 +9,8 @@ export async function getAllTransactions(): Promise<transaction[]> {
             creationTimestamp:created_at, 
             logger:users(firstName:first_name),
             product:products(name),
-            quantityChanged:quantity_changed`,
+            quantityChanged:quantity_changed,
+            deliveryID:delivery_id`,
         )
         .order("created_at", { ascending: false })
         .returns<transaction[]>();

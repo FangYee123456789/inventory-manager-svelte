@@ -1,9 +1,39 @@
 import { useState, useEffect } from "react";
 import LogCard from "./components/transaction-message";
-import type { transaction } from "types/supabase";
+import type { transaction, deliveryOrder } from "types/supabase";
 import { getAllTransactions } from "lib/database/transactions-api";
+import TransactionCardModal from "./components/transaction-card-modal";
+import { getDeliveryOrderByID } from "lib/database/delivery-order-api";
 
 function TransactionLog() {
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [selectedTransaction, setSelectedTransaction] =
+        useState<transaction>();
+    const [
+        selectedTransactionDeliveryOrder,
+        setSelectedTransactionDeliveryOrder,
+    ] = useState<deliveryOrder>();
+
+    async function handleSelectTransaction(transaction: transaction) {
+        setSelectedTransaction(transaction);
+        if (transaction.deliveryID) {
+            const selectedDeliverOrder = await getDeliveryOrderByID(
+                transaction.deliveryID,
+            );
+            setSelectedTransactionDeliveryOrder(selectedDeliverOrder[0]);
+        } else {
+            setSelectedTransactionDeliveryOrder(undefined);
+        }
+    }
+
+    function openModal() {
+        setModalOpen(true);
+    }
+
+    function closeModal() {
+        setModalOpen(false);
+    }
+
     const [transactions, setTransactions] = useState<transaction[]>([]);
 
     useEffect(() => {
@@ -17,8 +47,21 @@ function TransactionLog() {
     return (
         <section className="column">
             {transactions.map((transaction) => (
-                <LogCard transaction={transaction} key={transaction.id} />
+                <LogCard
+                    transaction={transaction}
+                    key={transaction.id}
+                    handleOpenModal={openModal}
+                    selectTransaction={handleSelectTransaction}
+                />
             ))}
+            {selectedTransaction && (
+                <TransactionCardModal
+                    isModalOpen={isModalOpen}
+                    handleCloseModal={closeModal}
+                    transactionData={selectedTransaction}
+                    deliveryOrderData={selectedTransactionDeliveryOrder}
+                />
+            )}
         </section>
     );
 }
