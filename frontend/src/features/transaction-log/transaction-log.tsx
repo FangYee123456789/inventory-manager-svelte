@@ -16,13 +16,12 @@ function TransactionLog() {
 
     async function handleSelectTransaction(transaction: transaction) {
         setSelectedTransaction(transaction);
+        setSelectedTransactionDeliveryOrder(undefined);
         if (transaction.deliveryID) {
             const selectedDeliverOrder = await getDeliveryOrderByID(
                 transaction.deliveryID,
             );
             setSelectedTransactionDeliveryOrder(selectedDeliverOrder[0]);
-        } else {
-            setSelectedTransactionDeliveryOrder(undefined);
         }
     }
 
