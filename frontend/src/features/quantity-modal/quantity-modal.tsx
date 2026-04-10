@@ -183,12 +183,3 @@ function QuantityModal({
 }
 
 export default QuantityModal;
-
-// async function handleDeliveryOrderForm(formData: FormData) {
-//     // closeModal();
-//     const deliveryID = formData.get("deliveryID") as string;
-//     const deliveryDate = new Date(
-//         Date.parse(formData.get("deliveryDate") as string),
-//     );
-//     await insertDeliveryOrder(deliveryID, deliveryDate);
-// }
