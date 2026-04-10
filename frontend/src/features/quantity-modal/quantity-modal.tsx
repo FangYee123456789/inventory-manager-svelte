@@ -18,12 +18,12 @@ const modalStyles = {
 
 Modal.setAppElement("#root");
 
-interface QuantityModelProps {
+interface props {
     modalIsOpen: boolean;
     handleCloseModal: () => void;
 }
 
-function QuantityModal({ modalIsOpen, handleCloseModal }: QuantityModelProps) {
+function QuantityModal({ modalIsOpen, handleCloseModal }: props) {
     const [suppliers, setSuppliers] = useState<supplier[]>([]);
     const [isIncomingOrder, setIsIncomingOrder] = useState(true);
 

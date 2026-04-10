@@ -4,12 +4,12 @@ import type { product } from "types/supabase";
 //     updateProductQuantity,
 // } from "../lib/products-api";
 
-interface ProductRowProps {
+interface props {
     product: product;
     handleQuantityChange: (productID: string) => void;
 }
 
-function ProductRow({ product, handleQuantityChange }: ProductRowProps) {
+function ProductRow({ product, handleQuantityChange }: props) {
     // async function handleFormSubmission(formData: FormData) {
     //     const masterID = formData.get("id") as string;
     //     const previousQuantity = Number(formData.get("previousQuantity"));
