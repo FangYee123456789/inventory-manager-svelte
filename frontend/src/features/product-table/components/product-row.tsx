@@ -6,7 +6,10 @@ import type { product } from "types/supabase";
 
 interface props {
     product: product;
-    handleProductSelection: (productID: string) => void;
+    handleProductSelection: (
+        productID: string,
+        productQuantity: number,
+    ) => void;
 }
 
 function ProductRow({ product, handleProductSelection }: props) {
@@ -47,7 +50,12 @@ function ProductRow({ product, handleProductSelection }: props) {
             <th>
                 <button
                     className="button is-primary"
-                    onClick={() => handleProductSelection(product.masterID)}
+                    onClick={() =>
+                        handleProductSelection(
+                            product.masterID,
+                            product.quantity,
+                        )
+                    }
                 >
                     Modify
                 </button>

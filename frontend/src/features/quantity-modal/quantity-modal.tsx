@@ -23,12 +23,14 @@ Modal.setAppElement("#root");
 
 interface props {
     selectedProductID: string;
+    selectedProductQuantity: number;
     modalIsOpen: boolean;
     handleCloseModal: () => void;
 }
 
 function QuantityModal({
     selectedProductID,
+    selectedProductQuantity,
     modalIsOpen,
     handleCloseModal,
 }: props) {
@@ -52,6 +54,7 @@ function QuantityModal({
         );
         const loggerID = "4";
         const supplierID = formData.get("supplierID") as string;
+        const quantity = Number(formData.get("quantity"));
 
         if (operation == "+") {
             const deliveryID = await insertNewDeliveryOrder(
@@ -67,19 +70,32 @@ function QuantityModal({
                 deliveryID,
             );
 
-            updateProductQuantity(selectedProductID, quantityChange);
+            const newQuantity = validateQuantityInput(quantity, quantityChange);
+            updateProductQuantity(selectedProductID, newQuantity);
         } else if (operation == "-") {
             insertNewTransaction(
                 loggerID,
                 selectedProductID,
                 quantityChange * -1,
             );
-            updateProductQuantity(selectedProductID, quantityChange);
+            const newQuantity = validateQuantityInput(
+                quantity,
+                quantityChange * -1,
+            );
+            updateProductQuantity(selectedProductID, newQuantity);
         } else {
             console.error(
                 "How did you get here? No valid operation option submitted",
             );
         }
+    }
+
+    function validateQuantityInput(
+        currentQuantity: number,
+        quantityChange: number,
+    ): number {
+        const newQuantity = currentQuantity + quantityChange;
+        return newQuantity;
     }
 
     function handleOperationChange(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -98,6 +114,11 @@ function QuantityModal({
                     type="hidden"
                     name="masterID"
                     value={selectedProductID}
+                />
+                <input
+                    type="hidden"
+                    name="quantity"
+                    value={selectedProductQuantity}
                 />
                 <fieldset>
                     <div className="field">
@@ -122,7 +143,7 @@ function QuantityModal({
                                     type="number"
                                     className="input"
                                     name="quantityChange"
-                                    placeholder="0"
+                                    placeholder="1"
                                     required
                                     step="1"
                                     min="1"

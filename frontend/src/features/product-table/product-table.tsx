@@ -11,6 +11,7 @@ function ProductTable() {
 
     const [modalIsOpen, setIsOpen] = useState(false);
     const [selectedProductID, setSelectedProductID] = useState("");
+    const [selectedProductQuantity, setSelectedProductQuantity] = useState(0);
 
     function openModal() {
         setIsOpen(true);
@@ -20,9 +21,9 @@ function ProductTable() {
         setIsOpen(false);
     }
 
-    function onSelectProduct(productID: string) {
-        console.log("productID: ", productID);
+    function onSelectProduct(productID: string, productQuantity: number) {
         setSelectedProductID(productID);
+        setSelectedProductQuantity(productQuantity);
         openModal();
     }
 
@@ -69,6 +70,7 @@ function ProductTable() {
             </table>
             <QuantityModal
                 selectedProductID={selectedProductID}
+                selectedProductQuantity={selectedProductQuantity}
                 modalIsOpen={modalIsOpen}
                 handleCloseModal={closeModal}
             />
