@@ -20,9 +20,8 @@ function App() {
                 //Theoretically shouldn't need to return null here
                 //since data would automatically be null
             }
-
             console.log("Fetched session: ", data.session);
-            return data.session;
+            setSession(session);
         }
         fetchSession();
 
