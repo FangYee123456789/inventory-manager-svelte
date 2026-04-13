@@ -1,8 +1,13 @@
 import { AppBar, Typography, Toolbar } from "@mui/material";
 import EnterAccount from "./components/enter-account";
 import ExitAccount from "./components/exit-account";
+import type { Session } from "@supabase/supabase-js";
 
-function Navbar() {
+interface props {
+    session: Session;
+}
+
+function Navbar({ session }: props) {
     return (
         <AppBar sx={{ bgcolor: "common.white" }}>
             <Toolbar>
