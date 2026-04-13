@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@date-fns/tz": "^1.4.1",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@fontsource/roboto": "^5.2.10",
+    "@mui/material": "^9.0.0",
     "@supabase/supabase-js": "^2.101.1",
     "bulma": "^1.0.4",
     "date-fns": "^4.1.0",
