@@ -7,7 +7,7 @@ export async function getAllTransactions(): Promise<transaction[]> {
         .select(
             `id, 
             creationTimestamp:created_at, 
-            logger:users(firstName:first_name),
+            logger:profiles(firstName:first_name),
             product:products(name),
             quantityChanged:quantity_changed,
             deliveryID:delivery_id`,
