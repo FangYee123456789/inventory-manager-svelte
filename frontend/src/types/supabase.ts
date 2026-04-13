@@ -34,3 +34,10 @@ export type deliveryOrder = {
         name: string;
     };
 };
+
+export type user = {
+    id: string;
+    role: string;
+    email: string;
+    firstName: string;
+};
