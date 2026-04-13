@@ -11,17 +11,17 @@ function EnterAccount() {
         setIsSignIn(!isSignIn);
     }
 
-    function handleChangeEmail(e: Event) {
+    function handleChangeEmail(e: any) {
         //Once you write one of these event handlers
         //You will never want to stop beating react to death with hammers
         setEmail((e.target as HTMLInputElement).value);
     }
 
-    function handleChangePassword(e: Event) {
+    function handleChangePassword(e: any) {
         setPassword((e.target as HTMLInputElement).value);
     }
 
-    async function handleSubmission(e: Event) {
+    async function handleSubmission(e: any) {
         e.preventDefault();
         if (isSignIn) {
             const { error: signInError } =
@@ -44,20 +44,20 @@ function EnterAccount() {
     }
 
     return (
-        <form onSubmit={() => handleSubmission}>
+        <form onSubmit={handleSubmission}>
             <Stack spacing={2} direction={"row"}>
                 <TextField
                     id="outlined-basic"
                     label="Email"
                     type="email"
                     required
-                    onChange={() => handleChangeEmail}
+                    onChange={handleChangeEmail}
                 />
                 <TextField
                     id="outlined-basic"
                     label="Password"
                     type="Password"
-                    onChange={() => handleChangePassword}
+                    onChange={handleChangePassword}
                     required
                     slotProps={{ htmlInput: { minLength: 6 } }}
                 />
