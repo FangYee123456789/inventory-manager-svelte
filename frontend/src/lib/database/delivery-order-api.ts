@@ -52,17 +52,24 @@ export async function getDeliveryOrderIDByOrderIDAndDate(
         .from("delivery_orders")
         .select("id")
         .eq("order_id", orderID)
-        .eq("order_date", orderDate.toISOString())
-        .single();
+        .eq("order_date", orderDate.toISOString());
     if (error) {
+        //PGRST116 is the error code for not
+        if (error.code == "PGRST116") {
+            //supabase cannot do .single()
+            // because then an error is thrown(not affected by the above error handling)
+            // when data is empty
+            return null;
+        }
         console.error(
             "Error retrieving delivery order by orderID & Date: ",
             error,
         );
     }
 
-    if (!data) {
+    if (!data || data.length == 0) {
         return null;
     }
-    return data.id;
+
+    return data[0].id;
 }
