@@ -14,6 +14,7 @@ function Navbar() {
                 <Typography
                     variant="h6"
                     sx={{ flexGrow: 1, color: "common.black" }}
+                    component="p"
                 >
                     Managing Inventory: {role}
                 </Typography>
