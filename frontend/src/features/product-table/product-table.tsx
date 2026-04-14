@@ -50,47 +50,46 @@ function ProductTable() {
     }, []);
 
     return (
-        <section>
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Master Number</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Photos</TableCell>
-                            <TableCell>Category</TableCell>
-                            <TableCell>Quantity</TableCell>
-                            {role == "Procurement" ||
-                                (role == "Project" && (
-                                    <TableCell>Modify</TableCell>
-                                ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {enabledProducts.map((product) => (
-                            <ProductRow
-                                product={product}
-                                key={product.masterID}
-                                handleProductSelection={onSelectProduct}
-                            />
-                        ))}
-                        {disabledProducts.map((product) => (
-                            <ProductRow
-                                product={product}
-                                key={product.masterID}
-                                handleProductSelection={onSelectProduct}
-                            />
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+        <>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Master Number</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Photos</TableCell>
+                        <TableCell>Category</TableCell>
+                        <TableCell>Quantity</TableCell>
+                        {role == "Procurement" ||
+                            (role == "Project" && (
+                                <TableCell>Modify</TableCell>
+                            ))}
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {enabledProducts.map((product) => (
+                        <ProductRow
+                            product={product}
+                            key={product.masterID}
+                            handleProductSelection={onSelectProduct}
+                        />
+                    ))}
+                    {disabledProducts.map((product) => (
+                        <ProductRow
+                            product={product}
+                            key={product.masterID}
+                            handleProductSelection={onSelectProduct}
+                        />
+                    ))}
+                </TableBody>
+            </Table>
+
             <QuantityModal
                 selectedProductID={selectedProductID}
                 selectedProductQuantity={selectedProductQuantity}
                 modalIsOpen={modalIsOpen}
                 handleCloseModal={closeModal}
             />
-        </section>
+        </>
     );
 }
 

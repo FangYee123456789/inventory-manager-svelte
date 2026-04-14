@@ -44,7 +44,7 @@ function TransactionLog() {
     }, []);
 
     return (
-        <section className="column">
+        <>
             {transactions.map((transaction) => (
                 <LogCard
                     transaction={transaction}
@@ -61,7 +61,7 @@ function TransactionLog() {
                     deliveryOrderData={selectedTransactionDeliveryOrder}
                 />
             )}
-        </section>
+        </>
     );
 }
 

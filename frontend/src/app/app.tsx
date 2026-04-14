@@ -3,7 +3,7 @@ import { supabase } from "lib/database/supabase";
 import Navbar from "features/navbar/navbar";
 import ProductTable from "features/product-table/product-table";
 import ProductLog from "features/transaction-log/transaction-log";
-import { Toolbar, Grid } from "@mui/material";
+import { Toolbar, Grid, Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { SessionContext, RoleContext } from "lib/context/context";
 import type { Session } from "@supabase/supabase-js";
@@ -59,21 +59,24 @@ function App() {
             <CssBaseline />
             <RoleContext value={role}>
                 <SessionContext value={session}>
-                    <section>
+                    <Box component="header">
                         <Navbar />
                         <Toolbar />
-                    </section>
+                    </Box>
                     {/* Toolbar is here so the Navbar is sticky & doesn't cover the texts */}
-                    <main>
-                        <Grid container spacing={2}>
-                            <Grid size={8}>
-                                <ProductTable />
-                            </Grid>
-                            <Grid size={4}>
-                                <ProductLog />
-                            </Grid>
+                    <Grid
+                        container
+                        spacing={2}
+                        component="main"
+                        sx={{ paddingTop: 1 }}
+                    >
+                        <Grid size={8} component="section">
+                            <ProductTable />
                         </Grid>
-                    </main>
+                        <Grid size={4} component="section">
+                            <ProductLog />
+                        </Grid>
+                    </Grid>
                 </SessionContext>
             </RoleContext>
         </>
