@@ -37,7 +37,7 @@ function QuantityModal({
 }: props) {
     const [suppliers, setSuppliers] = useState<supplier[]>([]);
     const [isIncomingOrder, setIsIncomingOrder] = useState(true);
-    const [session, _setSession] = useContext(SessionContext);
+    const session = useContext(SessionContext);
 
     useEffect(() => {
         async function fetchSuppliers(): Promise<void> {

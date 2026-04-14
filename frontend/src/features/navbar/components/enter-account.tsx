@@ -1,10 +1,8 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { supabase } from "lib/database/supabase";
 import { Stack, TextField, Button } from "@mui/material";
-import { SessionContext } from "lib/context/session-context";
 
 function EnterAccount() {
-    const [_session, setSession] = useContext(SessionContext);
     const [isSignIn, setIsSignIn] = useState(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -26,7 +24,7 @@ function EnterAccount() {
     async function handleSubmission(e: any) {
         e.preventDefault();
         if (isSignIn) {
-            const { error: signInError, data } =
+            const { error: signInError } =
                 await supabase.auth.signInWithPassword({
                     email,
                     password,
@@ -34,16 +32,14 @@ function EnterAccount() {
             if (signInError) {
                 console.error("Error signing in", signInError);
             }
-            setSession(data.session);
         } else {
-            const { error: signUpError, data } = await supabase.auth.signUp({
+            const { error: signUpError } = await supabase.auth.signUp({
                 email,
                 password,
             });
             if (signUpError) {
                 console.error("Error signing in", signUpError);
             }
-            setSession(data.session);
         }
     }
 

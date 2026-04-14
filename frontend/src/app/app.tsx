@@ -37,7 +37,7 @@ function App() {
 
     return (
         <>
-            <SessionContext value={[session, setSession]}>
+            <SessionContext value={session}>
                 <CssBaseline>
                     <Navbar />
 

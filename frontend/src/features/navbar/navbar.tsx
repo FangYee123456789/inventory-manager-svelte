@@ -5,7 +5,7 @@ import ExitAccount from "./components/exit-account";
 import { SessionContext } from "lib/context/session-context";
 
 function Navbar() {
-    const [session, _setSession] = useContext(SessionContext);
+    const session = useContext(SessionContext);
 
     return (
         <AppBar sx={{ bgcolor: "common.white", padding: 1 }}>
