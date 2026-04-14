@@ -5,8 +5,7 @@ export async function getAllSuppliers(): Promise<supplier[]> {
     const { error, data } = await supabase
         .from("suppliers")
         .select("*")
-        .order("id", { ascending: true })
-        .returns<supplier[]>();
+        .order("id", { ascending: true });
     if (error) {
         console.error("Error retrieving all suppliers: ", error);
         return [];
