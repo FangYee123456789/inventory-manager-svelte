@@ -6,7 +6,7 @@ import DeliveryOrderFieldset from "./components/delivery-order-fieldset";
 import { updateProductQuantity } from "lib/database/products-api";
 import { insertNewTransaction } from "lib/database/transactions-api";
 import { insertNewDeliveryOrder } from "lib/database/delivery-order-api";
-import { SessionContext } from "lib/context/context";
+import { RoleContext, SessionContext } from "lib/context/context";
 
 const modalStyles = {
     overlay: { backgroundColor: "rgb(255, 255, 255, 0.8)" },
@@ -35,6 +35,7 @@ function QuantityModal({
     modalIsOpen,
     handleCloseModal,
 }: props) {
+    const role = useContext(RoleContext);
     const [suppliers, setSuppliers] = useState<supplier[]>([]);
     const [isIncomingOrder, setIsIncomingOrder] = useState(true);
     const session = useContext(SessionContext);
@@ -132,12 +133,23 @@ function QuantityModal({
                             <p className="control">
                                 <span className="select">
                                     <select
+                                        disabled
                                         name="operation"
                                         id="operation"
                                         onChange={handleOperationChange}
                                     >
-                                        <option value="+">+</option>
-                                        <option value="-">-</option>
+                                        <option
+                                            value="+"
+                                            selected={role == "Procurement"}
+                                        >
+                                            +
+                                        </option>
+                                        <option
+                                            value="-"
+                                            selected={role == "Project"}
+                                        >
+                                            -
+                                        </option>
                                     </select>
                                 </span>
                             </p>
