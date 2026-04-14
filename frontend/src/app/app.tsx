@@ -57,20 +57,21 @@ function App() {
 
     return (
         <>
-            <SessionContext value={session}>
-                <CssBaseline>
-                    <Navbar />
+            <RoleContext value={role}>
+                <SessionContext value={session}>
+                    <CssBaseline>
+                        <Navbar />
 
-                    <Toolbar />
-                    {/* Toolbar is here so the Navbar is sticky & doesn't cover the texts */}
-                </CssBaseline>
-                <RoleContext value={role}>
+                        <Toolbar />
+                        {/* Toolbar is here so the Navbar is sticky & doesn't cover the texts */}
+                    </CssBaseline>
+
                     <main className="columns m-5">
                         <ProductTable />
                         <ProductLog />
                     </main>
-                </RoleContext>
-            </SessionContext>
+                </SessionContext>
+            </RoleContext>
         </>
     );
 }
