@@ -1,5 +1,6 @@
 import type { transaction } from "types/supabase";
 import { convertToSGTime, formatRelativeToToday } from "lib/format-dates";
+import { List, ListItemText, Typography, Stack, Divider } from "@mui/material";
 
 interface props {
     transaction: transaction;
@@ -22,21 +23,26 @@ function TransactionCard({
     }
 
     return (
-        <section>
-            <a onClick={() => handleSelectTransaction(transaction)}>
-                <article className="columns">
-                    <div className="column">
-                        {transaction.logger.firstName}{" "}
-                        {transaction.quantityChanged > 0 && "+"}
-                        {transaction.quantityChanged} {transaction.product.name}
-                    </div>
-                    <div className="column has-text-right">
-                        {relativeDateString}
-                    </div>
-                </article>
-            </a>
-            <hr />
-        </section>
+        <>
+            <List component="article">
+                <a onClick={() => handleSelectTransaction(transaction)}>
+                    <Stack direction="row">
+                        <ListItemText
+                            primary={`${
+                                transaction.quantityChanged > 0
+                                    ? "Incoming"
+                                    : "Outgoing"
+                            } from ${transaction.logger.firstName}`}
+                            secondary={`${transaction.quantityChanged} ${transaction.product.name}`}
+                        ></ListItemText>
+                        <Typography align="right">
+                            {relativeDateString}
+                        </Typography>
+                    </Stack>
+                </a>
+            </List>
+            <Divider />
+        </>
     );
 }
 
