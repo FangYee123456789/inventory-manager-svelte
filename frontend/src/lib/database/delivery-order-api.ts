@@ -43,3 +43,26 @@ export async function getDeliveryOrderByID(
 
     return data;
 }
+
+export async function getDeliveryOrderIDByOrderIDAndDate(
+    orderID: string,
+    orderDate: Date,
+) {
+    const { error, data } = await supabase
+        .from("delivery_orders")
+        .select("id")
+        .eq("order_id", orderID)
+        .eq("order_date", orderDate.toISOString())
+        .single();
+    if (error) {
+        console.error(
+            "Error retrieving delivery order by orderID & Date: ",
+            error,
+        );
+    }
+
+    if (!data) {
+        return null;
+    }
+    return data.id;
+}

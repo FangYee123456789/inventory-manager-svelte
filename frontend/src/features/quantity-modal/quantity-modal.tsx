@@ -1,26 +1,28 @@
 import { useState, useEffect, useContext } from "react";
-import Modal from "react-modal";
 import { getAllSuppliers } from "lib/database/suppliers-api";
 import type { supplier } from "types/supabase";
-import DeliveryOrderFieldset from "./components/delivery-order-fieldset";
 import { updateProductQuantity } from "lib/database/products-api";
 import { insertNewTransaction } from "lib/database/transactions-api";
-import { insertNewDeliveryOrder } from "lib/database/delivery-order-api";
+import {
+    getDeliveryOrderIDByOrderIDAndDate,
+    insertNewDeliveryOrder,
+} from "lib/database/delivery-order-api";
 import { RoleContext, SessionContext } from "lib/context/context";
-
-const modalStyles = {
-    overlay: { backgroundColor: "rgb(255, 255, 255, 0.8)" },
-    content: {
-        top: "50%",
-        left: "50%",
-        right: "auto",
-        bottom: "auto",
-        marginRight: "-50%",
-        transform: "translate(-50%, -50%)",
-    },
-};
-
-Modal.setAppElement("#root");
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    TextField,
+    InputAdornment,
+    Stack,
+    Typography,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+} from "@mui/material";
 
 interface props {
     selectedProductID: string;
@@ -39,7 +41,6 @@ function QuantityModal({
     const role = useContext(RoleContext);
 
     const [suppliers, setSuppliers] = useState<supplier[]>([]);
-    const [isIncomingOrder, setIsIncomingOrder] = useState(true);
 
     useEffect(() => {
         async function fetchSuppliers(): Promise<void> {
@@ -49,50 +50,60 @@ function QuantityModal({
         fetchSuppliers();
     }, []);
 
-    async function handleFormSubmission(formData: FormData) {
-        if (!session) return;
-        const operation = formData.get("operation") as string;
-        const quantityChange = Number(formData.get("quantityChange"));
-        const orderID = formData.get("orderID") as string;
-        const orderDate = new Date(
-            Date.parse(formData.get("orderDate") as string),
-        );
-        const supplierID = formData.get("supplierID") as string;
-        const quantity = Number(formData.get("quantity"));
+    async function handleFormSubmission(e: React.SubmitEvent<HTMLFormElement>) {
+        e.preventDefault();
+        const loggerID = session?.user.id;
+        if (!loggerID) {
+            console.error("Session is missing");
+            return;
+        }
+        const data = new FormData(e.target);
 
-        if (operation == "+") {
-            const deliveryID = await insertNewDeliveryOrder(
-                supplierID,
+        const quantityChange = Number(data.get("quantityChange"));
+        const orderID = data.get("doNumber") as string;
+        const orderDate = new Date(Date.parse(data.get("doDate") as string));
+        const supplierID = data.get("supplierID") as string;
+
+        if (role == "Procurement") {
+            //Check if there is already a delivery order
+            let deliveryID = await getDeliveryOrderIDByOrderIDAndDate(
                 orderID,
                 orderDate,
             );
 
+            //If not, insert a new one
+            if (deliveryID == null || deliveryID === "") {
+                deliveryID = await insertNewDeliveryOrder(
+                    supplierID,
+                    orderID,
+                    orderDate,
+                );
+            }
+
             insertNewTransaction(
-                session.user.id,
+                loggerID,
                 selectedProductID,
                 quantityChange,
                 deliveryID,
             );
-
-            const newQuantity = validateQuantityInput(quantity, quantityChange);
+            const newQuantity = validateQuantityInput(
+                selectedProductQuantity,
+                quantityChange,
+            );
             updateProductQuantity(selectedProductID, newQuantity);
-            window.location.reload();
-        } else if (operation == "-") {
+        } else if (role == "Project") {
             insertNewTransaction(
                 session.user.id,
                 selectedProductID,
                 quantityChange * -1,
             );
             const newQuantity = validateQuantityInput(
-                quantity,
+                selectedProductQuantity,
                 quantityChange * -1,
             );
             updateProductQuantity(selectedProductID, newQuantity);
-            window.location.reload();
         } else {
-            console.error(
-                "How did you get here? No valid operation option submitted",
-            );
+            console.error("How did you get here");
         }
     }
 
@@ -104,96 +115,101 @@ function QuantityModal({
         return newQuantity;
     }
 
-    function handleOperationChange(e: React.ChangeEvent<HTMLSelectElement>) {
-        setIsIncomingOrder(e.target.value == "+");
-    }
-
     return (
-        <Modal
-            isOpen={modalIsOpen}
-            onRequestClose={handleCloseModal}
-            contentLabel="Delivery Order Form"
-            style={modalStyles}
-        >
-            <form action={handleFormSubmission}>
-                <input
-                    type="hidden"
-                    name="masterID"
-                    value={selectedProductID}
-                />
-                <input
-                    type="hidden"
-                    name="quantity"
-                    value={selectedProductQuantity}
-                />
-                <fieldset>
-                    <div className="field">
-                        <label className="label" htmlFor="quantityChange">
-                            Quantity:
-                        </label>
-                        <div className="field has-addons">
-                            <p className="control">
-                                <span className="select">
-                                    <select
-                                        disabled
-                                        name="operation"
-                                        id="operation"
-                                        onChange={handleOperationChange}
-                                    >
-                                        <option
-                                            value="+"
-                                            selected={role == "Procurement"}
-                                        >
-                                            +
-                                        </option>
-                                        <option
-                                            value="-"
-                                            selected={role == "Project"}
-                                        >
-                                            -
-                                        </option>
-                                    </select>
-                                </span>
-                            </p>
-                            <div className="control">
-                                <input
-                                    type="number"
-                                    className="input"
-                                    name="quantityChange"
-                                    placeholder="1"
+        <Dialog onClose={handleCloseModal} open={modalIsOpen}>
+            <DialogTitle component="div">
+                <Typography variant="h6">
+                    {role == "Procurement" && "Add Quantity"}
+                    {role == "Project" && "Remove Quantity"}
+                </Typography>
+                <Typography variant="subtitle2">
+                    You are modifying: {selectedProductID}
+                </Typography>
+            </DialogTitle>
+            <DialogContent>
+                <form onSubmit={handleFormSubmission} id="quantity-form">
+                    <Stack spacing={2}>
+                        <TextField
+                            fullWidth
+                            autoFocus
+                            required
+                            label="Quantity change"
+                            type="number"
+                            name="quantityChange"
+                            slotProps={{
+                                htmlInput: { min: 1, step: 1 },
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            {role == "Procurement" ? "+" : "-"}
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
+                        />
+                        {role == "Procurement" && (
+                            <>
+                                <Typography variant="h6">
+                                    Delivery Order
+                                </Typography>
+                                <TextField
                                     required
-                                    step="1"
-                                    min="1"
-                                    id="quantityChange"
+                                    label="DO Number"
+                                    placeholder="e.g. 2604013"
+                                    name="doNumber"
                                 />
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-                <hr />
-                {isIncomingOrder ? (
-                    <fieldset>
-                        <DeliveryOrderFieldset suppliers={suppliers} />
-                    </fieldset>
-                ) : (
-                    <fieldset disabled>
-                        <DeliveryOrderFieldset suppliers={suppliers} />
-                    </fieldset>
-                )}
-                <div className="field is-grouped">
-                    <div className="control">
-                        <button type="submit" className="button is-primary">
-                            Submit
-                        </button>
-                    </div>
-                    <div className="control">
-                        <button className="button" onClick={handleCloseModal}>
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </Modal>
+                                <TextField
+                                    required
+                                    type="date"
+                                    label="Delivery Date"
+                                    slotProps={{ inputLabel: { shrink: true } }}
+                                    defaultValue={
+                                        new Date().toISOString().split("T")[0]
+                                    }
+                                    name="doDate"
+                                />
+                                <FormControl>
+                                    <InputLabel>Supplier</InputLabel>
+                                    <Select label="Supplier" name="supplierID">
+                                        {suppliers.map(({ id, name }) => (
+                                            <MenuItem value={id} key={id}>
+                                                {name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+
+                                {/* Once you've tried to use Autocomplete you'll never want to stop beating MUI to death with hammers */}
+                                {/* <Autocomplete
+                                    options={suppliers}
+                                    sx={{ width: 300 }}
+                                    getOptionLabel={(option) => option.name}
+                                    getOptionKey={(option) => option.id}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Supplier"
+                                            name="supplier"
+                                        />
+                                    )}
+                                /> */}
+                            </>
+                        )}
+                    </Stack>
+                </form>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseModal}>Cancel</Button>
+                <Button
+                    type="submit"
+                    form="quantity-form"
+                    variant="contained"
+                    color="primary"
+                >
+                    Confirm
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 }
 
