@@ -1,13 +1,12 @@
-import { Container, Grid } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import type { Session } from "@supabase/supabase-js";
 import AddProductForm from "features/add-product/add-product-form";
 import Navigation from "features/navigation/navigation";
-import ProductTable from "features/product-table/product-table";
-import ProductLog from "features/transaction-log/transaction-log";
 import { RoleContext, SessionContext } from "lib/context/context";
 import { supabase } from "lib/database/supabase";
 import { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router";
+import ProductDashboard from "./product-dashboard";
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -58,19 +57,14 @@ function App() {
       <CssBaseline />
       <RoleContext value={role}>
         <SessionContext value={session}>
-          <Navigation />
-          {/* Toolbar is here so the Navbar is sticky & doesn't cover the texts */}
-          <Grid container spacing={2} sx={{ paddingTop: 4 }} component={Container} maxWidth="xl">
-            <Grid size={12}>
-              <AddProductForm />
-            </Grid>
-            <Grid size={{ sm: 12, lg: 8 }} component="section">
-              <ProductTable />
-            </Grid>
-            <Grid size={4} component="section">
-              <ProductLog />
-            </Grid>
-          </Grid>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<Navigation />}>
+                <Route index element={<ProductDashboard />} />
+                <Route path="add" element={<AddProductForm />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
         </SessionContext>
       </RoleContext>
     </>
