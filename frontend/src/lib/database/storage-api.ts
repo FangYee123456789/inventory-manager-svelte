@@ -8,7 +8,7 @@ export async function uploadImage(file: File): Promise<string | null> {
     return null;
   }
 
-  const { data } = await supabase.storage.from("product-images").getPublicUrl(filePath);
+  const { data } = supabase.storage.from("product-images").getPublicUrl(filePath);
 
   return data.publicUrl;
 }
