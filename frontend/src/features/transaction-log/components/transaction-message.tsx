@@ -1,4 +1,4 @@
-import { Divider, List, ListItemText, Stack, Typography } from "@mui/material";
+import { ListItem, ListItemText, Typography } from "@mui/material";
 import { convertToSGTime, formatRelativeToToday } from "lib/format-dates";
 import type { transaction } from "types/supabase";
 
@@ -20,20 +20,17 @@ function TransactionMessage({ transaction, handleOpenModal, selectTransaction }:
 
   return (
     <>
-      <List component="article">
-        <a onClick={() => handleSelectTransaction(transaction)}>
-          <Stack direction="row">
-            <ListItemText
-              primary={`${
-                transaction.quantityChanged > 0 ? "Incoming" : "Outgoing"
-              } from ${transaction.logger.firstName}`}
-              secondary={`${transaction.quantityChanged} ${transaction.product.name}`}
-            ></ListItemText>
-            <Typography align="right">{relativeDateString}</Typography>
-          </Stack>
-        </a>
-      </List>
-      <Divider />
+      <a onClick={() => handleSelectTransaction(transaction)}>
+        <ListItem>
+          <ListItemText
+            primary={`${
+              transaction.quantityChanged > 0 ? "Incoming" : "Outgoing"
+            } from ${transaction.logger.firstName}`}
+            secondary={`${transaction.quantityChanged} ${transaction.product.name}`}
+          ></ListItemText>
+          <Typography align="right">{relativeDateString}</Typography>
+        </ListItem>
+      </a>
     </>
   );
 }

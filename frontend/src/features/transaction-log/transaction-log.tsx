@@ -1,3 +1,4 @@
+import { List, Stack } from "@mui/material";
 import { getDeliveryOrderByID } from "lib/database/delivery-order-api";
 import { getAllTransactions } from "lib/database/transactions-api";
 import { useEffect, useState } from "react";
@@ -40,14 +41,19 @@ function TransactionLog() {
 
   return (
     <>
-      {transactions.map((transaction) => (
-        <LogCard
-          transaction={transaction}
-          key={transaction.id}
-          handleOpenModal={openModal}
-          selectTransaction={handleSelectTransaction}
-        />
-      ))}
+      <List>
+        <Stack>
+          {transactions.map((transaction) => (
+            <TransactionMessage
+              transaction={transaction}
+              key={transaction.id}
+              handleOpenModal={openModal}
+              selectTransaction={handleSelectTransaction}
+            />
+          ))}
+        </Stack>
+      </List>
+
       {selectedTransaction && (
         <TransactionCardModal
           isModalOpen={isModalOpen}
