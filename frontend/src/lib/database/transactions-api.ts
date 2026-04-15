@@ -1,3 +1,4 @@
+import type { PostgrestError } from "@supabase/supabase-js";
 import { supabase } from "lib/database/supabase";
 import type { transaction } from "types/supabase";
 
@@ -40,28 +41,25 @@ export async function insertNewTransaction(
   quantityChanged: number,
   deliveryID?: string,
 ): Promise<boolean> {
+  let error: PostgrestError | null;
   if (deliveryID) {
-    const { error } = await supabase.from("transactions").insert({
+    ({ error } = await supabase.from("transactions").insert({
       logger_id: loggerID,
       product_id: productID,
       quantity_changed: quantityChanged,
       delivery_id: deliveryID,
-    });
-    if (error) {
-      console.error("Error inserting transaction: ", error);
-      return false;
-    }
-    return true;
+    }));
   } else {
-    const { error } = await supabase.from("transactions").insert({
+    ({ error } = await supabase.from("transactions").insert({
       logger_id: loggerID,
       product_id: productID,
       quantity_changed: quantityChanged,
-    });
-    if (error) {
-      console.error("Error inserting transaction: ", error);
-      return false;
-    }
-    return true;
+    }));
   }
+
+  if (error) {
+    console.error("Error inserting transaction: ", error);
+    return false;
+  }
+  return true;
 }
