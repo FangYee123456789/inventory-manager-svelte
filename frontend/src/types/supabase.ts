@@ -41,3 +41,8 @@ export type user = {
   email: string;
   firstName: string;
 };
+
+export type category = {
+  id: string;
+  name: string;
+};
