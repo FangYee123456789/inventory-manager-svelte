@@ -32,6 +32,7 @@ function EnterAccount() {
     }
     if (error) {
       console.error("Error entering account: ", error);
+      alert(error.message);
     }
   }
 
