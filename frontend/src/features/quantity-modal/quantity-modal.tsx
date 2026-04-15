@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { RoleContext } from "lib/context/context";
 import { useContext } from "react";
-import QuantityForm from "./quantity-form";
+import QuantityForm from "./components/quantity-form";
 
 interface props {
   selectedProductID: string;
