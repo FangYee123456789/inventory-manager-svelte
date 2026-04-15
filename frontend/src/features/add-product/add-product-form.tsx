@@ -11,7 +11,6 @@ import {
 import imageCompression from "browser-image-compression";
 import { getAllProductCategories } from "lib/database/categories-api";
 import { uploadImage } from "lib/database/storage-api";
-import { MuiFileInput } from "mui-file-input";
 import { useEffect, useState } from "react";
 import type { category } from "types/supabase";
 
@@ -23,7 +22,7 @@ const options = {
 
 function AddProductForm() {
   const [files, setFiles] = useState<File[]>([]);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [_imageUrls, setImageUrls] = useState<string[]>([]);
   const [productCategories, setProductCategories] = useState<category[]>([]);
 
   useEffect(() => {
@@ -54,44 +53,49 @@ function AddProductForm() {
   }
 
   return (
-    <>
-      {imageUrls.map((url) => (
-        <img src={url} key={url} />
-      ))}
-      <form onSubmit={handleFormSubmit}>
-        <Stack spacing={2}>
-          <Typography variant="h6">Add a new Product</Typography>
-          <TextField label="Name" required name="name" />
-          <FormControl>
-            <InputLabel>Category</InputLabel>
-            <Select label="Category" name="categoryID" defaultValue="">
-              {productCategories.map(({ id, name }) => (
-                <MenuItem value={id} key={id}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <TextField
-            label="Quantity"
-            type="number"
-            required
-            name="quantity"
-            slotProps={{ htmlInput: { min: 0, step: 1 } }}
-          />
-          <MuiFileInput
-            name="files"
-            multiple
-            value={files}
-            onChange={handleFilesChange}
-            slotProps={{ htmlInput: { accept: "image/*" } }}
-          />
-          <Button type="submit" variant="contained">
-            Submit
-          </Button>
-        </Stack>
-      </form>
-    </>
+    <form onSubmit={handleFormSubmit}>
+      <Stack spacing={2}>
+        <Typography variant="h6">Add a new Product</Typography>
+        <TextField label="Name" required name="name" />
+        <FormControl>
+          <InputLabel>Category</InputLabel>
+          <Select label="Category" name="categoryID" defaultValue="">
+            {productCategories.map(({ id, name }) => (
+              <MenuItem value={id} key={id}>
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <TextField
+          label="Quantity"
+          type="number"
+          required
+          name="quantity"
+          slotProps={{ htmlInput: { min: 0, step: 1 } }}
+        />
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          color="secondary"
+          tabIndex={-1}
+        >
+          <input type="file" multiple />
+        </Button>
+
+        {/* <MuiFileInput
+          name="files"
+          multiple
+          value={files}
+          onChange={handleFilesChange}
+          slotProps={{ htmlInput: { accept: "image/*" } }}
+        /> */}
+        <Button type="submit" variant="contained">
+          Submit
+        </Button>
+      </Stack>
+    </form>
   );
 }
 

@@ -1,12 +1,12 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import type { Session } from "@supabase/supabase-js";
-import AddProductForm from "features/add-product/add-product-form";
 import Navigation from "features/navigation/navigation";
 import { RoleContext, SessionContext } from "lib/context/context";
 import { supabase } from "lib/database/supabase";
 import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
-import ProductDashboard from "./product-dashboard";
+import ProductAdmin from "./product/product-admin";
+import ProductGeneral from "./product/product-general";
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -60,8 +60,8 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route element={<Navigation />}>
-                <Route path="add" element={<AddProductForm />} />
                 <Route index element={<ProductGeneral />} />
+                <Route path="add" element={<ProductAdmin />} />
               </Route>
             </Routes>
           </BrowserRouter>
