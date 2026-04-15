@@ -1,5 +1,6 @@
 import { List, Stack } from "@mui/material";
 import { getDeliveryOrderByID } from "lib/database/delivery-order-api";
+import { supabase } from "lib/database/supabase";
 import { getAllTransactions } from "lib/database/transactions-api";
 import { useEffect, useState } from "react";
 import type { deliveryOrder, transaction } from "types/supabase";
@@ -31,12 +32,37 @@ function TransactionLog() {
 
   const [transactions, setTransactions] = useState<transaction[]>([]);
 
+  async function fetchTransactions() {
+    const transactions = await getAllTransactions();
+    setTransactions(transactions);
+  }
+
   useEffect(() => {
-    async function fetchTransactions() {
-      const transactions = await getAllTransactions();
-      setTransactions(transactions);
-    }
     fetchTransactions();
+  }, []);
+
+  useEffect(() => {
+    const channel = supabase.channel("transactions-channel");
+    channel
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "transactions" },
+        (_payload) => {
+          window.location.reload();
+          //I don't know why payload.new's date is being read as an invalid date but it is so yeah,
+          // just gonna force a fetch again yay!
+          // const newTransaction = payload.new as transaction;
+          // console.log(newTransaction);
+          // console.log(transactions);
+          // setTransactions((prev) => [...prev, newTransaction]);
+        },
+      )
+      .subscribe();
+
+    return () => {
+      console.log("Cleaning up channel");
+      channel.unsubscribe();
+    };
   }, []);
 
   return (
