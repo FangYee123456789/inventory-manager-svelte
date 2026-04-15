@@ -1,8 +1,19 @@
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import imageCompression from "browser-image-compression";
+import { getAllProductCategories } from "lib/database/categories-api";
 import { uploadImage } from "lib/database/storage-api";
 import { MuiFileInput } from "mui-file-input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { category } from "types/supabase";
 
 const options = {
   maxSizeMB: 0.08,
@@ -13,6 +24,15 @@ const options = {
 function AddProductForm() {
   const [files, setFiles] = useState<File[]>([]);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [productCategories, setProductCategories] = useState<category[]>([]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const categoryArray = await getAllProductCategories();
+      setProductCategories(categoryArray);
+    }
+    fetchCategories();
+  }, []);
 
   //MuiFileInput returns the file directly instead of an event
   function handleFilesChange(files: File[]) {
@@ -42,7 +62,16 @@ function AddProductForm() {
         <Stack spacing={2}>
           <Typography variant="h6">Add a new Product</Typography>
           <TextField label="Name" required name="name" />
-          <TextField label="Category" required name="category" />
+          <FormControl>
+            <InputLabel>Category</InputLabel>
+            <Select label="Category" name="categoryID" defaultValue="">
+              {productCategories.map(({ id, name }) => (
+                <MenuItem value={id} key={id}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             label="Quantity"
             type="number"
