@@ -22,9 +22,10 @@ import type { supplier } from "types/supabase";
 interface props {
   selectedProductID: string;
   selectedProductQuantity: number;
+  closeModal: () => void;
 }
 
-function QuantityForm({ selectedProductID, selectedProductQuantity }: props) {
+function QuantityForm({ selectedProductID, selectedProductQuantity, closeModal }: props) {
   const session = useContext(SessionContext);
   const role = useContext(RoleContext);
 
@@ -39,6 +40,7 @@ function QuantityForm({ selectedProductID, selectedProductQuantity }: props) {
 
   async function handleFormSubmission(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
+    closeModal();
     if (!session) {
       console.error("Session is missing");
       return;
@@ -66,7 +68,7 @@ function QuantityForm({ selectedProductID, selectedProductQuantity }: props) {
     }
     const newQuantity = validateQuantityInput(selectedProductQuantity, quantityChange);
     updateProductQuantity(selectedProductID, newQuantity);
-    window.location.reload();
+    // window.location.reload();
   }
 
   function validateQuantityInput(currentQuantity: number, quantityChange: number): number {

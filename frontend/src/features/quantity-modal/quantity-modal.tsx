@@ -40,6 +40,7 @@ function QuantityModal({
         <QuantityForm
           selectedProductID={selectedProductID}
           selectedProductQuantity={selectedProductQuantity}
+          closeModal={handleCloseModal}
         />
       </DialogContent>
       <DialogActions>
