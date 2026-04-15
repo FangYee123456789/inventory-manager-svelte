@@ -3,7 +3,7 @@ import { getAllTransactions } from "lib/database/transactions-api";
 import { useEffect, useState } from "react";
 import type { deliveryOrder, transaction } from "types/supabase";
 import TransactionCardModal from "./components/transaction-card-modal";
-import LogCard from "./components/transaction-message";
+import TransactionMessage from "./components/transaction-message";
 
 function TransactionLog() {
   const [isModalOpen, setModalOpen] = useState(false);

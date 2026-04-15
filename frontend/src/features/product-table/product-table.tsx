@@ -21,7 +21,7 @@ function ProductTable() {
   const [enabledProducts, setEnabledProducts] = useState<product[]>([]);
   const [disabledProducts, setDisabledProducts] = useState<product[]>([]);
 
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsOpen] = useState(false);
   const [selectedProductID, setSelectedProductID] = useState("");
   const [selectedProductName, setSelectedProductName] = useState("");
   const [selectedProductQuantity, setSelectedProductQuantity] = useState(0);
@@ -87,7 +87,7 @@ function ProductTable() {
         selectedProductID={selectedProductID}
         selectedProductName={selectedProductName}
         selectedProductQuantity={selectedProductQuantity}
-        modalIsOpen={modalIsOpen}
+        isModalOpen={isModalOpen}
         handleCloseModal={closeModal}
       />
     </>

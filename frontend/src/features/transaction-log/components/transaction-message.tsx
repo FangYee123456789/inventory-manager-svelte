@@ -8,7 +8,7 @@ interface props {
   selectTransaction: (transaction: transaction) => void;
 }
 
-function TransactionCard({ transaction, handleOpenModal, selectTransaction }: props) {
+function TransactionMessage({ transaction, handleOpenModal, selectTransaction }: props) {
   const sgDateTime = convertToSGTime(transaction.creationTimestamp);
   const relativeDateString = formatRelativeToToday(sgDateTime);
 
@@ -38,4 +38,4 @@ function TransactionCard({ transaction, handleOpenModal, selectTransaction }: pr
   );
 }
 
-export default TransactionCard;
+export default TransactionMessage;

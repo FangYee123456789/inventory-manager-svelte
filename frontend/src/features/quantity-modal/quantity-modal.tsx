@@ -14,7 +14,7 @@ interface props {
   selectedProductID: string;
   selectedProductName: string;
   selectedProductQuantity: number;
-  modalIsOpen: boolean;
+  isModalOpen: boolean;
   handleCloseModal: () => void;
 }
 
@@ -22,13 +22,13 @@ function QuantityModal({
   selectedProductID,
   selectedProductName,
   selectedProductQuantity,
-  modalIsOpen,
+  isModalOpen,
   handleCloseModal,
 }: props) {
   const role = useContext(RoleContext);
 
   return (
-    <Dialog onClose={handleCloseModal} open={modalIsOpen}>
+    <Dialog onClose={handleCloseModal} open={isModalOpen}>
       <DialogTitle component="div">
         <Typography variant="h6">
           {role == "Procurement" && "Add Quantity"}
