@@ -4,28 +4,32 @@ import { MuiFileInput } from "mui-file-input";
 import { useState } from "react";
 
 function AddProductForm() {
-  const [file, setFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   //MuiFileInput returns the file directly instead of an event
-  function handleFileChange(file: File | null) {
-    if (file) {
-      setFile(file);
+  function handleFilesChange(files: File[]) {
+    if (files) {
+      setFiles(files);
     }
   }
 
   async function handleFormSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    if (file) {
-      const url = await uploadImage(file);
-      setImageUrl(url);
+    if (files) {
+      files.forEach(async (file) => {
+        const url = await uploadImage(file);
+        if (!url) return;
+        setImageUrls((prev) => [...prev, url]);
+      });
     }
   }
 
   return (
     <>
-      <img src={imageUrl ? imageUrl : ""} alt="image" />
+      {imageUrls.map((url) => (
+        <img src={url} />
+      ))}
       <form onSubmit={handleFormSubmit}>
         <Stack spacing={2}>
           <TextField label="Name" required name="name" />
@@ -38,9 +42,10 @@ function AddProductForm() {
             slotProps={{ htmlInput: { min: 0, step: 1 } }}
           />
           <MuiFileInput
-            name="file"
-            value={file}
-            onChange={handleFileChange}
+            name="files"
+            multiple
+            value={files}
+            onChange={handleFilesChange}
             slotProps={{ htmlInput: { accept: "image/*" } }}
           />
           <Button type="submit" variant="contained">
