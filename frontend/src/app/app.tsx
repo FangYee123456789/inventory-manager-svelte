@@ -1,8 +1,8 @@
-import { Box, Container, Grid, Toolbar } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import type { Session } from "@supabase/supabase-js";
 import AddProductForm from "features/add-product/add-product-form";
-import Navbar from "features/navbar/navbar";
+import Navigation from "features/navigation/navigation";
 import ProductTable from "features/product-table/product-table";
 import ProductLog from "features/transaction-log/transaction-log";
 import { RoleContext, SessionContext } from "lib/context/context";
@@ -58,10 +58,7 @@ function App() {
       <CssBaseline />
       <RoleContext value={role}>
         <SessionContext value={session}>
-          <Box component="header">
-            <Navbar />
-            <Toolbar />
-          </Box>
+          <Navigation />
           {/* Toolbar is here so the Navbar is sticky & doesn't cover the texts */}
           <Grid container spacing={2} sx={{ paddingTop: 4 }} component={Container} maxWidth="xl">
             <Grid size={12}>
