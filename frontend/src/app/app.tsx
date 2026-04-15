@@ -60,8 +60,8 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route element={<Navigation />}>
-                <Route index element={<ProductDashboard />} />
                 <Route path="add" element={<AddProductForm />} />
+                <Route index element={<ProductGeneral />} />
               </Route>
             </Routes>
           </BrowserRouter>

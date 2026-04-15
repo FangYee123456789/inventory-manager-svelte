@@ -4,7 +4,7 @@ import TransactionLog from "features/transaction-log/transaction-log";
 
 export default function ProductDashboard() {
   return (
-    <Grid container spacing={2} sx={{ paddingTop: 8 }} component={Container} maxWidth="xl">
+    <Grid container spacing={2} component={Container} maxWidth="xl">
       <Grid size={{ sm: 12, lg: 8 }} component="section">
         <ProductTable />
       </Grid>
