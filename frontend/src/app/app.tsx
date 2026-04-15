@@ -1,4 +1,4 @@
-import { Box, Grid, Toolbar } from "@mui/material";
+import { Box, Container, Grid, Toolbar } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import type { Session } from "@supabase/supabase-js";
 import Navbar from "features/navbar/navbar";
@@ -62,8 +62,8 @@ function App() {
             <Toolbar />
           </Box>
           {/* Toolbar is here so the Navbar is sticky & doesn't cover the texts */}
-          <Grid container spacing={2} component="main" sx={{ paddingTop: 1 }}>
-            <Grid size={8} component="section">
+          <Grid container spacing={2} sx={{ paddingTop: 1 }} component={Container} maxWidth="xl">
+            <Grid size={{ sm: 12, lg: 8 }} component="section">
               <ProductTable />
             </Grid>
             <Grid size={4} component="section">
