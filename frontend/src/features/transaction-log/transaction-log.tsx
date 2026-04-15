@@ -1,5 +1,5 @@
 import { List, Stack } from "@mui/material";
-import { getDeliveryOrderByID } from "lib/database/delivery-order-api";
+import { getDeliveryOrderByID } from "lib/database/delivery-orders-api";
 import { supabase } from "lib/database/supabase";
 import { getAllTransactions } from "lib/database/transactions-api";
 import { useEffect, useState } from "react";
