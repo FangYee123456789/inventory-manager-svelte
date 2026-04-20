@@ -58,3 +58,14 @@ export type productInsert = {
   current_quantity: number;
   disabled: boolean;
 };
+
+export type balance = {
+  balance: number;
+};
+
+export type balanceTransaction = {
+  projectID: string;
+  balanceChange: number;
+  createdAt: Date;
+  loggerID: string;
+};
