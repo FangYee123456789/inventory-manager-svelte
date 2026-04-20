@@ -107,7 +107,7 @@ CREATE TRIGGER trg_set_current_balance
 
 
 CREATE TABLE balance_transactions(
-    projectID INTEGER NOT NULL REFERENCES projects(id),
+    project_id INTEGER NOT NULL REFERENCES projects(id),
     id SERIAL NOT NULL PRIMARY KEY,
     balance_changed NUMERIC NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
