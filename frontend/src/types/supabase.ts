@@ -46,3 +46,14 @@ export type category = {
   id: string;
   name: string;
 };
+
+export type productInsert = {
+  product_id: string;
+  master_id: string;
+  name: string;
+  photo_paths: string[];
+  category_id: number;
+  supplier_id: number;
+  initial_quantity: number;
+  disabled: boolean;
+};

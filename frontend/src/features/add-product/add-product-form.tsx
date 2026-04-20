@@ -10,9 +10,10 @@ import {
 } from "@mui/material";
 import imageCompression from "browser-image-compression";
 import { getAllProductCategories } from "lib/database/categories-api";
+import { insertNewProduct } from "lib/database/products-api";
 import { uploadImage } from "lib/database/storage-api";
 import { useEffect, useState } from "react";
-import type { category } from "types/supabase";
+import type { category, productInsert } from "types/supabase";
 
 const options = {
   maxSizeMB: 0.08,
@@ -21,8 +22,6 @@ const options = {
 };
 
 function AddProductForm() {
-  const [files, setFiles] = useState<File[]>([]);
-  const [_imageUrls, setImageUrls] = useState<string[]>([]);
   const [productCategories, setProductCategories] = useState<category[]>([]);
 
   useEffect(() => {
@@ -33,23 +32,41 @@ function AddProductForm() {
     fetchCategories();
   }, []);
 
-  //MuiFileInput returns the file directly instead of an event
-  function handleFilesChange(files: File[]) {
-    if (files) {
-      setFiles(files);
-    }
-  }
-
   async function handleFormSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (files) {
-      files.forEach(async (file) => {
+    const formData = new FormData(e.target);
+    const productName = formData.get("name") as string;
+    const categoryID = Number(formData.get("categoryID"));
+
+    const initialQuantity = Number(formData.get("quantity"));
+    const productPhotos = formData.getAll("img") as File[];
+    console.log(productPhotos);
+
+    const imageUrls: string[] = [];
+
+    if (productPhotos.length > 0) {
+      productPhotos.forEach(async (file) => {
         const compressedFile = await imageCompression(file, options);
         const url = await uploadImage(compressedFile);
         if (!url) return;
-        setImageUrls((prev) => [...prev, url]);
+        imageUrls.push(url);
       });
     }
+
+    const newProduct: productInsert = {
+      product_id: Math.floor(Math.random() * 10000 + 1).toString(),
+      master_id: Math.floor(Math.random() * 10000 + 1).toString(),
+      name: productName,
+      photo_paths: imageUrls,
+      category_id: categoryID,
+      supplier_id: 1,
+      initial_quantity: initialQuantity,
+      disabled: false,
+    };
+
+    console.log(newProduct);
+
+    await insertNewProduct(newProduct);
   }
 
   return (
@@ -81,16 +98,8 @@ function AddProductForm() {
           color="secondary"
           tabIndex={-1}
         >
-          <input type="file" multiple />
+          <input type="file" multiple name="img" accept="image/*" />
         </Button>
-
-        {/* <MuiFileInput
-          name="files"
-          multiple
-          value={files}
-          onChange={handleFilesChange}
-          slotProps={{ htmlInput: { accept: "image/*" } }}
-        /> */}
         <Button type="submit" variant="contained">
           Submit
         </Button>

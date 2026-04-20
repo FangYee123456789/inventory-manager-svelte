@@ -1,5 +1,5 @@
 import { supabase } from "lib/database/supabase";
-import type { product } from "types/supabase";
+import type { product, productInsert } from "types/supabase";
 
 export async function getAllProducts(): Promise<product[]> {
   const { error, data } = await supabase
@@ -31,4 +31,13 @@ export async function updateProductQuantity(masterID: string, newQuantity: numbe
     console.error("Error updating product quantity", error);
     return;
   }
+}
+
+export async function insertNewProduct(newProduct: productInsert): Promise<boolean> {
+  const { error } = await supabase.from("products").insert(newProduct);
+  if (error) {
+    console.error("Error inserting new product: ", error);
+    return false;
+  }
+  return true;
 }
