@@ -40,17 +40,18 @@ function AddProductForm() {
 
     const initialQuantity = Number(formData.get("quantity"));
     const productPhotos = formData.getAll("img") as File[];
-    console.log(productPhotos);
 
     const imageUrls: string[] = [];
 
     if (productPhotos.length > 0) {
-      productPhotos.forEach(async (file) => {
+      // forEach cannot be asynchronous... ts cost me an hour of my life
+      const uploadPromises = productPhotos.map(async (file) => {
         const compressedFile = await imageCompression(file, options);
         const url = await uploadImage(compressedFile);
-        if (!url) return;
-        imageUrls.push(url);
+        if (url) imageUrls.push(url);
       });
+
+      await Promise.all(uploadPromises);
     }
 
     const newProduct: productInsert = {
@@ -63,8 +64,6 @@ function AddProductForm() {
       initial_quantity: initialQuantity,
       disabled: false,
     };
-
-    console.log(newProduct);
 
     await insertNewProduct(newProduct);
   }
