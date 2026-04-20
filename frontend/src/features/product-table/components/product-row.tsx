@@ -1,8 +1,9 @@
-import { Button, ImageList, ImageListItem, TableCell, TableRow } from "@mui/material";
+import { Button, TableCell, TableRow } from "@mui/material";
 import { RoleContext } from "lib/context/context";
 import { truncateStringEllipsis } from "lib/miscellaneous";
 import { useContext } from "react";
 import type { product } from "types/supabase";
+import ProductImage from "./product-image";
 
 interface props {
   product: product;
@@ -16,13 +17,7 @@ function ProductRow({ product, handleProductSelection }: props) {
     <TableRow className={product.isDisabled ? "disabled-row" : ""}>
       <TableCell>{product.masterID}</TableCell>
       <TableCell>{truncateStringEllipsis(product.name, 20)}</TableCell>
-      <TableCell>
-        <ImageList cols={1} sx={{ width: "150px" }}>
-          <ImageListItem>
-            <img src="product_photos/mock/test1.jpg" alt="" />
-          </ImageListItem>
-        </ImageList>
-      </TableCell>
+      <ProductImage name={product.name} photoPaths={product.photoPaths} />
       <TableCell>{truncateStringEllipsis(product.category.name, 10)}</TableCell>
       <TableCell align="right">{product.quantity}</TableCell>
       <TableCell>
