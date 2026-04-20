@@ -16,8 +16,8 @@ import { useEffect, useState } from "react";
 import type { category, productInsert } from "types/supabase";
 
 const options = {
-  maxSizeMB: 0.08,
-  maxWidthOrHeight: 300,
+  maxSizeMB: 0.1,
+  maxWidthOrHeight: 600,
   useWebWorker: true,
 };
 
@@ -46,7 +46,9 @@ function AddProductForm() {
     if (productPhotos.length > 0) {
       // forEach cannot be asynchronous... ts cost me an hour of my life
       const uploadPromises = productPhotos.map(async (file) => {
+        // console.log("Original file size: ", (file.size / 1024 / 1024).toFixed(2) + "MB");
         const compressedFile = await imageCompression(file, options);
+        // console.log("Compressed size: ", (compressedFile.size / 1024 / 1024).toFixed(2) + "MB");
         const url = await uploadImage(compressedFile);
         if (url) imageUrls.push(url);
       });
