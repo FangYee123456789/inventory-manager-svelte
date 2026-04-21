@@ -77,7 +77,7 @@ function QuantityForm({ selectedProductID, selectedProductQuantity, closeModal }
   }
 
   return (
-    <form onSubmit={handleFormSubmission} id="quantity-form">
+    <form onSubmit={handleFormSubmission} id="quantity-form" autoComplete="off">
       <Stack spacing={2}>
         <TextField
           fullWidth

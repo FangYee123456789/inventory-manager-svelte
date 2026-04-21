@@ -76,7 +76,7 @@ function AddProductForm() {
   }
 
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form onSubmit={handleFormSubmit} autoComplete="off">
       <Stack spacing={2}>
         <Typography variant="h6">Add a new Product</Typography>
         <TextField label="Master No. " required name="masterID" />

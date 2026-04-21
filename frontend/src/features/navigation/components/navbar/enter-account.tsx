@@ -37,7 +37,7 @@ function EnterAccount() {
   }
 
   return (
-    <form onSubmit={handleSubmission}>
+    <form onSubmit={handleSubmission} autoComplete="off">
       <Stack spacing={2} direction={"row"}>
         <TextField
           id="outlined-basic"
