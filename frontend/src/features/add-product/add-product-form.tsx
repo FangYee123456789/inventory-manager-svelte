@@ -1,15 +1,7 @@
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import imageCompression from "browser-image-compression";
-import { getAllProductCategories } from "lib/database/categories-api";
+import AutocompleteComponent from "lib/components/autocomplete-component";
+import { getAllProductCategories, insertNewCategory } from "lib/database/categories-api";
 import { insertNewProduct } from "lib/database/products-api";
 import { uploadImage } from "lib/database/storage-api";
 import { useEffect, useState } from "react";
@@ -23,6 +15,7 @@ const options = {
 
 function AddProductForm() {
   const [productCategories, setProductCategories] = useState<category[]>([]);
+  const [selectedCategoryID, setSelectedCategoryID] = useState("");
 
   useEffect(() => {
     async function fetchCategories() {
@@ -34,11 +27,16 @@ function AddProductForm() {
 
   async function handleFormSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (selectedCategoryID == "") {
+      console.error("no category selected");
+      alert(`Error, try clicking "Add" in the Category Input`);
+      return;
+    }
     const formData = new FormData(e.target);
 
     const masterID = formData.get("masterID") as string;
     const productName = formData.get("name") as string;
-    const categoryID = Number(formData.get("categoryID"));
+    const categoryID = selectedCategoryID;
 
     const initialQuantity = Number(formData.get("quantity"));
     const productPhotos = formData.getAll("img") as File[];
@@ -71,6 +69,11 @@ function AddProductForm() {
     };
 
     await insertNewProduct(newProduct);
+    setSelectedCategoryID("");
+  }
+
+  function handleCategoryIDChange(id: string) {
+    setSelectedCategoryID(id);
   }
 
   return (
@@ -79,16 +82,12 @@ function AddProductForm() {
         <Typography variant="h6">Add a new Product</Typography>
         <TextField label="Master No. " required name="masterID" />
         <TextField label="Name" required name="name" />
-        <FormControl>
-          <InputLabel>Category</InputLabel>
-          <Select label="Category" name="categoryID" defaultValue="">
-            {productCategories.map(({ id, name }) => (
-              <MenuItem value={id} key={id}>
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <AutocompleteComponent
+          label="Category"
+          optionsArray={productCategories}
+          databaseInsert={insertNewCategory}
+          updateCategoryID={handleCategoryIDChange}
+        />
         <TextField
           label="Quantity"
           type="number"
