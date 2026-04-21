@@ -10,16 +10,17 @@ export default function ProductDashboard() {
   const [filter, setFilter] = useState<FILTER>("none");
   const [filterArg, setFilterArg] = useState("");
 
-  useEffect(() => {
-    console.log("filter changed");
-    console.log("or filterarg changed");
-  }, [filter, filterArg]);
-
   return (
     <FilterContext value={{ filter, setFilter, filterArg, setFilterArg }}>
       <Container maxWidth={false} sx={{ marginX: 2 }}>
         <Grid container spacing={2}>
-          {filter!="none" && <Grid size={12}><Typography variant="h6" component="h1">Filtering for: {filter} {filterArg}</Typography></Grid>}        
+          {filter != "none" && (
+            <Grid size={12}>
+              <Typography variant="h6" component="h1">
+                Filtering for: {filter} {filterArg}
+              </Typography>
+            </Grid>
+          )}
           <Grid size={{ sm: 12, lg: 8 }} component="section">
             <ProductTable />
           </Grid>

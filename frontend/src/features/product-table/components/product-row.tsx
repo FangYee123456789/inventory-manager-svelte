@@ -15,7 +15,6 @@ function ProductRow({ product, handleProductSelection }: props) {
   const { setFilter, setFilterArg } = useContext(FilterContext);
 
   function handleFilterByMasterID() {
-    console.log("hi");
     setFilter("productid");
     setFilterArg(product.masterID);
   }
@@ -24,7 +23,9 @@ function ProductRow({ product, handleProductSelection }: props) {
     <TableRow className={product.isDisabled ? "disabled-row" : ""}>
       <TableCell>{product.masterID}</TableCell>
       <TableCell>
-        <a onClick={handleFilterByMasterID} style={{cursor: "pointer"}}>{truncateStringEllipsis(product.name, 20)}</a>
+        <a onClick={handleFilterByMasterID} style={{ cursor: "pointer" }}>
+          {truncateStringEllipsis(product.name, 20)}
+        </a>
       </TableCell>
       <ProductImage name={product.name} photoPaths={product.photoPaths} />
       <TableCell>{truncateStringEllipsis(product.category.name, 10)}</TableCell>
