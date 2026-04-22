@@ -1,20 +1,12 @@
-import {
-  FormControl,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { InputAdornment, Stack, TextField, Typography } from "@mui/material";
+import AutocompleteComponent from "lib/components/autocomplete-component";
 import { RoleContext, SessionContext } from "lib/context/context";
 import {
   getDeliveryOrderIDByOrderIDAndDate,
   insertNewDeliveryOrder,
 } from "lib/database/delivery-orders-api";
 import { updateProductQuantity } from "lib/database/products-api";
-import { getAllSuppliers } from "lib/database/suppliers-api";
+import { getAllSuppliers, insertNewSupplier } from "lib/database/suppliers-api";
 import { insertNewTransaction } from "lib/database/transactions-api";
 import { useContext, useEffect, useState } from "react";
 import type { supplier } from "types/supabase";
@@ -54,7 +46,6 @@ function QuantityForm({
     let quantityChange = Number(data.get("quantityChange"));
     const orderID = data.get("doNumber") as string;
     const orderDate = new Date(Date.parse(data.get("doDate") as string));
-    const supplierID = data.get("supplierID") as string;
 
     if (role === "Procurement") {
       //Check if there is already a delivery order
@@ -66,7 +57,7 @@ function QuantityForm({
       //If not, insert a new one
       if (deliveryID == null || deliveryID === "") {
         deliveryID = await insertNewDeliveryOrder(
-          supplierID,
+          selectedSupplierID,
           orderID,
           orderDate,
         );
@@ -87,7 +78,6 @@ function QuantityForm({
       quantityChange,
     );
     updateProductQuantity(selectedProductID, newQuantity);
-    // window.location.reload();
   }
 
   function validateQuantityInput(
@@ -97,6 +87,8 @@ function QuantityForm({
     const newQuantity = currentQuantity + quantityChange;
     return newQuantity;
   }
+
+  const [selectedSupplierID, setSelectedSupplierID] = useState("");
 
   return (
     <form onSubmit={handleFormSubmission} id="quantity-form" autoComplete="off">
@@ -136,16 +128,12 @@ function QuantityForm({
               defaultValue={new Date().toISOString().split("T")[0]}
               name="doDate"
             />
-            <FormControl>
-              <InputLabel>Supplier</InputLabel>
-              <Select label="Supplier" name="supplierID" defaultValue="">
-                {suppliers.map(({ id, name }) => (
-                  <MenuItem value={id} key={id}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <AutocompleteComponent
+              label="Supplier"
+              optionsArray={suppliers}
+              databaseInsert={insertNewSupplier}
+              returnIDAsValue={setSelectedSupplierID}
+            />
           </>
         )}
       </Stack>
