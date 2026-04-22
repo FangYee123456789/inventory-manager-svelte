@@ -119,21 +119,6 @@ function QuantityForm({ selectedProductID, selectedProductQuantity, closeModal }
                 ))}
               </Select>
             </FormControl>
-
-            {/* Once you've tried to use Autocomplete you'll never want to stop beating MUI to death with hammers */}
-            {/* <Autocomplete
-                                    options={suppliers}
-                                    sx={{ width: 300 }}
-                                    getOptionLabel={(option) => option.name}
-                                    getOptionKey={(option) => option.id}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Supplier"
-                                            name="supplier"
-                                        />
-                                    )}
-                                /> */}
           </>
         )}
       </Stack>
