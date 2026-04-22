@@ -9,10 +9,10 @@ interface OptionWithInput {
 }
 
 interface Props<T> {
-  label: string;
-  optionsArray: T[];
-  databaseInsert: (newValue: string) => Promise<T | null>;
-  returnIDAsValue: (id: string) => void;
+  label: string; //Input label.
+  optionsArray: T[]; //Array of objects. Must have id & name properties.
+  databaseInsert: (newValue: string) => Promise<T | null>; //The function which calls the database to create the new tuple
+  returnIDAsValue: (id: string) => void; //State variable in parent for storing the ID of the selected object
 }
 
 const filter = createFilterOptions<OptionWithInput>();
