@@ -76,7 +76,6 @@ function AddProductForm() {
     };
 
     await insertNewProduct(newProduct);
-    setSelectedCategoryID("");
   }
 
   function handleCategoryIDChange(id: string) {
