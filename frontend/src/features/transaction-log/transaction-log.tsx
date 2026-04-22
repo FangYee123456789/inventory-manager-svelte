@@ -76,12 +76,12 @@ function TransactionLog() {
         { event: "INSERT", schema: "public", table: "transactions" },
         (_payload) => {
           window.location.reload();
-          //I don't know why payload.new's date is being read as an invalid date but it is so yeah,
-          // just gonna force a fetch again yay!
+          // fetchTransactions();
+          // For some reason, transactions & filteredTransactions are both empty...
+          // Probably due to the fact I'm calling useEffect(fetchTransactions) & there's some form of desync
+          // Date also can't be properly parsed
           // const newTransaction = payload.new as transaction;
-          // console.log(newTransaction);
-          // console.log(transactions);
-          // setTransactions((prev) => [...prev, newTransaction]);
+          // setTransactions([...transactions, newTransaction]);
         },
       )
       .subscribe();
