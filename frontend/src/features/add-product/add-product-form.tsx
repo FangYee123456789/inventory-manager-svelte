@@ -75,7 +75,12 @@ function AddProductForm() {
       disabled: false,
     };
 
-    await insertNewProduct(newProduct);
+    const success = await insertNewProduct(newProduct);
+    if (success) {
+      alert("Item has been added to the inventory.");
+    } else {
+      alert("Item has not been added.");
+    }
   }
 
   function handleCategoryIDChange(id: string) {
