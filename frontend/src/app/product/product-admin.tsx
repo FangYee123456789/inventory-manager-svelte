@@ -9,20 +9,18 @@ export default function ProductAdmin() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (role != "QS") {
+    if (role !== "QS") {
       navigate("/*");
     }
-  }, [role]);
+  }, [role, navigate]);
 
   return (
-    <>
-      <Grid container>
+    <Grid container>
         <Grid size="grow" />
         <Grid size={3}>
           <AddProductForm />
         </Grid>
         <Grid size="grow" />
       </Grid>
-    </>
   );
 }

@@ -27,9 +27,9 @@ function ProductRow({ product, handleProductSelection }: props) {
     <TableRow className={product.isDisabled ? "disabled-row" : ""}>
       <TableCell>{product.masterID}</TableCell>
       <TableCell>
-        <a onClick={handleFilterByMasterID} style={{ cursor: "pointer" }}>
+        <button className="none" onClick={handleFilterByMasterID} style={{ cursor: "pointer" }} type="button">
           {truncateStringEllipsis(product.name, 20)}
-        </a>
+        </button>
       </TableCell>
       <TableCell>
         {product.photoUrls[0] && (
@@ -39,7 +39,7 @@ function ProductRow({ product, handleProductSelection }: props) {
       <TableCell>{truncateStringEllipsis(product.category.name, 10)}</TableCell>
       <TableCell align="right">{product.quantity}</TableCell>
       <TableCell>
-        {(role == "Procurement" || role == "Project") &&
+        {(role === "Procurement" || role === "Project") &&
           !product.isDisabled && (
             <Button
               variant="outlined"

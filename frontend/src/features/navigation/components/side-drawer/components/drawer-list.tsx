@@ -30,7 +30,7 @@ export default function DrawerList() {
           </RouterLink>
         </ListItem>
         <Divider />
-        {role == "QS" && (
+        {role === "QS" && (
           <ListItem>
             <RouterLink to="/add">
               <ListItemButton>

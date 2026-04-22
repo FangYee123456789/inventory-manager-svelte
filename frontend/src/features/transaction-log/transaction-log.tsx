@@ -3,7 +3,7 @@ import { FilterContext } from "lib/context/context";
 import { getDeliveryOrderByID } from "lib/database/delivery-orders-api";
 import { supabase } from "lib/database/supabase";
 import { getAllTransactions } from "lib/database/transactions-api";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import type { deliveryOrder, transaction } from "types/supabase";
 import TransactionCardModal from "./components/transaction-card-modal";
 import TransactionMessage from "./components/transaction-message";
@@ -59,14 +59,14 @@ function TransactionLog() {
     }
   }, [filter, filterArg, transactions]);
 
-  async function fetchTransactions() {
+  const fetchTransactions = useCallback(async()=> {
     const transactions = await getAllTransactions();
     setTransactions(transactions);
-  }
+  }, [])
 
   useEffect(() => {
     fetchTransactions();
-  }, []);
+  }, [fetchTransactions]);
 
   useEffect(() => {
     const channel = supabase.channel("transactions-channel");
@@ -97,7 +97,7 @@ function TransactionLog() {
     <>
       <List>
         <Stack>
-          {filteredTransactions.length == 0 && <p>Nothing matches filters</p>}
+          {filteredTransactions.length === 0 && <p>Nothing matches filters</p>}
           {filteredTransactions.length > 0 &&
             filteredTransactions.map((transaction) => (
               <TransactionMessage

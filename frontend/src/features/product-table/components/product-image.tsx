@@ -16,7 +16,7 @@ interface props {
 export default function ProductImage({ name, photoUrls }: props) {
   const [isOpen, setIsOpen] = useState(false);
 
-  function toggleModal(e: React.MouseEvent<HTMLAnchorElement>) {
+  function toggleModal(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     setIsOpen(!isOpen);
   }
@@ -25,9 +25,9 @@ export default function ProductImage({ name, photoUrls }: props) {
     <>
       <ImageList cols={1} sx={{ width: "300px" }}>
         <ImageListItem>
-          <a onClick={toggleModal}>
-            <img src={photoUrls[0].item} alt="" width="300px" />
-          </a>
+          <button className="none" onClick={toggleModal} type="button">
+            <img src={photoUrls[0].item} width="300px" aria-label="item-image"/>
+          </button>
         </ImageListItem>
       </ImageList>
       <Dialog
@@ -39,9 +39,9 @@ export default function ProductImage({ name, photoUrls }: props) {
         <DialogTitle sx={{ paddingBottom: 0 }}>{name}</DialogTitle>
         <DialogContent>
           <ImageList cols={3} gap={30}>
-            {photoUrls.map(({ item: url }) => (
+            {photoUrls.map(({ item: url }, key) => (
               <ImageListItem key={url}>
-                <img src={url} />
+                <img src={url} alt={`${name} #${key + 1}`}/>
               </ImageListItem>
             ))}
           </ImageList>

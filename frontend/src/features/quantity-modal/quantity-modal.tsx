@@ -31,8 +31,8 @@ function QuantityModal({
     <Dialog onClose={handleCloseModal} open={isModalOpen}>
       <DialogTitle component="div">
         <Typography variant="h6">
-          {role == "Procurement" && "Add Quantity"}
-          {role == "Project" && "Remove Quantity"}
+          {role === "Procurement" && "Add Quantity"}
+          {role === "Project" && "Remove Quantity"}
         </Typography>
         <Typography variant="subtitle2">{selectedProductName}</Typography>
       </DialogTitle>

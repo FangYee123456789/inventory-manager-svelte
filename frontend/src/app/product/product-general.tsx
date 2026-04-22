@@ -19,7 +19,7 @@ export default function ProductDashboard() {
     <FilterContext value={{ filter, setFilter, filterArg, setFilterArg }}>
       <Container maxWidth={false} sx={{ marginX: 2 }}>
         <Grid container spacing={2}>
-          {filter != "none" && (
+          {filter !== "none" && (
             <Grid size={12}>
               <Stack direction="row" spacing={2}>
                 <Typography variant="h6" component="h1">

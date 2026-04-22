@@ -53,7 +53,7 @@ export async function getDeliveryOrderIDByOrderIDAndDate(
     .eq("order_date", orderDate.toISOString());
   if (error) {
     //PGRST116 is the error code for not
-    if (error.code == "PGRST116") {
+    if (error.code === "PGRST116") {
       //supabase cannot do .single()
       // because then an error is thrown(not affected by the above error handling)
       // when data is empty
@@ -62,7 +62,7 @@ export async function getDeliveryOrderIDByOrderIDAndDate(
     console.error("Error retrieving delivery order by orderID & Date: ", error);
   }
 
-  if (!data || data.length == 0) {
+  if (!data || data.length === 0) {
     return null;
   }
 

@@ -73,7 +73,7 @@ function ProductTable() {
               <TableCell>Photos</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Quant</TableCell>
-              {(role == "Procurement" || role == "Project") && (
+              {(role === "Procurement" || role === "Project") && (
                 <TableCell>Modify</TableCell>
               )}
             </TableRow>

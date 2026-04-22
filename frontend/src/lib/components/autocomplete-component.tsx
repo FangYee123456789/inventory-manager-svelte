@@ -31,7 +31,7 @@ export default function AutocompleteComponent<
 
   useEffect(() => {
     if (value) returnIDAsValue(value.id);
-  }, [value]);
+  }, [value, returnIDAsValue]);
 
   async function handleNewOption(inputString: string) {
     setLoading(true);

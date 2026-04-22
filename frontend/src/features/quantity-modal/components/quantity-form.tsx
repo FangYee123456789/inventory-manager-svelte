@@ -56,7 +56,7 @@ function QuantityForm({
     const orderDate = new Date(Date.parse(data.get("doDate") as string));
     const supplierID = data.get("supplierID") as string;
 
-    if (role == "Procurement") {
+    if (role === "Procurement") {
       //Check if there is already a delivery order
       let deliveryID = await getDeliveryOrderIDByOrderIDAndDate(
         orderID,
@@ -113,13 +113,13 @@ function QuantityForm({
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  {role == "Procurement" ? "+" : "-"}
+                  {role === "Procurement" ? "+" : "-"}
                 </InputAdornment>
               ),
             },
           }}
         />
-        {role == "Procurement" && (
+        {role === "Procurement" && (
           <>
             <Typography variant="h6">Delivery Order</Typography>
             <TextField

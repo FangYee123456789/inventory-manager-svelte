@@ -5,6 +5,6 @@ export function filterTransactionsByProductID(
   transactionArray: transaction[],
 ): transaction[] {
   return transactionArray.filter(
-    (transaction) => transaction.product.masterID == productID,
+    (transaction) => transaction.product.masterID === productID,
   );
 }

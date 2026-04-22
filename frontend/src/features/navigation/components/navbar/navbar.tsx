@@ -30,7 +30,7 @@ function Navbar({ toggleDrawer }: props) {
           sx={{ flexGrow: 1, color: "common.black" }}
           component="p"
         >
-          Inventory Management {role ? ": " + role : ""}
+          Inventory Management {role ? `: ${role}` : ""}
         </Typography>
         {session ? <ExitAccount /> : <EnterAccount />}
       </Toolbar>

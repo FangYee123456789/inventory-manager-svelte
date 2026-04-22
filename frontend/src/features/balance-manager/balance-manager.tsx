@@ -34,7 +34,7 @@ export default function BalanceManager() {
     setBalanceExpression(e.target.value);
 
     //If it is a number, it means an expression has just been calculated. Thus, previousBalance needs to be updated.
-    if (!isNaN(+e.target.value)) {
+    if (!Number.isNaN(e.target.value)) {
       setPreviousBalance(+e.target.value);
     }
   }
@@ -71,7 +71,7 @@ export default function BalanceManager() {
     let finalChanges = balanceChanges;
 
     //Check if there is an expression when confirming and call handleBalanceFormSubmit if there is
-    if (isNaN(+balanceExpression)) {
+    if (Number.isNaN(balanceExpression)) {
       finalChanges = handleBalanceFormSubmit();
     }
     await insertBulkBalanceTransactions(finalChanges);

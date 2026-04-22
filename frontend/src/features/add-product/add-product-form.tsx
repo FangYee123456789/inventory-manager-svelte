@@ -37,7 +37,7 @@ function AddProductForm() {
 
   async function handleFormSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (selectedCategoryID == "") {
+    if (selectedCategoryID === "") {
       console.error("no category selected");
       alert(`Error, try clicking "Add" in the Category Input`);
       return;
@@ -107,7 +107,6 @@ function AddProductForm() {
         <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
         <Button
           component="label"
-          role={undefined}
           variant="contained"
           color="secondary"
           tabIndex={-1}
