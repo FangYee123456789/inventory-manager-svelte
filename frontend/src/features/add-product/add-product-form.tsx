@@ -50,6 +50,7 @@ function AddProductForm() {
 
     const initialQuantity = Number(formData.get("quantity"));
     const productPhotos = formData.getAll("img") as File[];
+    const isDisabled = formData.get("disabled") === "on";
 
     const imageUrls: string[] = [];
 
@@ -72,7 +73,7 @@ function AddProductForm() {
       photo_paths: imageUrls,
       category_id: categoryID,
       initial_quantity: initialQuantity,
-      disabled: false,
+      disabled: isDisabled,
     };
 
     const success = await insertNewProduct(newProduct);
@@ -106,7 +107,10 @@ function AddProductForm() {
           name="quantity"
           slotProps={{ htmlInput: { min: 0, step: 1 } }}
         />
-        <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+        <FormControlLabel
+          control={<Checkbox name="disabled" />}
+          label="Disabled"
+        />
         <Button
           component="label"
           variant="contained"
