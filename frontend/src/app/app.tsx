@@ -5,9 +5,9 @@ import { RoleContext, SessionContext } from "lib/context/context";
 import { supabase } from "lib/database/supabase";
 import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
-import MissingPage from "./missing-page/missing-page";
 import ProductAdmin from "./product/product-admin";
 import ProductGeneral from "./product/product-general";
+import MissingPage from "./misc/missing-page";
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
