@@ -28,14 +28,14 @@ const options = {
 };
 
 function AddProductForm() {
-  const [productCategories, setProductCategories] = useState<category[]>([]);
+  const [categories, setcategories] = useState<category[]>([]);
   const [selectedCategoryID, setSelectedCategoryID] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchCategories() {
       const categoryArray = await getAllProductCategories();
-      setProductCategories(categoryArray);
+      setcategories(categoryArray);
     }
     fetchCategories();
   }, []);
@@ -49,7 +49,7 @@ function AddProductForm() {
       console.log(formData);
 
       const masterID = formData.get("masterID") as string;
-      const productName = formData.get("name") as string;
+      const name = formData.get("name") as string;
       const categoryID = selectedCategoryID;
 
       const initialQuantity = Number(formData.get("quantity"));
@@ -59,9 +59,9 @@ function AddProductForm() {
       const imageUrls: photoObj[] = [];
 
       //I don't know why it doesnt just return a null or whatever but when there are no files selected, this is returned and must be accounted for.
-      if (productPhotos[0].type !== "application/octet-stream") {
+      if (photos && photos[0].type !== "application/octet-stream") {
         // forEach cannot be asynchronous... ts cost me an hour of my life
-        const uploadPromises = productPhotos.map(async (file) => {
+        const uploadPromises = photos.map(async (file) => {
           // console.log("Original file size: ", (file.size / 1024 / 1024).toFixed(2) + "MB");
           const compressedFile = await imageCompression(file, options);
           // console.log("Compressed size: ", (compressedFile.size / 1024 / 1024).toFixed(2) + "MB");
@@ -74,7 +74,7 @@ function AddProductForm() {
 
       const newProduct: productInsert = {
         master_id: masterID,
-        name: productName,
+        name: name,
         photo_paths: imageUrls,
         category_id: categoryID === "" ? null : categoryID,
         initial_quantity: initialQuantity,
@@ -113,7 +113,7 @@ function AddProductForm() {
         <TextField label="Name" required name="name" />
         <AutocompleteComponent
           label="Category"
-          optionsArray={productCategories}
+          optionsArray={categories}
           databaseInsert={insertNewCategory}
           returnIDAsValue={handleCategoryIDChange}
           isRequired={false}
