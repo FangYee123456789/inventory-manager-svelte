@@ -28,7 +28,7 @@ const options = {
 };
 
 function AddProductForm() {
-  const [categories, setcategories] = useState<category[]>([]);
+  const [categories, setCategories] = useState<category[]>([]);
   const [selectedCategoryID, setSelectedCategoryID] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
