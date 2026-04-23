@@ -17,7 +17,7 @@ import {
 import { insertNewProduct } from "lib/database/products-api";
 import { uploadImage } from "lib/database/storage-api";
 import { MuiFileInput } from "mui-file-input";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { category, photoObj, productInsert } from "types/supabase";
 import Loading from "../../app/misc/loading";
 
@@ -32,13 +32,14 @@ function AddProductForm() {
   const [selectedCategoryID, setSelectedCategoryID] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    async function fetchCategories() {
-      const categoryArray = await getAllProductCategories();
-      setcategories(categoryArray);
-    }
-    fetchCategories();
+  const fetchCategories = useCallback(async () => {
+    const categoryArray = await getAllProductCategories();
+    setCategories(categoryArray);
   }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   async function handleFormSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -93,7 +94,8 @@ function AddProductForm() {
       alert("Item has not been added.");
     }
     // to update categories if a new one was added
-    window.location.reload();
+    fetchCategories();
+    setSelectedCategoryID("");
   }
 
   function handleCategoryIDChange(id: string) {
