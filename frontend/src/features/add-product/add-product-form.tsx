@@ -53,7 +53,7 @@ function AddProductForm() {
       const categoryID = selectedCategoryID;
 
       const initialQuantity = Number(formData.get("quantity"));
-      const productPhotos = formData.getAll("img") as File[];
+      const photos = imgInput;
       const isDisabled = formData.get("disabled") === "on";
 
       const imageUrls: photoObj[] = [];
