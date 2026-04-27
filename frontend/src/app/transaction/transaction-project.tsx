@@ -9,7 +9,7 @@ export default function TransactionProject() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if ((role && role !== "Project") || role !== "Admin") {
+    if (!(role === "Project" || role === "Admin")) {
       navigate("/*");
     }
   }, [role, navigate]);
