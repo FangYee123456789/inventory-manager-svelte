@@ -22,16 +22,16 @@ type item = {
 
 export default function AddItemElement() {
   const [masterNo, setMasterNo] = useState("");
-  const [quantity, setQuantity] = useState<number>(0);
+  const [quantity, setQuantity] = useState<number>();
   const [items, setItems] = useState<item[]>([]);
 
   async function handleClick() {
-    if (masterNo === "" || Number.isNaN(quantity)) {
+    if (masterNo === "" || Number.isNaN(quantity) || !quantity) {
       alert("Please enter master no & qty.");
       return;
     }
 
-    if (quantity < 1 || !Number.isInteger(quantity)) {
+    if (!Number.isInteger(quantity) || quantity < 1) {
       alert("Qty must be an integer larger than 0.");
       return;
     }
