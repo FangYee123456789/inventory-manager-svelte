@@ -109,6 +109,14 @@ export default function AddItemElement() {
           </>     
         ))}
       </List>
+      <Stack direction="row" spacing={2}>
+        <Button type="button" variant="outlined">
+          Clear
+        </Button>
+        <Button type="submit" variant="contained">
+          Submit
+        </Button>
+      </Stack>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import AutocompleteComponent from "lib/components/autocomplete-component";
 import { getAllSuppliers, insertNewSupplier } from "lib/database/suppliers-api";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import AddItemElement from "./add-item-element";
 
 export default function AddDeliveryOrderForm() {
   const [suppliers, setSuppliers] = useState<supplier[]>([]);
-  const [_selectedSupplierID, setSelectedSupplierID] = useState("");
+  const [selectedSupplierID, setSelectedSupplierID] = useState("");
 
   useEffect(() => {
     async function fetchSuppliers(): Promise<void> {
@@ -17,8 +17,20 @@ export default function AddDeliveryOrderForm() {
     fetchSuppliers();
   }, []);
 
+  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const data: FormData = new FormData(e.target);
+
+    const date = data.get("date");
+    const supplierID = selectedSupplierID;
+    const ref = data.get("ref");
+    const items = data.getAll("item")
+
+    console.log(`${date} ${supplierID} ${ref} ${items}`)
+  }
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Typography variant="h5">Add Delivery Order</Typography>
       <Typography variant="h6">Delivery Order Info</Typography>
       <TextField
@@ -41,15 +53,7 @@ export default function AddDeliveryOrderForm() {
       <TextField label="Ref" required fullWidth margin="normal" name="ref"/>
       <hr/>
       <Typography variant="h6" sx={{marginBottom: 2}}>Items</Typography>
-      <AddItemElement />
-      <Stack direction="row" spacing={2}>
-        <Button type="button" variant="outlined">
-          Clear
-        </Button>
-        <Button type="submit" variant="contained">
-          Submit
-        </Button>
-      </Stack>
+      <AddItemElement/>
     </form>
   );
 }
