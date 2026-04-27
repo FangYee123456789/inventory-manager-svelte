@@ -83,7 +83,7 @@ export default function AddItemElement() {
           value={quantity}
           onChange={(e) => setQuantity(Number(e.target.value))}
           type="number"
-          label="qty"
+          label="Quantity"
           placeholder="1"
           slotProps={{ htmlInput: { step: 1, min: 1 } }}
         />
