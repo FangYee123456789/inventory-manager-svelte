@@ -2,7 +2,11 @@ import { TextField, Typography } from "@mui/material";
 import AddItemElement from "./add-item-element";
 
 export function OutgoingTransactionForm() {
-  function handleSubmit() {}
+  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const data: FormData = new FormData(e.target);
+    console.log(data);
+  }
 
   return (
     <form onSubmit={handleSubmit}>

@@ -27,7 +27,7 @@ export type transaction = {
 
 export type transactionInsert = {
   logger_id: string;
-  delivery_id: string;
+  delivery_id?: string;
   product_id: string;
   quantity_changed: number;
 };
