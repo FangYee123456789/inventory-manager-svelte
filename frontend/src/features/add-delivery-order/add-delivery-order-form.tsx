@@ -27,7 +27,7 @@ export default function AddDeliveryOrderForm() {
         label="Delivery Date"
         slotProps={{ inputLabel: { shrink: true } }}
         defaultValue={new Date().toISOString().split("T")[0]}
-        name="doDate"
+        name="date"
         fullWidth
         margin="normal"
       />
