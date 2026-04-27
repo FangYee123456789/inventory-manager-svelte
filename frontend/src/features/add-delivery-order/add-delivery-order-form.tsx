@@ -38,7 +38,7 @@ export default function AddDeliveryOrderForm() {
         returnIDAsValue={setSelectedSupplierID}
         isRequired={true}
       />
-      <TextField label="Ref" required fullWidth margin="normal" />
+      <TextField label="Ref" required fullWidth margin="normal" name="ref"/>
       <hr/>
       <Typography variant="h6" sx={{marginBottom: 2}}>Items</Typography>
       <AddItemElement />

@@ -89,6 +89,7 @@ export default function AddItemElement() {
       </Stack>
       <List>
         {items.map(({ master, name, quantity }) => (<>
+        <input type="hidden" name="item" value={master}/>
           <ListItem
             key={master}
             secondaryAction={
