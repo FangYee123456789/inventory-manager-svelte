@@ -15,7 +15,7 @@ export default function ProductQS() {
   }, [role, navigate]);
 
   return (
-    <Layout spacing={3}>
+    <Layout spacing={5}>
       <AddProductForm />
     </Layout>
   );
