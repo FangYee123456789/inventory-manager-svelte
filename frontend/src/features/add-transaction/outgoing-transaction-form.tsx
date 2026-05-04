@@ -52,13 +52,11 @@ export function OutgoingTransactionForm() {
         });
       }
 
-      if (!insertBulkTransactions(newTransactions)) {
-        throw new Error("Bulk insertion failed");
-      }
+      const isInsertSuccessful = await insertBulkTransactions(newTransactions);
+      if (!isInsertSuccessful) throw new Error("Bulk insertion failed");
 
-      if (!updateQuantities(newTransactions)) {
-        throw new Error("update quantity failed");
-      }
+      const isUpdateSuccessful = await updateQuantities(newTransactions);
+      if (!isUpdateSuccessful) throw new Error("Update quantity failed");
     } catch (e) {
       console.error(e);
       return;
