@@ -6,7 +6,7 @@ import { FilterContext } from "lib/context/context";
 import { useState } from "react";
 import type { FILTER } from "types/misc";
 
-export default function ProductDashboard() {
+export default function ProductGeneral() {
   const [filter, setFilter] = useState<FILTER>("none");
   const [filterArg, setFilterArg] = useState("");
 

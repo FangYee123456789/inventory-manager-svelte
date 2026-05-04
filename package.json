@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx @biomejs/biome lint --write --unsafe ./frontend/src"
+    "fmt": "npx @biomejs/biome format ./frontend/src",
+    "fmt-fix": "npx @biomejs/biome format --write ./frontend/src",
+    "lint": "npx @biomejs/biome lint ./frontend/src",
+    "lint-fix": "npx @biomejs/biome lint --write --unsafe ./frontend/src"
   },
   "repository": {
     "type": "git",

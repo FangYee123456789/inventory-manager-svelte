@@ -1,13 +1,15 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import type { Session } from "@supabase/supabase-js";
-import Navigation from "features/navigation/navigation";
 import { RoleContext, SessionContext } from "lib/context/context";
 import { supabase } from "lib/database/supabase";
 import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
-import ProductAdmin from "./product/product-admin";
-import ProductGeneral from "./product/product-general";
 import Missing from "./misc/missing";
+import Navigation from "./navigation/navigation";
+import ProductGeneral from "./product/product-general";
+import ProductQS from "./product/product-qs";
+import TransactionProcurement from "./transaction/transaction-procurement";
+import TransactionProject from "./transaction/transaction-project";
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -64,7 +66,15 @@ function App() {
             <Routes>
               <Route element={<Navigation />}>
                 <Route index element={<ProductGeneral />} />
-                <Route path="add" element={<ProductAdmin />} />
+                <Route path="add-product" element={<ProductQS />} />
+                <Route
+                  path="incoming-transaction"
+                  element={<TransactionProcurement />}
+                />
+                <Route
+                  path="outgoing-transaction"
+                  element={<TransactionProject />}
+                />
               </Route>
               <Route path="/*" element={<Missing />} />
             </Routes>

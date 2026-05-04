@@ -46,3 +46,33 @@ export async function insertNewProduct(
   }
   return true;
 }
+
+export async function getProductByMaster(master: string): Promise<string> {
+  const { error, data } = await supabase
+    .from("products")
+    .select("name")
+    .eq("master_id", master)
+    .single()
+    .returns<{ name: string }>();
+  if (error) {
+    console.error("Error getting product by master", error);
+    return "";
+  }
+  return data.name;
+}
+
+export async function getQuantityByMaster(
+  master: string,
+): Promise<number | null> {
+  const { error, data } = await supabase
+    .from("products")
+    .select("currentQuantity:current_quantity")
+    .eq("master_id", master)
+    .single()
+    .returns<{ currentQuantity: number }>();
+  if (error) {
+    console.error("Error getting product by master", error);
+    return null;
+  }
+  return data.currentQuantity;
+}
