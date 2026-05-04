@@ -38,11 +38,8 @@ export default function DrawerList() {
             <BookmarkRemoveIcon />
           </DrawerListItem>
         )}
-        {(role === "Admin") && (
-          <DrawerListItem
-            route={"/add-account"}
-            description={"Add account"}
-          >
+        {role === "Admin" && (
+          <DrawerListItem route={"/add-account"} description={"Add account"}>
             <BookmarkRemoveIcon />
           </DrawerListItem>
         )}

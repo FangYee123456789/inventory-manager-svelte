@@ -9,9 +9,9 @@ export default function AccountAdmin() {
   const session = useContext(SessionContext);
   const role = useContext(RoleContext);
 
-  if (!session) return <Loading />
-  if (!(role === "Admin")) return <Missing />
-  
+  if (!session) return <Loading />;
+  if (!(role === "Admin")) return <Missing />;
+
   return (
     <Layout spacing={5}>
       <AddAccountForm />

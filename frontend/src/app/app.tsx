@@ -76,10 +76,7 @@ function App() {
                   path="outgoing-transaction"
                   element={<TransactionProject />}
                 />
-                <Route
-                  path="add-account"
-                  element={<AccountAdmin />}
-                />
+                <Route path="add-account" element={<AccountAdmin />} />
               </Route>
               <Route path="/*" element={<Missing />} />
             </Routes>
