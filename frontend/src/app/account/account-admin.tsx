@@ -5,7 +5,7 @@ import Layout from "../layout";
 import Loading from "../misc/loading";
 import Missing from "../misc/missing";
 
-export default function TransactionProcurement() {
+export default function AccountAdmin() {
   const session = useContext(SessionContext);
   const role = useContext(RoleContext);
 
