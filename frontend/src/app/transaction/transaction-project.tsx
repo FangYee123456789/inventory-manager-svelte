@@ -10,7 +10,6 @@ export default function TransactionProject() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(session);
     if (!session || !(role === "Project" || role === "Admin")) {
       navigate("/*");
     }
