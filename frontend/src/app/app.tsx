@@ -23,8 +23,6 @@ function App() {
       const { error, data } = await supabase.auth.getSession();
       if (error) {
         console.error("Error fetching session: ", error);
-        //Theoretically shouldn't need to return null here
-        //since data would automatically be null
       }
       setSession(data.session);
     }
@@ -53,29 +51,11 @@ function App() {
         console.error("Error fetching profiles: ", error);
         return;
       }
-
-      console.log(data);
       setRole(data.role);
       setIsVerified(data.isVerified);
     }
-
-    // async function fetchUserRole(id: string) {
-    //   const { error, data } = await supabase
-    //     .from("profiles")
-    //     .select("role")
-    //     .eq("id", id)
-    //     .single()
-    //     .returns<{ role: string }>();
-    //   if (error) {
-    //     console.error("Error fetching profiles: ", error);
-    //     return;
-    //   }
-    //   setRole(data.role);
-    // }
-
     if (!session?.user.id) return;
     fetchUser(session.user.id);
-    // fetchUserRole(session.user.id);
   }, [session]);
 
   const VerifiedLayout = () => {
