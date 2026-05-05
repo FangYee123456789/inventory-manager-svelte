@@ -2,6 +2,7 @@ import AddIcon from "@mui/icons-material/Add";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import HomeFilledIcon from "@mui/icons-material/HomeFilled";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { Box, Divider, List } from "@mui/material";
 import { RoleContext } from "lib/context/context";
 import { useContext } from "react";
@@ -40,7 +41,7 @@ export default function DrawerList() {
         )}
         {role === "Admin" && (
           <DrawerListItem route={"/add-account"} description={"Add account"}>
-            <BookmarkRemoveIcon />
+            <PersonAddIcon />
           </DrawerListItem>
         )}
       </List>
