@@ -1,5 +1,6 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import type { Session } from "@supabase/supabase-js";
+import UpdatePasswordForm from "features/update-password/update-password-form";
 import { RoleContext, SessionContext } from "lib/context/context";
 import { supabase } from "lib/database/supabase";
 import { useEffect, useState } from "react";
@@ -14,6 +15,7 @@ import TransactionProject from "./transaction/transaction-project";
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
+  const [isVerified, setIsVerified] = useState<boolean>(false);
   const [role, setRole] = useState("");
 
   useEffect(() => {
@@ -40,23 +42,48 @@ function App() {
   }, []);
 
   useEffect(() => {
-    async function fetchUserRole(id: string) {
+    async function fetchUser(id: string): Promise<void> {
       const { error, data } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, isVerified:is_verified")
         .eq("id", id)
-        .single()
-        .returns<{ role: string }>();
+        .single();
+
       if (error) {
         console.error("Error fetching profiles: ", error);
         return;
       }
+
+      console.log(data);
       setRole(data.role);
+      setIsVerified(data.isVerified);
     }
 
+    // async function fetchUserRole(id: string) {
+    //   const { error, data } = await supabase
+    //     .from("profiles")
+    //     .select("role")
+    //     .eq("id", id)
+    //     .single()
+    //     .returns<{ role: string }>();
+    //   if (error) {
+    //     console.error("Error fetching profiles: ", error);
+    //     return;
+    //   }
+    //   setRole(data.role);
+    // }
+
     if (!session?.user.id) return;
-    fetchUserRole(session.user.id);
+    fetchUser(session.user.id);
+    // fetchUserRole(session.user.id);
   }, [session]);
+
+  const VerifiedLayout = () => {
+    if (!isVerified) {
+      return <UpdatePasswordForm />;
+    }
+    return <Navigation />;
+  };
 
   return (
     <>
@@ -65,7 +92,7 @@ function App() {
         <SessionContext value={session}>
           <BrowserRouter>
             <Routes>
-              <Route element={<Navigation />}>
+              <Route element={<VerifiedLayout />}>
                 <Route index element={<ProductGeneral />} />
                 <Route path="add-product" element={<ProductQS />} />
                 <Route
