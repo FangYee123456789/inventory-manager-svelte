@@ -32,6 +32,7 @@ function App() {
       (_event, session) => {
         setSession(session);
         setRole("");
+        setIsVerified(false);
       },
     );
     return () => {
@@ -59,7 +60,7 @@ function App() {
   }, [session]);
 
   const VerifiedLayout = () => {
-    if (!isVerified) {
+    if (session && !isVerified) {
       return <UpdatePasswordForm />;
     }
     return <Navigation />;
