@@ -1,5 +1,7 @@
 import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USERNAME } from '$env/static/private';
-import postgres from 'postgres';
+import { isHttpError } from '@sveltejs/kit';
+import { error } from 'console';
+import postgres, { PostgresError } from 'postgres';
 
 export const sql = postgres({
 	host: DB_HOST,
@@ -8,3 +10,21 @@ export const sql = postgres({
 	username: DB_USERNAME,
 	password: DB_PASSWORD
 });
+
+export const handleQueryErrors = (e: unknown, customPsqlHandler?: (e: PostgresError) => void) => {
+	console.log(e);
+	if (isHttpError(e)) throw e;
+	if (isPostgresError(e)) {
+		const psqlError = e as PostgresError;
+
+		if (psqlError.code.startsWith('0800')) error(500, 'Database connection failed');
+		if (psqlError.code === '42601') throw new Error('Syntax error found in query statement');
+		if (customPsqlHandler) customPsqlHandler(psqlError);
+		throw new Error('Unhandled psql error', { cause: e });
+	}
+	throw new Error('Unhandled error', { cause: e });
+};
+
+export const isPostgresError = (e: unknown): boolean => {
+	return e instanceof PostgresError;
+};
