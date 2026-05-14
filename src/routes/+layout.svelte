@@ -1,9 +1,12 @@
 <script lang="ts">
+	import favicon from '$lib/assets/favicon.ico';
 	import './layout.css';
-	import favicon from '$lib/assets/favicon.svg';
 
 	let { children } = $props();
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+	<title>Webi Wabo 3</title>
+	<link rel="icon" href={favicon} />
+</svelte:head>
 {@render children()}
