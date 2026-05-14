@@ -4,6 +4,7 @@
 	import './layout.css';
 
 	let { children } = $props();
+	let isLoggedIn: boolean = $state(false);
 </script>
 
 <svelte:head>
@@ -30,34 +31,35 @@
 			</ul>
 		</div>
 	</div>
-	<div class="navbar-center"></div>
+	<div class="navbar-center">
+		<button class="btn" onclick={() => (isLoggedIn = !isLoggedIn)}>{isLoggedIn}</button>
+	</div>
 	<div class="me-2 navbar-end">
-		<div class="dropdown dropdown-end">
-			<div tabindex="0" role="button" class="btn avatar btn-circle btn-ghost">
-				<div class="w-10 rounded-full">
-					<img
-						alt="Tailwind CSS Navbar component"
-						src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-					/>
+		{#if isLoggedIn}
+			<div class="dropdown dropdown-end">
+				<div tabindex="0" role="button" class="btn avatar btn-circle btn-ghost">
+					<div class="w-10 rounded-full bg-green-600"></div>
 				</div>
+				<ul
+					tabindex="-1"
+					class="dropdown-content menu z-1 w-52 rounded-box bg-base-100 p-2 shadow-sm"
+				>
+					<li>
+						<a
+							class="justify-between"
+							href={resolve('/user/[slug]', {
+								slug: '1'
+							})}
+						>
+							Profile
+						</a>
+						<button>Sign out</button>
+					</li>
+				</ul>
 			</div>
-			<ul
-				tabindex="-1"
-				class="dropdown-content menu z-1 mt-3 w-52 menu-sm rounded-box bg-base-100 p-2 shadow"
-			>
-				<li>
-					<a
-						class="justify-between"
-						href={resolve('/user/[slug]', {
-							slug: '1'
-						})}
-					>
-						Profile
-						<span class="badge">New</span>
-					</a>
-				</li>
-			</ul>
-		</div>
+		{:else}
+			<button class="btn">Sign in</button>
+		{/if}
 	</div>
 </div>
 
