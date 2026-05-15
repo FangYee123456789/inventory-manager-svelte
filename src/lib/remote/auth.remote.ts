@@ -1,7 +1,8 @@
 import { form } from '$app/server';
-import { handleQueryErrors, sql } from '$lib/server/postgres';
+import { sql } from '$lib/server/postgres';
 import type { User } from '$lib/types/databaseTypes';
 import { email, password } from '$lib/types/schemaTypes';
+import { handleQueryErrors } from '$lib/utils/errorHandling';
 import { comparePasswordHash } from '$lib/utils/hash';
 import { redirect } from '@sveltejs/kit';
 import * as z from 'zod';
