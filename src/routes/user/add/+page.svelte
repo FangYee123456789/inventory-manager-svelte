@@ -17,7 +17,8 @@
 >
 	<fieldset {disabled} class="fieldset w-xs rounded-box border border-base-300 bg-base-200 p-4">
 		<legend class="fieldset-legend text-xl">Create new user</legend>
-		<input {...password.as('hidden', String(Math.floor(10000000 + Math.random() * 90000000)))} />
+		<!-- <input {...password.as('hidden', String(Math.floor(10000000 + Math.random() * 90000000)))} /> -->
+		<input {...password.as('hidden', '12345678')} />
 		{#each password.issues() as issue, index (index)}
 			<p class="issue">{issue.message}</p>
 		{/each}
