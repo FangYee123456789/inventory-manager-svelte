@@ -3,8 +3,7 @@
 	import favicon from '$lib/assets/favicon.ico';
 	import './layout.css';
 
-	let { children } = $props();
-	let isLoggedIn: boolean = $state(false);
+	let { children, data } = $props();
 </script>
 
 <svelte:head>
@@ -31,11 +30,9 @@
 			</ul>
 		</div>
 	</div>
-	<div class="navbar-center">
-		<button class="btn" onclick={() => (isLoggedIn = !isLoggedIn)}>{isLoggedIn}</button>
-	</div>
+	<div class="navbar-center"></div>
 	<div class="me-2 navbar-end">
-		{#if isLoggedIn}
+		{#if data.user}
 			<div class="dropdown dropdown-end">
 				<div tabindex="0" role="button" class="btn avatar btn-circle btn-ghost">
 					<div class="w-10 rounded-full bg-green-600"></div>
