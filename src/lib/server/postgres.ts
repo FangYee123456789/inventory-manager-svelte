@@ -1,7 +1,8 @@
 import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USERNAME } from '$env/static/private';
 import { isHttpError } from '@sveltejs/kit';
 import { error } from 'console';
-import postgres, { PostgresError } from 'postgres';
+import type { PostgresError } from 'postgres';
+import postgres from 'postgres';
 
 export const sql = postgres({
 	host: DB_HOST,
@@ -26,5 +27,7 @@ export const handleQueryErrors = (e: unknown, customPsqlHandler?: (e: PostgresEr
 };
 
 export const isPostgresError = (e: unknown): boolean => {
-	return e instanceof PostgresError;
+	// "instanceof cannot be used here because PostgresError cannot be used a value"
+	// do you genuinely think you deserve to live
+	return (e as PostgresError).code !== undefined;
 };
