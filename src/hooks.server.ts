@@ -1,5 +1,5 @@
-import { validateSessionToken } from '$lib/remote/auth.remote';
 import { getUser } from '$lib/remote/user.remote';
+import { validateSessionToken } from '$lib/server/sessions';
 
 export async function handle({ event, resolve }) {
 	const token = event.cookies.get('token');
