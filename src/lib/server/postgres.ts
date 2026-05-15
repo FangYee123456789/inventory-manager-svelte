@@ -13,7 +13,6 @@ export const sql = postgres({
 });
 
 export const handleQueryErrors = (e: unknown, customPsqlHandler?: (e: PostgresError) => void) => {
-	console.log(e);
 	if (isHttpError(e)) throw e;
 	if (isPostgresError(e)) {
 		const psqlError = e as PostgresError;
