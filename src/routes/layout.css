@@ -5,4 +5,7 @@
 	:disabled {
 		@apply cursor-not-allowed;
 	}
+	.issue {
+		@apply text-red-600;
+	}
 }
