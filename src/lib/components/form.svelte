@@ -7,6 +7,7 @@
 </script>
 
 <form
+	enctype="multipart/form-data"
 	class="w-125 {classes}"
 	{...remoteForm.enhance(
 		async ({
