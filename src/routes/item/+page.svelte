@@ -10,7 +10,8 @@
 		| 'category'
 		| 'categoryReverse'
 		| 'quantity'
-		| 'quantityReverse';
+		| 'quantityReverse'
+		| 'lastChanged';
 
 	let sortOption = $state<SortOption>('master');
 	let sortedItems = $derived.by(() => {
@@ -31,12 +32,14 @@
 				return sortItems(data.items, 'quantity');
 			case 'quantityReverse':
 				return sortItems(data.items, 'quantity', true);
+			case 'lastChanged':
+				return sortItems(data.items, 'lastChanged');
 		}
 	});
 
 	function sortItems(
 		list: Item[],
-		property: 'master' | 'name' | 'category' | 'quantity',
+		property: 'master' | 'name' | 'category' | 'quantity' | 'lastChanged',
 		isReverse = false
 	): Item[] {
 		if (isReverse)
@@ -44,8 +47,15 @@
 		return list.toSorted((a, b) => String(a[property]).localeCompare(String(b[property])));
 	}
 
-	let selectedItems = $state();
+	let selectedItems = $state([]);
 </script>
+
+<button
+	class="btn {sortOption === 'lastChanged' ? '' : 'btn-soft'} btn-primary"
+	onclick={() => {
+		sortOption = 'lastChanged';
+	}}>Last changed</button
+>
 
 <table class="table max-w-200">
 	<thead>
@@ -89,8 +99,8 @@
 		<th
 			><input
 				type="checkbox"
-				bind:group={selectedItems}
 				value={master}
+				bind:group={selectedItems}
 				onchange={(e) => {
 					const element = e.target as HTMLInputElement;
 					if (element.checked) {
