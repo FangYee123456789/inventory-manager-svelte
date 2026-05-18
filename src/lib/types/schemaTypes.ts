@@ -1,8 +1,16 @@
 import * as z from 'zod';
 
 export const zString = z.string().trim();
-
-export const zNumber = z.number('Please enter a number.').int().gte(0);
+export const zNumber = z
+	.number()
+	.int('Number be an integer.')
+	.gte(0, 'Number must not be negative.');
+export const zImgFile = z
+	.file('Please submit a file.')
+	.mime(
+		['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp'],
+		'Unsupported file format.'
+	); //why don't they have a wildcard bruh
 
 export const serial = z.coerce
 	.number()
