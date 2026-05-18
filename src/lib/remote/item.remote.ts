@@ -4,7 +4,7 @@ import type { Item } from '$lib/types/databaseTypes';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
 import { form } from '$app/server';
 import * as z from 'zod';
-import { zString, masterNumber } from '$lib/types/schemaTypes';
+import { zString, masterNumber, zNumber } from '$lib/types/schemaTypes';
 
 export const getItems = query(async () => {
 	try {
@@ -48,11 +48,12 @@ export const getItemsFullInfo = query(async () => {
 
 export const createItem = form(
 	z.object({
-		masterNumber: masterNumber,
-		name: zString,
-		category: zString,
-		supplier: zString,
-		quantity: z.number()
+		masterNumber,
+		name: zString.min(1, 'Name cannot be empty.'),
+		category: zString.min(1, 'Category cannot be empty.'),
+		supplier: zString.min(1, 'Supplier cannot be empty.'),
+		quantity: zNumber,
+		isDisabled: z.boolean()
 	}),
 	async () => {}
 );
