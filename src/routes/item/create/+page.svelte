@@ -1,12 +1,14 @@
 <script lang="ts">
 	import Form from '$lib/components/form.svelte';
 	import Input from '$lib/components/input.svelte';
+	import InputIssues from '$lib/components/inputIssues.svelte';
 
 	import { createItem } from '$lib/remote/item.remote';
 
 	// const { data } = $props();
 
-	const { masterNumber, name, category, supplier, quantity } = createItem.fields;
+	const { masterNumber, name, category, supplier, quantity, thumbnail, photos, isDisabled } =
+		createItem.fields;
 
 	let isFilling = $state<boolean>(true);
 	const oninput = () => (isFilling = true);
@@ -45,12 +47,19 @@
 	<Input label="Quantity" type="number" field={quantity} {oninput} placeholder="0" value="0" />
 	<fieldset class="fieldset gap-0">
 		<legend class="fieldset-legend">Pick a thumbnail</legend>
-		<input type="file" class="file-input" />
+		<input {...thumbnail.as('file')} class="file-input" />
 		<span class="label">Main photo</span>
 	</fieldset>
+	<InputIssues field={thumbnail} />
 	<fieldset class="fieldset gap-0">
 		<legend class="fieldset-legend">Pick additional photos</legend>
-		<input type="file" class="file-input" multiple />
+		<input {...photos.as('file multiple')} multiple class="file-input" />
 		<span class="label">Gallery photos</span>
 	</fieldset>
+	<InputIssues field={photos} />
+	<label class="label">
+		<input {...isDisabled.as('checkbox')} />
+		Disabled
+	</label>
+	<button type="submit" class="btn btn-primary">Add</button>
 </Form>
