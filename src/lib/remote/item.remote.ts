@@ -2,6 +2,9 @@ import { query } from '$app/server';
 import { sql } from '$lib/server/postgres';
 import type { Item } from '$lib/types/databaseTypes';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
+import { form } from '$app/server';
+import * as z from 'zod';
+import { zString, masterNumber } from '$lib/types/schemaTypes';
 
 export const getItems = query(async () => {
 	try {
@@ -42,3 +45,14 @@ export const getItemsFullInfo = query(async () => {
 		handleQueryErrors(e);
 	}
 });
+
+export const createItem = form(
+	z.object({
+		masterNumber: masterNumber,
+		name: zString,
+		category: zString,
+		supplier: zString,
+		quantity: z.number()
+	}),
+	async () => {}
+);
