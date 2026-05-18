@@ -36,5 +36,5 @@ export type Item = {
 	supplier: string;
 	supplierID?: string;
 	thumbnail: string;
-	photos?: { item: string }[] | [];
+	photos: { item: string }[] | [];
 };
