@@ -30,14 +30,11 @@ export type Category = Generic;
 
 export type Item = {
 	id: number;
-	masterNumber: string;
 	name: string;
 	category: string;
 	categoryID?: string;
 	supplier: string;
 	supplierID?: string;
-	quantity: number;
-	isDisabled: boolean;
-	thumbnailUrl: string;
-	photoUrls?: { item: string }[] | [];
+	thumbnail: string;
+	photos?: { item: string }[] | [];
 };
