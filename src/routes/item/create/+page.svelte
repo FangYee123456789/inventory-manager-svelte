@@ -2,6 +2,7 @@
 	import Form from '$lib/components/form.svelte';
 	import Input from '$lib/components/input.svelte';
 	import InputIssues from '$lib/components/inputIssues.svelte';
+	import InputFile from '$lib/components/inputFile.svelte';
 
 	import { createItem } from '$lib/remote/item.remote';
 
@@ -45,18 +46,13 @@
 		placeholder="Select Supplier or create a new one"
 	/>
 	<Input label="Quantity" type="number" field={quantity} {oninput} placeholder="0" value="0" />
-	<fieldset class="fieldset gap-0">
-		<legend class="fieldset-legend">Pick a thumbnail</legend>
-		<input {...thumbnail.as('file')} class="file-input" />
-		<span class="label">Main photo</span>
-	</fieldset>
-	<InputIssues field={thumbnail} />
-	<fieldset class="fieldset gap-0">
-		<legend class="fieldset-legend">Pick additional photos</legend>
-		<input {...photos.as('file multiple')} multiple class="file-input" />
-		<span class="label">Gallery photos</span>
-	</fieldset>
-	<InputIssues field={photos} />
+	<InputFile label="Pick a thumbnail" type="file" field={thumbnail} subtitle="Main photo" />
+	<InputFile
+		label="Pick additional photos"
+		type="file multiple"
+		field={photos}
+		subtitle="Gallery photos"
+	/>
 	<label class="label">
 		<input {...isDisabled.as('checkbox')} class="checkbox checkbox-lg checkbox-secondary" />
 		Disabled
