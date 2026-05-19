@@ -11,6 +11,27 @@
 
 	let isFilling = $state<boolean>(true);
 	const oninput = () => (isFilling = true);
+
+	$inspect(photos.value());
+	let thumbnailUrl = $derived.by((): string => {
+		let file = thumbnail.value();
+		if (file) {
+			const imageUrl = URL.createObjectURL(file);
+			return imageUrl;
+		}
+		return '';
+	});
+	let photoUrls = $derived.by((): string[] => {
+		let files = photos.value();
+		if (!files) return [];
+		const urlList: string[] = [];
+		files.forEach((file) => {
+			if (!file) return;
+			const imageUrl = URL.createObjectURL(file);
+			urlList.push(imageUrl);
+		});
+		return urlList;
+	});
 </script>
 
 <div class="flex">
@@ -20,7 +41,7 @@
 		errorMsg="Failed to add item"
 		successMsg="Added new item"
 		{isFilling}
-		classes="w-125"
+		classes="grow"
 	>
 		<Input
 			label="Master Number"
@@ -59,4 +80,30 @@
 		<InputIssues field={isDisabled} />
 		<button type="submit" class="btn btn-primary">Add</button>
 	</Form>
+
+	<div class="flex flex-col">
+		{#if thumbnailUrl}
+			<h2>Thumbnail</h2>
+			<img
+				class="max-w-50"
+				src={thumbnailUrl}
+				alt="thumbnail preview"
+				onload={() => URL.revokeObjectURL(thumbnailUrl)}
+			/>
+		{/if}
+		{#if photoUrls.length !== 0}
+			<h2>Gallery</h2>
+			<div class="grid grid-cols-2 gap-2">
+				{#each photoUrls as url, i (i)}
+					<img
+						class="max-w-50"
+						src={url}
+						alt="Gallery img #{i}"
+						onload={() => URL.revokeObjectURL(url)}
+					/>
+				{/each}
+			</div>
+		{/if}
+	</div>
+	<div class="grow"></div>
 </div>
