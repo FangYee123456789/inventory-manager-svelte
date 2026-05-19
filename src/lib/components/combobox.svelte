@@ -2,7 +2,7 @@
 	import type { Generic } from '$lib/types/databaseTypes';
 	import InputIssues from './inputIssues.svelte';
 
-	const { label, field, list, subtitle = '' } = $props();
+	const { label, field, list, subtitle = '', placeholder = '' } = $props();
 
 	let inputValue = $derived.by(() => {
 		if (!field.value()) return '';
@@ -17,7 +17,7 @@
 <div class="mb-4">
 	<label class="input w-full">
 		<span class="label">{label}:</span>
-		<input list={`${label}-list`} {...field.as('text')} />
+		<input list={`${label}-list`} {...field.as('text')} {placeholder} />
 	</label>
 	<span class="label">{subtitle}</span>
 	<InputIssues {field} />

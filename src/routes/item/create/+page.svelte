@@ -57,12 +57,14 @@
 			field={category}
 			list={data.categories}
 			subtitle="New categories can be added as needed"
+			placeholder="Enter category"
 		/>
 		<Combobox
 			label="Supplier"
 			field={supplier}
 			list={data.suppliers}
 			subtitle="New suppliers can be added as needed"
+			placeholder="Enter supplier"
 		/>
 		<Input label="Quantity" type="number" field={quantity} {oninput} placeholder="0" value="0" />
 		<InputFile label="Pick a thumbnail" type="file" field={thumbnail} subtitle="Main photo" />
