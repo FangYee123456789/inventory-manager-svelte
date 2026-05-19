@@ -3,16 +3,17 @@
 	import Input from '$lib/components/input.svelte';
 	import InputIssues from '$lib/components/inputIssues.svelte';
 	import InputFile from '$lib/components/inputFile.svelte';
+	import Combobox from '$lib/components/combobox.svelte';
 
 	import { createItem } from '$lib/remote/item.remote';
-
 	const { masterNumber, name, category, supplier, quantity, thumbnail, photos, isDisabled } =
 		createItem.fields;
+
+	const { data } = $props();
 
 	let isFilling = $state<boolean>(true);
 	const oninput = () => (isFilling = true);
 
-	$inspect(photos.value());
 	let thumbnailUrl = $derived.by((): string => {
 		let file = thumbnail.value();
 		if (file) {
@@ -51,19 +52,17 @@
 			placeholder="Enter master number"
 		/>
 		<Input label="Name" type="text" field={name} {oninput} placeholder="Enter item name" />
-		<Input
+		<Combobox
 			label="Category"
-			type="text"
 			field={category}
-			{oninput}
-			placeholder="Select Category or create a new one"
+			list={data.categories}
+			subtitle="New categories can be added as needed"
 		/>
-		<Input
+		<Combobox
 			label="Supplier"
-			type="text"
 			field={supplier}
-			{oninput}
-			placeholder="Select Supplier or create a new one"
+			list={data.suppliers}
+			subtitle="New suppliers can be added as needed"
 		/>
 		<Input label="Quantity" type="number" field={quantity} {oninput} placeholder="0" value="0" />
 		<InputFile label="Pick a thumbnail" type="file" field={thumbnail} subtitle="Main photo" />
