@@ -1,5 +1,5 @@
 <script lang="ts">
-	import InputIssues from '$lib/components/inputIssues.svelte';
+	import InputIssues from './inputIssues.svelte';
 
 	const { label, type, field, oninput, placeholder = '', value = '' } = $props();
 </script>
