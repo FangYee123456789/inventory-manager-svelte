@@ -27,7 +27,7 @@ export const getItemsFullInfo = query(async () => {
 	try {
 		return await sql<Item[]>`SELECT
        i.id,
-       i.master_number AS "master",
+       i.master_number AS "masterNumber",
        i.name,
        c.name AS "category",
        i.category_id AS "categoryID",
@@ -68,12 +68,15 @@ export const createItem = form(
 	}) => {
 		console.log(masterNumber, name, category, supplier, quantity, thumbnail, photos, isDisabled);
 
-		const [categoryResult] = await sql<
-			Category[]
-		>`INSERT INTO categories (name) VALUES (${category}) ON CONFLICT(name) DO UPDATE SET name = EXCLUDED.name RETURNING *`;
-		const [supplierResult] = await sql<
-			Supplier[]
-		>`INSERT INTO suppliers (name) VALUES (${supplier}) ON CONFLICT(name) DO UPDATE SET name = EXCLUDED.name RETURNING *;`;
+		const [categoryResult] = await sql<Category[]>`
+			INSERT INTO categories (name) VALUES (${category}) 
+			ON CONFLICT(name) DO UPDATE SET name = name 
+			RETURNING *`;
+
+		const [supplierResult] = await sql<Supplier[]>`
+			INSERT INTO suppliers (name) VALUES (${supplier}) 
+			ON CONFLICT(name) DO UPDATE SET name = name 
+			RETURNING *;`;
 
 		const thumbnailStr = 'http://dummyimage.com/173x100.png/dddddd/000000';
 		const photosArray = [
@@ -107,9 +110,7 @@ export const createItem = form(
 		i.quantity
 		FROM i 
 		JOIN categories c ON i.category_id = c.id 
-		JOIN suppliers s ON i.supplier_id = s.id
-`;
-		console.log(itemResult);
+		JOIN suppliers s ON i.supplier_id = s.id`;
 
 		return { success: true, item: itemResult };
 	}
