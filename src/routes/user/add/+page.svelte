@@ -18,18 +18,21 @@
 	<input {...password.as('hidden', '12345678')} />
 	<Input label="Email" type="email" field={email} {oninput} placeholder="example@domain.com" />
 	<Input label="Name" type="text" field={name} {oninput} placeholder="John" />
-	<label>
-		<input class="radio" {...role.as('radio', 'QS')} required />
-		QS
-	</label>
-	<label>
-		<input class="radio" {...role.as('radio', 'Procurement')} />
-		Procurement
-	</label>
-	<label>
-		<input class="radio" {...role.as('radio', 'Project')} />
-		Project
-	</label>
+	<div class="flex flex-col space-y-2">
+		<label>
+			<input class="radio" {...role.as('radio', 'QS')} required />
+			QS
+		</label>
+		<label>
+			<input class="radio" {...role.as('radio', 'Procurement')} />
+			Procurement
+		</label>
+		<label>
+			<input class="radio" {...role.as('radio', 'Project')} />
+			Project
+		</label>
+	</div>
+
 	{#each role.issues() as issue, index (index)}
 		<p class="issue">{issue.message}</p>
 	{/each}
