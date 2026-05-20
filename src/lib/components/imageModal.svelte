@@ -10,11 +10,11 @@
 
 <button
 	onclick={() => {
-		const dialog = document.querySelector(`#modal${id}`);
+		const dialog = document.querySelector(`#img-modal${id}`);
 		(dialog as HTMLDialogElement).showModal();
 	}}><img src={thumbnailSrc} alt="thumbnail" loading="lazy" class="w-full" /></button
 >
-<dialog id={`modal${id}`} class="modal">
+<dialog id={`img-modal${id}`} class="modal">
 	<div class="modal-box">
 		<form method="dialog">
 			<button class="btn absolute top-2 right-2 btn-circle btn-ghost btn-sm">✕</button>
