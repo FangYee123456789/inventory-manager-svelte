@@ -2,11 +2,12 @@
 	import ItemCard from '$lib/components/itemCard.svelte';
 
 	const { data } = $props();
-	$inspect(data.item);
 </script>
 
 {#if !data.item}
 	404 not found
 {:else}
-	<ItemCard {...data.item} />
+	<div class="max-w-75">
+		<ItemCard {...data.item} />
+	</div>
 {/if}
