@@ -9,12 +9,12 @@
 		successMsg,
 		isFilling,
 		classes = '',
-		enhanceFunction = defaultEnhance
+		enhanceCallback = defaultEnhance
 	} = $props();
 
 	let isLoading = $state<boolean>(false);
 
-	async function defaultEnhance({ form, submit }: formEnhance) {
+	async function defaultEnhance({ form, submit }: EnhanceParams) {
 		isLoading = true;
 		if (await submit!()) {
 			isFilling = false;
@@ -28,7 +28,7 @@
 <form
 	enctype="multipart/form-data"
 	class="w-full max-w-100 {classes}"
-	{...remoteForm.enhance(enhanceFunction)}
+	{...remoteForm.enhance(enhanceCallback)}
 >
 	<fieldset
 		class="fieldset gap-0 rounded-box border border-base-300 bg-base-200 p-4"
