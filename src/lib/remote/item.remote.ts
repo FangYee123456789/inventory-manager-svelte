@@ -69,9 +69,15 @@ export const createItem = form(
 		console.log(masterNumber, name, category, supplier, quantity, thumbnail, photos, isDisabled);
 
 		const [categoryResult] = await sql<Category[]>`
-			INSERT INTO categories (name) VALUES (${category}) 
-			ON CONFLICT(name) DO UPDATE SET name = name 
-			RETURNING *`;
+			WITH i AS(
+				INSERT INTO categories (name) VALUES (${category}) 
+				ON CONFLICT(name) DO NOTHING
+				RETURNING id
+			)
+			SELECT id FROM i
+			UNION ALL
+			SELECT id FROM categories WHERE name = ${category}
+			LIMIT 1;`;
 
 		const [supplierResult] = await sql<Supplier[]>`
 			INSERT INTO suppliers (name) VALUES (${supplier}) 
