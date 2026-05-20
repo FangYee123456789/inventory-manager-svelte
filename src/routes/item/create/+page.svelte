@@ -1,12 +1,11 @@
 <script lang="ts">
-	import Combobox from '$lib/components/combobox.svelte';
-	import Form from '$lib/components/form.svelte';
-	import Input from '$lib/components/input.svelte';
-	import InputFile from '$lib/components/inputFile.svelte';
-	import InputIssues from '$lib/components/inputIssues.svelte';
-	import { createItem } from '$lib/remote/item.remote';
-	import type { EnhanceParams } from '$lib/types/types';
-	import ItemCard from './itemCard.svelte';
+	import Combobox from '$lib/components/base/combobox.svelte';
+	import Form from '$lib/components/base/form.svelte';
+	import Input from '$lib/components/base/input.svelte';
+	import InputFile from '$lib/components/base/inputFile.svelte';
+	import InputIssues from '$lib/components/base/inputIssues.svelte';
+	import ItemCard from '$lib/components/itemCard.svelte';
+	import { createItem } from '$lib/remote/item.remote.js';
 	import PhotoPreview from './photoPreview.svelte';
 
 	const { masterNumber, name, category, supplier, quantity, thumbnail, photos, isDisabled } =
@@ -17,10 +16,7 @@
 	let isFilling = $state<boolean>(true);
 	const oninput = () => (isFilling = true);
 
-	async function enhanceCallback({ data, submit }: EnhanceParams) {
-		console.log(data);
-		await submit!();
-	}
+	// async function enhanceCallback({ data, submit }: EnhanceParams) {}
 </script>
 
 <div class="flex">
@@ -31,7 +27,6 @@
 		successMsg="Added new item"
 		{isFilling}
 		classes="grow"
-		{enhanceCallback}
 	>
 		<Input
 			label="Master Number"
@@ -76,7 +71,7 @@
 	<div class="flex flex-col">
 		<PhotoPreview thumbnailFile={thumbnail.value()} galleryFiles={photos.value()} />
 	</div>
-	<div class="grow">
+	<div>
 		{#if createItem.result?.success}
 			<ItemCard {...createItem.result.item} />
 		{/if}

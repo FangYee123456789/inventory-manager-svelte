@@ -1,7 +1,8 @@
 <script lang="ts">
-	import Form from '$lib/components/form.svelte';
-	import Input from '$lib/components/input.svelte';
-	import { createUser } from '$lib/remote/user.remote';
+	import Form from "$lib/components/base/form.svelte";
+	import Input from "$lib/components/base/input.svelte";
+	import { createUser } from "$lib/remote/user.remote";
+
 	const { email, password, role, name } = createUser.fields;
 
 	let isFilling = $state<boolean>(true);
