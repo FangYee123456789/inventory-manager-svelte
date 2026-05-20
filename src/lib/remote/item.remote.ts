@@ -88,7 +88,7 @@ export const createItem = form(
 			SELECT id FROM i
 			UNION ALL
 			SELECT id FROM suppliers WHERE name = ${supplier}
-			LIMIT 1;`;`;
+			LIMIT 1;`;
 
 		const thumbnailStr = 'http://dummyimage.com/173x100.png/dddddd/000000';
 		const photosArray = [
