@@ -24,7 +24,7 @@
 			<span class="text-sm">{supplier}</span>
 		</h2>
 		<p>
-			Quantity: {quantity}
+			{quantity} in Inventory
 		</p>
 		<div class="card-actions justify-end">
 			<button class="btn size-12.5 btn-soft btn-error" aria-label="delete" onclick={handleDelete}
