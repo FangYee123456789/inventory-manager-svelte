@@ -6,12 +6,18 @@
 	import InputIssues from '$lib/components/base/inputIssues.svelte';
 	import ItemCard from '$lib/components/itemCard.svelte';
 	import { createItem } from '$lib/remote/item.remote.js';
+	import type { Item } from '$lib/types/databaseTypes.js';
 	import PhotoPreview from './photoPreview.svelte';
 
 	const { masterNumber, name, category, supplier, quantity, thumbnail, photos, isDisabled } =
 		createItem.fields;
 
 	const { data } = $props();
+	let addedItems = $state<Item[]>([]);
+	let deletedItems = $state<string[]>([]);
+	let filteredItems = $derived.by(() => {
+		return addedItems.filter(({ masterNumber }) => !deletedItems.includes(masterNumber));
+	});
 </script>
 
 <div class="flex">
@@ -21,6 +27,9 @@
 		errorMsg="Failed to add item"
 		successMsg="Added new item"
 		classes="grow"
+		onSuccess={() => {
+			if (createItem.result?.item) addedItems.push(createItem.result.item);
+		}}
 	>
 		<Input
 			label="Master Number"
@@ -65,8 +74,8 @@
 		<PhotoPreview thumbnailFile={thumbnail.value()} galleryFiles={photos.value()} />
 	</div>
 	<div>
-		{#if createItem.result?.success}
-			<ItemCard {...createItem.result.item}/>
-		{/if}
+		{#each filteredItems as item (item.id)}
+			<ItemCard {...item} {deletedItems} />
+		{/each}
 	</div>
 </div>
