@@ -101,21 +101,24 @@
 		}}
 	>
 		<th>
-			<input
-				type="checkbox"
-				onclick={(e) => e.stopPropagation()}
-				onchange={(e) => {
-					console.log('checked');
-					const element = e.target as HTMLInputElement;
-					if (element.checked) {
-						element.parentElement?.parentElement?.classList.add('bg-base-300');
-						selectedItems.add(masterNumber);
-					} else {
-						element.parentElement?.parentElement?.classList.remove('bg-base-300');
-						selectedItems.delete(masterNumber);
-					}
-				}}
-			/>
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+			<label class="p-2" onclick={(e) => e.stopPropagation()}>
+				<input
+					type="checkbox"
+					onchange={(e) => {
+						console.log('checked');
+						const element = e.target as HTMLInputElement;
+						if (element.checked) {
+							element.parentElement?.parentElement?.parentElement?.classList.add('bg-base-300');
+							selectedItems.add(masterNumber);
+						} else {
+							element.parentElement?.parentElement?.classList.remove('bg-base-300');
+							selectedItems.delete(masterNumber);
+						}
+					}}
+				/>
+			</label>
 		</th>
 		<th class="w-25 text-2xl">{masterNumber}</th>
 		<th class="flex w-50 items-center justify-center">
