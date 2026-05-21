@@ -3,7 +3,7 @@
 	import { resolve } from '$app/paths';
 	import favicon from '$lib/assets/favicon.ico';
 	import { signOut } from '$lib/remote/auth.remote';
-	import { Toaster } from 'svelte-sonner';
+	import { toast, Toaster } from 'svelte-sonner';
 	import './layout.css';
 
 	let { children, data } = $props();
@@ -58,6 +58,7 @@
 							onclick={async () => {
 								await signOut(data.session.id);
 								invalidateAll();
+								toast.success('Signed out');
 							}}
 							>Sign out
 						</button>
