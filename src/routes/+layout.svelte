@@ -25,7 +25,7 @@
 			>
 				<li><a href={resolve('/item')}>Item List</a></li>
 				<div class="divider m-0.5">QS</div>
-				<li><a href={resolve('/item/create')}>Add Item</a></li>
+				<li><a href={resolve('/item/new')}>Add Item</a></li>
 				<div class="divider m-0.5">Procurement</div>
 				<li><a href={resolve('/item/add')}>Add Delivery Order</a></li>
 				<div class="divider m-0.5">Project</div>
