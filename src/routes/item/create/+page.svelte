@@ -12,11 +12,6 @@
 		createItem.fields;
 
 	const { data } = $props();
-
-	let isFilling = $state<boolean>(true);
-	const oninput = () => (isFilling = true);
-
-	// async function enhanceCallback({ data, submit }: EnhanceParams) {}
 </script>
 
 <div class="flex">
@@ -25,17 +20,15 @@
 		legend="Add new item"
 		errorMsg="Failed to add item"
 		successMsg="Added new item"
-		{isFilling}
 		classes="grow"
 	>
 		<Input
 			label="Master Number"
 			type="text"
 			field={masterNumber}
-			{oninput}
 			placeholder="Enter master number"
 		/>
-		<Input label="Name" type="text" field={name} {oninput} placeholder="Enter item name" />
+		<Input label="Name" type="text" field={name} placeholder="Enter item name" />
 		<Combobox
 			label="Category"
 			field={category}
@@ -50,7 +43,7 @@
 			subtitle="New suppliers can be added as needed"
 			placeholder="Enter supplier"
 		/>
-		<Input label="Quantity" type="number" field={quantity} {oninput} placeholder="0" value="0" />
+		<Input label="Quantity" type="number" field={quantity} placeholder="0" value="0" />
 		<InputFile label="Pick a thumbnail" type="file" field={thumbnail} subtitle="Main photo" />
 		<InputFile
 			label="Pick additional photos"
@@ -73,7 +66,7 @@
 	</div>
 	<div>
 		{#if createItem.result?.success}
-			<ItemCard {...createItem.result.item} />
+			<ItemCard {...createItem.result.item}/>
 		{/if}
 	</div>
 </div>

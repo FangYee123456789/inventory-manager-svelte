@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { EnhanceParams } from '$lib/types/types';
+	import { toast } from 'svelte-sonner';
 
 	let {
 		remoteForm,
@@ -7,7 +8,6 @@
 		children,
 		errorMsg,
 		successMsg,
-		isFilling,
 		classes = '',
 		enhanceCallback = defaultEnhance
 	} = $props();
@@ -17,8 +17,12 @@
 	async function defaultEnhance({ form, submit }: EnhanceParams) {
 		isLoading = true;
 		if (await submit!()) {
-			isFilling = false;
 			if (remoteForm.result?.success !== false) form!.reset();
+			if (remoteForm.result.success) {
+				toast.success(successMsg);
+			} else {
+				toast.error(errorMsg);
+			}
 		}
 
 		isLoading = false;
@@ -38,13 +42,6 @@
 		{@render children()}
 		{#if isLoading}
 			<p>Loading...</p>
-		{/if}
-		{#if remoteForm.result && !isFilling}
-			{#if !remoteForm.result.success}
-				<p class="issue">{errorMsg}</p>
-			{:else}
-				<p class="text-green-600">{successMsg}</p>
-			{/if}
 		{/if}
 	</fieldset>
 </form>
