@@ -17,7 +17,7 @@
 <div class="mb-4">
 	<label class="input w-full">
 		<span class="label">{label}:</span>
-		<input list={`${label}-list`} {...field.as('text')} {placeholder} />
+		<input list={`${label}-list`} {...field.as('text')} {placeholder} spellcheck="false" />
 	</label>
 	<span class="label">{subtitle}</span>
 	<InputIssues {field} />
