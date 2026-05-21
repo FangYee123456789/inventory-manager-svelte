@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import ItemCard from '$lib/components/itemCard.svelte';
 
 	const { data } = $props();
 </script>
@@ -15,7 +14,5 @@
 {#if !data.item}
 	404 not found
 {:else}
-	<div class="max-w-75">
-		<ItemCard {...data.item} />
-	</div>
+	<div class="max-w-75">item here</div>
 {/if}
