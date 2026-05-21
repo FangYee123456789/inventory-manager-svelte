@@ -85,12 +85,11 @@ export const createItem = form(
 		name,
 		category,
 		supplier,
-		quantity,
-		thumbnail,
-		photos,
-		isDisabled = false
+		quantity
+		// thumbnail,
+		// photos,
+		// isDisabled = false
 	}) => {
-		console.log(masterNumber, name, category, supplier, quantity, thumbnail, photos, isDisabled);
 		const thumbnailStr = 'http://dummyimage.com/173x100.png/dddddd/000000';
 		const photosArray = [
 			{ item: 'http://dummyimage.com/108x100.png/ff4444/ffffff' },
@@ -138,6 +137,7 @@ export const createItem = form(
 					RETURNING *
 				)
 				SELECT i.master_number AS "masterNumber",
+				i.id,
 				i.name,
 				c.name AS "category",
 				c.id AS "categoryID",
