@@ -9,7 +9,7 @@
 
 	let fileCount = $derived.by(() => {
 		const value = field.value();
-		if (value === undefined) return 0;
+		if (value === undefined || value.length === 0) return 0;
 		if (value.length) return value.length;
 		return 1;
 	});
