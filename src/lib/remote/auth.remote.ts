@@ -39,11 +39,6 @@ function setTokenCookie(token: string): void {
 	cookies.set('token', token, { path: '/' });
 }
 
-// function getTokenCookie(): string | undefined {
-// 	const { cookies } = getRequestEvent();
-// 	return cookies.get('token');
-// }
-
 function deleteTokenCookie(): void {
 	const { cookies } = getRequestEvent();
 	cookies.delete('token', { path: '/' });
