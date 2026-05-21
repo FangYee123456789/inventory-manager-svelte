@@ -10,6 +10,7 @@
 		successMsg,
 		classes = '',
 		beforeSubmit = async () => Promise<void>,
+		onSuccess = async () => Promise<void>,
 		afterSubmit = async () => Promise<void>
 	} = $props();
 
@@ -21,16 +22,17 @@
 
 		isLoading = true;
 
-		beforeSubmit(form, data, submit);
+		beforeSubmit(data);
 
 		if (await submit()) {
 			if (remoteForm.result.success) {
+				onSuccess(data);
 				form.reset();
 				toast.success(successMsg);
 			} else {
 				toast.error(errorMsg);
 			}
-			afterSubmit(form, data, submit);
+			afterSubmit(data);
 		}
 		isLoading = false;
 	}
