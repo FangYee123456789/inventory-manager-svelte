@@ -9,23 +9,30 @@
 		errorMsg,
 		successMsg,
 		classes = '',
-		enhanceCallback = defaultEnhance
+		beforeSubmit = async () => Promise<void>,
+		afterSubmit = async () => Promise<void>
 	} = $props();
 
 	let isLoading = $state<boolean>(false);
 
-	async function defaultEnhance({ form, submit }: EnhanceParams) {
+	async function enhanceCallback({ form, data, submit }: EnhanceParams) {
+		//this should never happen but ts is funky like that
+		if (!form || !data || !submit) return;
+
 		isLoading = true;
-		if (await submit!()) {
-			if (remoteForm.result?.success !== false) form!.reset();
+
+		beforeSubmit(form, data, submit);
+
+		if (await submit()) {
 			if (remoteForm.result.success) {
+				form.reset();
 				toast.success(successMsg);
 			} else {
 				toast.error(errorMsg);
 			}
+			afterSubmit(form, data, submit);
+			isLoading = false;
 		}
-
-		isLoading = false;
 	}
 </script>
 
