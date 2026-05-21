@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import ImageModal from '$lib/components/imageModal.svelte';
 	import { deleteItem } from '$lib/remote/item.remote';
 	import type { Item } from '$lib/types/databaseTypes';
@@ -25,8 +27,6 @@
 		const modal = document.querySelector(`#confirm-modal${masterNumber}`);
 		(modal as HTMLDialogElement).close();
 	}
-
-	function handleEdit() {}
 </script>
 
 <div class="card bg-accent shadow-sm">
@@ -48,7 +48,10 @@
 			>
 				<span class="icon-[tabler--trash]"></span>
 			</button>
-			<button class="btn h-12.5 w-12.5 btn-soft btn-primary" aria-label="edit" onclick={handleEdit}
+			<button
+				class="btn h-12.5 w-12.5 btn-soft btn-primary"
+				aria-label="edit"
+				onclick={() => goto(resolve('/item/[slug]', { slug: masterNumber }))}
 				><span class="icon-[boxicons--edit]"></span></button
 			>
 		</div>
