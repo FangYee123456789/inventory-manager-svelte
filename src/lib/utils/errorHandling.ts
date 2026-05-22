@@ -2,9 +2,9 @@ import { error, isHttpError, isRedirect } from '@sveltejs/kit';
 import type { PostgresError } from 'postgres';
 
 export const handleQueryErrors = (e: unknown, customPsqlHandler?: (e: PostgresError) => void) => {
+	console.error(e);
 	if (isHttpError(e) || isRedirect(e)) throw e;
 	if (isPostgresError(e)) {
-		console.error(e);
 		const psqlError = e as PostgresError;
 
 		if (psqlError.code.startsWith('0800')) error(500, 'Database connection failed');
