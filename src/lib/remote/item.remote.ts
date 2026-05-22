@@ -3,7 +3,7 @@ import { sql } from '$lib/server/postgres';
 import type { Category, Item, Supplier } from '$lib/types/databaseTypes';
 import { master, zBoolean, zImgFile, zNumber, zString } from '$lib/types/schemaTypes';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
-import { error } from '@sveltejs/kit';
+import { error, invalid } from '@sveltejs/kit';
 import * as z from 'zod';
 
 export const getItems = query(async () => {
@@ -46,7 +46,7 @@ export const getItemsFullInfo = query(async () => {
 	}
 });
 
-export const getItemFullInfo = query(master, async (master) => {
+export const getItemFullInfo = query(zString, async (id) => {
 	try {
 		const result = await sql<Item[]>`SELECT
 			i.id,
@@ -63,7 +63,7 @@ export const getItemFullInfo = query(master, async (master) => {
 			FROM items i
 			JOIN categories c ON i.category_id = c.id
 			JOIN suppliers s ON i.supplier_id = s.id
-			WHERE master_number = ${master}`;
+			WHERE i.id = ${id}`;
 		if (result.count !== 1) error(404, 'Item not found.');
 		return result[0];
 	} catch (e) {
@@ -171,3 +171,81 @@ export const deleteItem = form(z.object({ master }), async ({ master }) => {
 		handleQueryErrors(e);
 	}
 });
+
+export const editMaster = form(z.object({ id: zString, master }), async ({ id, master }, issue) => {
+	try {
+		const result = await sql`UPDATE items SET master_number = ${master} WHERE id = ${id}`;
+		if (result.count !== 1) invalid(issue.master('Failed to update.'));
+	} catch (e) {
+		// Check if deletedItems is present
+		handleQueryErrors(e);
+	}
+});
+
+export const editName = form(
+	z.object({ id: zString, name: zString }),
+	async ({ id, name }, issue) => {
+		try {
+			const result = await sql`UPDATE items SET name = ${name} WHERE id = ${id}`;
+			if (result.count !== 1) invalid(issue.name('Failed to update.'));
+		} catch (e) {
+			handleQueryErrors(e);
+		}
+	}
+);
+
+export const editCategory = form(
+	z.object({ id: zString, category: zString }),
+	async ({ id, category }, issue) => {
+		try {
+			const updatedItem = await sql.begin(async (sql) => {
+				const [categoryResult] = await sql<Category[]>`
+				WITH i AS(
+					INSERT INTO categories (name) VALUES (${category}) 
+					ON CONFLICT(name) DO NOTHING
+					RETURNING id
+				)
+				SELECT id FROM i
+				UNION ALL
+				SELECT id FROM categories WHERE name = ${category}
+				LIMIT 1;`;
+
+				const itemResult =
+					await sql`UPDATE items SET category_id = ${categoryResult.id} WHERE id = ${id}`;
+				return itemResult;
+			});
+
+			if (updatedItem.count !== 1) invalid(issue.category('Failed to update'));
+		} catch (e) {
+			handleQueryErrors(e);
+		}
+	}
+);
+
+export const editSupplier = form(
+	z.object({ id: zString, supplier: zString }),
+	async ({ id, supplier }, issue) => {
+		try {
+			const updatedItem = await sql.begin(async (sql) => {
+				const [supplierResult] = await sql<Supplier[]>`
+				WITH i AS(
+					INSERT INTO suppliers (name) VALUES (${supplier}) 
+					ON CONFLICT(name) DO NOTHING
+					RETURNING id
+				)
+				SELECT id FROM i
+				UNION ALL
+				SELECT id FROM suppliers WHERE name = ${supplier}
+				LIMIT 1;`;
+
+				const itemResult =
+					await sql`UPDATE items SET supplier_id = ${supplierResult.id} WHERE id = ${id}`;
+				return itemResult;
+			});
+
+			if (updatedItem.count !== 1) invalid(issue.supplier('Failed to update'));
+		} catch (e) {
+			handleQueryErrors(e);
+		}
+	}
+);
