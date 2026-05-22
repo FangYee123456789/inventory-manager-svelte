@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import Combobox from '$lib/components/base/combobox.svelte';
 	import Form from '$lib/components/base/form.svelte';
 	import Input from '$lib/components/base/input.svelte';
-	import { editMaster, editName } from '$lib/remote/item.remote';
-	import type { Item } from '$lib/types/databaseTypes.js';
+	import { editCategory, editMaster, editName, editSupplier } from '$lib/remote/item.remote';
+	import type { Generic, Item } from '$lib/types/databaseTypes.js';
 
 	const { data } = $props();
 	let { id, master, name, category, categoryID, supplier, supplierID, quantity }: Item = $derived(
 		data.item
 	);
+	$inspect(category);
 </script>
 
 <div class="breadcrumbs text-sm">
@@ -25,6 +27,20 @@
 	<div class="max-w-75">
 		{@render editForm(editMaster, editMaster.fields.master, master, 'Master')}
 		{@render editForm(editName, editName.fields.name, name, 'Name')}
+		{@render editComboboxForm(
+			editCategory,
+			editCategory.fields.category,
+			data.categories,
+			'Category',
+			category
+		)}
+		{@render editComboboxForm(
+			editSupplier,
+			editSupplier.fields.supplier,
+			data.suppliers,
+			'Supplier',
+			supplier
+		)}
 	</div>
 {/if}
 
@@ -37,5 +53,13 @@
 	>
 		<input {...remoteForm.fields.id.as('hidden', id)} />
 		<Input {field} {value} type="text" placeholder={value} {label} rightButton="Edit" />
+	</Form>
+{/snippet}
+
+<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+{#snippet editComboboxForm(remoteForm: any, field: unknown, list: Generic[], label: string, value)}
+	<Form {remoteForm} errorMsg="error" successMsg="success">
+		<input {...remoteForm.fields.id.as('hidden', id)} />
+		<Combobox {label} {field} {list} rightButton="Edit" {value} />
 	</Form>
 {/snippet}
