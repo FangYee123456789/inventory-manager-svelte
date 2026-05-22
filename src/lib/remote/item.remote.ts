@@ -192,3 +192,32 @@ export const editName = form(
 		}
 	}
 );
+
+export const editCategory = form(
+	z.object({ id: zString, category: zString }),
+	async ({ id, category }, issue) => {
+		try {
+			const updatedItem = await sql.begin(async (sql) => {
+				const [categoryResult] = await sql<Category[]>`
+				WITH i AS(
+					INSERT INTO categories (name) VALUES (${category}) 
+					ON CONFLICT(name) DO NOTHING
+					RETURNING id
+				)
+				SELECT id FROM i
+				UNION ALL
+				SELECT id FROM categories WHERE name = ${category}
+				LIMIT 1;`;
+
+				const itemResult =
+					await sql`UPDATE items SET category_id = ${categoryResult.id} WHERE id = ${id}`;
+				return itemResult;
+			});
+
+			if (updatedItem.count !== 1) invalid(issue.category('Failed to update'));
+		} catch (e) {
+			handleQueryErrors(e);
+		}
+	}
+);
+
