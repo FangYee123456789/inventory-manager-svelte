@@ -221,3 +221,30 @@ export const editCategory = form(
 	}
 );
 
+export const editSupplier = form(
+	z.object({ id: zString, supplier: zString }),
+	async ({ id, supplier }, issue) => {
+		try {
+			const updatedItem = await sql.begin(async (sql) => {
+				const [supplierResult] = await sql<Supplier[]>`
+				WITH i AS(
+					INSERT INTO suppliers (name) VALUES (${supplier}) 
+					ON CONFLICT(name) DO NOTHING
+					RETURNING id
+				)
+				SELECT id FROM i
+				UNION ALL
+				SELECT id FROM suppliers WHERE name = ${supplier}
+				LIMIT 1;`;
+
+				const itemResult =
+					await sql`UPDATE items SET supplier_id = ${supplierResult.id} WHERE id = ${id}`;
+				return itemResult;
+			});
+
+			if (updatedItem.count !== 1) invalid(issue.supplier('Failed to update'));
+		} catch (e) {
+			handleQueryErrors(e);
+		}
+	}
+);
