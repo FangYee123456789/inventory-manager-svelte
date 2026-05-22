@@ -16,11 +16,6 @@ export const zImgFile = z
 // so it has to be marked as optional & default to false to work with checkboxes
 export const zBoolean = z.coerce.boolean<boolean>().optional().default(false);
 
-export const serial = z.coerce
-	.number()
-	.int()
-	.gt(0)
-	.transform((val) => String(val));
 export const email = z.email().trim().toLowerCase();
 export const password = z.string().trim().min(8, 'Min. 8 characters');
 
