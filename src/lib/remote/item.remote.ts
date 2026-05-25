@@ -1,10 +1,12 @@
 import { form, query } from '$app/server';
 import { sql } from '$lib/server/postgres';
-import type { Category, Item, Supplier } from '$lib/types/databaseTypes';
+import type { Item } from '$lib/types/databaseTypes';
 import { master, zBoolean, zImgFile, zNumber, zString } from '$lib/types/schemaTypes';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
 import { error, invalid } from '@sveltejs/kit';
 import * as z from 'zod';
+import { getOrCreateCategory } from './category.remote';
+import { getOrCreateSupplier } from './supplier.remote';
 
 export const getItems = query(async () => {
 	try {
@@ -102,27 +104,11 @@ export const createItem = form(
 		];
 		try {
 			const newItem = await sql.begin(async (sql) => {
-				const [categoryResult] = await sql<Category[]>`
-				WITH i AS(
-					INSERT INTO categories (name) VALUES (${category}) 
-					ON CONFLICT(name) DO NOTHING
-					RETURNING id
-				)
-				SELECT id FROM i
-				UNION ALL
-				SELECT id FROM categories WHERE name = ${category}
-				LIMIT 1;`;
+				const categoryResult = await getOrCreateCategory(category);
+				const supplierResult = await getOrCreateSupplier(supplier);
 
-				const [supplierResult] = await sql<Supplier[]>`
-				WITH i AS(
-					INSERT INTO suppliers (name) VALUES (${supplier}) 
-					ON CONFLICT(name) DO NOTHING
-					RETURNING id
-				)
-				SELECT id FROM i
-				UNION ALL
-				SELECT id FROM suppliers WHERE name = ${supplier}
-				LIMIT 1;`;
+				if (!categoryResult || !supplierResult)
+					throw new Error('Create Item: Category or Supplier result is undefined');
 
 				const [itemResult] = await sql<Item[]>`
 				WITH i AS (
@@ -199,20 +185,10 @@ export const editCategory = form(
 	async ({ id, category }, issue) => {
 		try {
 			const updatedItem = await sql.begin(async (sql) => {
-				const [categoryResult] = await sql<Category[]>`
-				WITH i AS(
-					INSERT INTO categories (name) VALUES (${category}) 
-					ON CONFLICT(name) DO NOTHING
-					RETURNING id
-				)
-				SELECT id FROM i
-				UNION ALL
-				SELECT id FROM categories WHERE name = ${category}
-				LIMIT 1;`;
+				const categoryResult = await getOrCreateCategory(category);
+				if (!categoryResult) throw new Error('editCategory: Category result is unde');
 
-				const itemResult =
-					await sql`UPDATE items SET category_id = ${categoryResult.id} WHERE id = ${id}`;
-				return itemResult;
+				return await sql`UPDATE items SET category_id = ${categoryResult.id} WHERE id = ${id}`;
 			});
 
 			if (updatedItem.count !== 1) invalid(issue.category('Failed to update'));
@@ -227,16 +203,8 @@ export const editSupplier = form(
 	async ({ id, supplier }, issue) => {
 		try {
 			const updatedItem = await sql.begin(async (sql) => {
-				const [supplierResult] = await sql<Supplier[]>`
-				WITH i AS(
-					INSERT INTO suppliers (name) VALUES (${supplier}) 
-					ON CONFLICT(name) DO NOTHING
-					RETURNING id
-				)
-				SELECT id FROM i
-				UNION ALL
-				SELECT id FROM suppliers WHERE name = ${supplier}
-				LIMIT 1;`;
+				const supplierResult = await getOrCreateSupplier(supplier);
+				if (!supplierResult) throw new Error('editSupplier: Supplier result is undefined');
 
 				const itemResult =
 					await sql`UPDATE items SET supplier_id = ${supplierResult.id} WHERE id = ${id}`;
