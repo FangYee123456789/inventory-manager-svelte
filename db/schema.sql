@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict pLtWnmKFseGP2m8Owr1SOk5TjEn1an84byh0owvWuNF9vIp7y64mqRklQXS2Izq
+\restrict W0cpMxUakohacGxDeSVjWEo9fYPmnN6tmv9aQaWwiT7lhr9NyNJ2KObra8r7ciQ
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -78,6 +78,50 @@ ALTER TABLE public.categories ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
+-- Name: incoming_items; Type: TABLE; Schema: public; Owner: inventory_user
+--
+
+CREATE TABLE public.incoming_items (
+    incoming_id bigint NOT NULL,
+    item_id bigint NOT NULL,
+    quantity bigint NOT NULL,
+    CONSTRAINT chk_natural CHECK ((quantity > 0))
+);
+
+
+ALTER TABLE public.incoming_items OWNER TO inventory_user;
+
+--
+-- Name: incoming_transactions; Type: TABLE; Schema: public; Owner: inventory_user
+--
+
+CREATE TABLE public.incoming_transactions (
+    id bigint NOT NULL,
+    logger_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    delivery_date date DEFAULT CURRENT_DATE NOT NULL,
+    supplier_id bigint NOT NULL,
+    delivery_ref text NOT NULL
+);
+
+
+ALTER TABLE public.incoming_transactions OWNER TO inventory_user;
+
+--
+-- Name: incoming_transactions_id_seq; Type: SEQUENCE; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE public.incoming_transactions ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.incoming_transactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: items; Type: TABLE; Schema: public; Owner: inventory_user
 --
 
@@ -89,8 +133,8 @@ CREATE TABLE public.items (
     thumbnail text NOT NULL,
     photos jsonb,
     master_number text NOT NULL,
-    quantity bigint DEFAULT 0 NOT NULL,
-    last_changed timestamp with time zone DEFAULT CURRENT_TIMESTAMP CONSTRAINT items_last_edit_not_null NOT NULL,
+    initial_quantity bigint DEFAULT 0 CONSTRAINT items_quantity_not_null NOT NULL,
+    last_stocked timestamp with time zone DEFAULT CURRENT_TIMESTAMP CONSTRAINT items_last_edit_not_null NOT NULL,
     disabled boolean DEFAULT false NOT NULL
 );
 
@@ -103,6 +147,62 @@ ALTER TABLE public.items OWNER TO inventory_user;
 
 ALTER TABLE public.items ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: outgoing_items; Type: TABLE; Schema: public; Owner: inventory_user
+--
+
+CREATE TABLE public.outgoing_items (
+    outgoing_id bigint NOT NULL,
+    item_id bigint NOT NULL,
+    quantity bigint NOT NULL,
+    CONSTRAINT chk_natural CHECK ((quantity > 0))
+);
+
+
+ALTER TABLE public.outgoing_items OWNER TO inventory_user;
+
+--
+-- Name: net_quantity; Type: VIEW; Schema: public; Owner: inventory_user
+--
+
+CREATE VIEW public.net_quantity AS
+ SELECT (sum(i.quantity) - sum(o.quantity)) AS net_quantity
+   FROM (public.incoming_items i
+     JOIN public.outgoing_items o ON ((i.item_id = o.item_id)));
+
+
+ALTER VIEW public.net_quantity OWNER TO inventory_user;
+
+--
+-- Name: outgoing_transactions; Type: TABLE; Schema: public; Owner: inventory_user
+--
+
+CREATE TABLE public.outgoing_transactions (
+    id bigint NOT NULL,
+    logger_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    expend_date date DEFAULT CURRENT_DATE NOT NULL,
+    expender text NOT NULL,
+    remarks text
+);
+
+
+ALTER TABLE public.outgoing_transactions OWNER TO inventory_user;
+
+--
+-- Name: outgoing_transactions_id_seq; Type: SEQUENCE; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE public.outgoing_transactions ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.outgoing_transactions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -198,6 +298,30 @@ ALTER TABLE ONLY public.categories
 
 
 --
+-- Name: incoming_items incoming_items_pkey; Type: CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.incoming_items
+    ADD CONSTRAINT incoming_items_pkey PRIMARY KEY (incoming_id, item_id);
+
+
+--
+-- Name: incoming_transactions incoming_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.incoming_transactions
+    ADD CONSTRAINT incoming_transactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: incoming_transactions incoming_transactions_supplier_id_delivery_ref_key; Type: CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.incoming_transactions
+    ADD CONSTRAINT incoming_transactions_supplier_id_delivery_ref_key UNIQUE (supplier_id, delivery_ref);
+
+
+--
 -- Name: items items_master_number_key; Type: CONSTRAINT; Schema: public; Owner: inventory_user
 --
 
@@ -219,6 +343,22 @@ ALTER TABLE ONLY public.items
 
 ALTER TABLE ONLY public.items
     ADD CONSTRAINT items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: outgoing_items outgoing_items_pkey; Type: CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.outgoing_items
+    ADD CONSTRAINT outgoing_items_pkey PRIMARY KEY (outgoing_id, item_id);
+
+
+--
+-- Name: outgoing_transactions outgoing_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.outgoing_transactions
+    ADD CONSTRAINT outgoing_transactions_pkey PRIMARY KEY (id);
 
 
 --
@@ -270,6 +410,38 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: incoming_items incoming_items_incoming_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.incoming_items
+    ADD CONSTRAINT incoming_items_incoming_id_fkey FOREIGN KEY (incoming_id) REFERENCES public.incoming_transactions(id);
+
+
+--
+-- Name: incoming_items incoming_items_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.incoming_items
+    ADD CONSTRAINT incoming_items_item_id_fkey FOREIGN KEY (item_id) REFERENCES public.items(id);
+
+
+--
+-- Name: incoming_transactions incoming_transactions_logger_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.incoming_transactions
+    ADD CONSTRAINT incoming_transactions_logger_id_fkey FOREIGN KEY (logger_id) REFERENCES public.users(id);
+
+
+--
+-- Name: incoming_transactions incoming_transactions_supplier_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.incoming_transactions
+    ADD CONSTRAINT incoming_transactions_supplier_id_fkey FOREIGN KEY (supplier_id) REFERENCES public.suppliers(id);
+
+
+--
 -- Name: items items_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: inventory_user
 --
 
@@ -283,6 +455,30 @@ ALTER TABLE ONLY public.items
 
 ALTER TABLE ONLY public.items
     ADD CONSTRAINT items_supplier_id_fkey FOREIGN KEY (supplier_id) REFERENCES public.suppliers(id);
+
+
+--
+-- Name: outgoing_items outgoing_items_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.outgoing_items
+    ADD CONSTRAINT outgoing_items_item_id_fkey FOREIGN KEY (item_id) REFERENCES public.items(id);
+
+
+--
+-- Name: outgoing_items outgoing_items_outgoing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.outgoing_items
+    ADD CONSTRAINT outgoing_items_outgoing_id_fkey FOREIGN KEY (outgoing_id) REFERENCES public.outgoing_transactions(id);
+
+
+--
+-- Name: outgoing_transactions outgoing_transactions_logger_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: inventory_user
+--
+
+ALTER TABLE ONLY public.outgoing_transactions
+    ADD CONSTRAINT outgoing_transactions_logger_id_fkey FOREIGN KEY (logger_id) REFERENCES public.users(id);
 
 
 --
@@ -304,5 +500,5 @@ GRANT ALL ON SCHEMA public TO inventory_user;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict pLtWnmKFseGP2m8Owr1SOk5TjEn1an84byh0owvWuNF9vIp7y64mqRklQXS2Izq
+\unrestrict W0cpMxUakohacGxDeSVjWEo9fYPmnN6tmv9aQaWwiT7lhr9NyNJ2KObra8r7ciQ
 
