@@ -3,19 +3,20 @@
 	import Form from '$lib/components/base/form.svelte';
 	import Input from '$lib/components/base/input.svelte';
 	import InputIssues from '$lib/components/base/inputIssues.svelte';
-	import { getItemName } from '$lib/remote/item.remote.js';
-	import { createTransaction } from '$lib/remote/transaction.remote.js';
+	import { getItemNameByMaster } from '$lib/remote/item.remote.js';
+	import { createIncomingTransaction } from '$lib/remote/transaction.remote.js';
 	import type { EnhanceParams } from '$lib/types/types.js';
 	import {} from 'os';
 	import { toast } from 'svelte-sonner';
 
 	type itemQuantity = {
+		id: string;
 		master: string;
 		name: string;
 		quantity: number;
 	};
 
-	const { date, supplier, deliveryID, masters, quantities } = createTransaction.fields;
+	const { date, supplier, deliveryID, ids, quantities } = createIncomingTransaction.fields;
 
 	const { data } = $props();
 	let masterInput = $state<string>('');
@@ -28,7 +29,7 @@
 </script>
 
 <Form
-	remoteForm={createTransaction}
+	remoteForm={createIncomingTransaction}
 	legend="Enter Delivery Order"
 	errorMsg="Failed to submit DO"
 	successMsg="DO added"
@@ -70,13 +71,14 @@
 				class="btn rounded-s-none btn-secondary"
 				type="button"
 				onclick={async () => {
-					const result = await getItemName(masterInput.toLowerCase().trim()).run();
+					const result = await getItemNameByMaster(masterInput.toLowerCase().trim()).run();
 					if (!result) {
 						toast.error(`Master number ${masterInput} not found.`);
 						return;
 					}
 
 					const newItem = {
+						id: result.id,
 						master: masterInput,
 						name: result.name,
 						quantity: 1
@@ -85,7 +87,7 @@
 				}}><span class="icon-[ic--baseline-plus]"></span></button
 			>
 		</label>
-		<InputIssues field={masters} />
+		<InputIssues field={ids} />
 		<table class="table table-zebra">
 			<thead>
 				<tr>
@@ -95,7 +97,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each items as { master, name, quantity }, i (i)}
+				{#each items as { id, master, name, quantity }, i (i)}
 					<tr>
 						<th class="w-15">{master}</th>
 						<th>{truncateString(name, 20)}</th>
@@ -110,7 +112,7 @@
 								min="0"
 							/>
 							<InputIssues field={quantities[i]} />
-							<input {...masters[i].as('hidden', master)} />
+							<input {...ids[i].as('hidden', id)} />
 							<input {...quantities[i].as('hidden', quantity)} />
 						</th>
 					</tr>
