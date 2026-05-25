@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict W0cpMxUakohacGxDeSVjWEo9fYPmnN6tmv9aQaWwiT7lhr9NyNJ2KObra8r7ciQ
+\restrict ECaShw7vfidqSymZ7pHCjXAwuxpnrz41x1K0dkRtSmVUgseFDWxGHEe0grezfuz
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -500,5 +500,5 @@ GRANT ALL ON SCHEMA public TO inventory_user;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict W0cpMxUakohacGxDeSVjWEo9fYPmnN6tmv9aQaWwiT7lhr9NyNJ2KObra8r7ciQ
+\unrestrict ECaShw7vfidqSymZ7pHCjXAwuxpnrz41x1K0dkRtSmVUgseFDWxGHEe0grezfuz
 
