@@ -4,17 +4,23 @@ import type { DB_Stock } from '$lib/types/databaseTypes';
 import { master, zNumber, zString } from '$lib/types/schemaTypes';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
 import { invalid } from '@sveltejs/kit';
+import { compareDesc, isAfter, isBefore } from 'date-fns';
 import * as z from 'zod';
 import { getOrCreateSupplier } from './supplier.remote';
 
 export const createIncomingTransaction = form(
-	z.object({
-		date: z.iso.date().max(new Date().getTime()),
-		supplier: zString,
-		deliveryID: zString,
-		ids: z.array(master, 'Please add an item.'),
-		quantities: z.array(zNumber.min(1, 'Quantity must be at least 1.'))
-	}),
+	z
+		.object({
+			date: z.iso.date(),
+			supplier: zString,
+			deliveryID: zString,
+			ids: z.array(master, 'Please add an item.'),
+			quantities: z.array(zNumber.min(1, 'Quantity must be at least 1.'))
+		})
+		.refine((obj) => isBefore(obj.date, new Date()), {
+			error: 'Date cannot be in the future.',
+			path: ['date']
+		}),
 	async ({ date, supplier, deliveryID, ids, quantities }, issue) => {
 		const { locals } = getRequestEvent();
 		try {
