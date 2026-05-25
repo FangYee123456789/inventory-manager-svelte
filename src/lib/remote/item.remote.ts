@@ -251,3 +251,13 @@ export const editSupplier = form(
 		}
 	}
 );
+
+export const getItemName = query(zString, async (master) => {
+	try {
+		const result = await sql<Item[]>`SELECT name FROM items WHERE master_number = ${master}`;
+		if (result.count !== 1) return undefined;
+		return result[0];
+	} catch (e) {
+		handleQueryErrors(e);
+	}
+});
