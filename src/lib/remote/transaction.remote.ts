@@ -3,6 +3,7 @@ import { sql } from '$lib/server/postgres';
 import type { DB_Stock } from '$lib/types/databaseTypes';
 import { master, zNumber, zString } from '$lib/types/schemaTypes';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
+import { invalid } from '@sveltejs/kit';
 import * as z from 'zod';
 import { getOrCreateSupplier } from './supplier.remote';
 
@@ -14,7 +15,7 @@ export const createIncomingTransaction = form(
 		ids: z.array(master, 'Please add an item.'),
 		quantities: z.array(zNumber.min(1, 'Quantity must be at least 1.'))
 	}),
-	async ({ date, supplier, deliveryID, ids, quantities }) => {
+	async ({ date, supplier, deliveryID, ids, quantities }, issue) => {
 		const { locals } = getRequestEvent();
 		try {
 			await sql.begin(async () => {
@@ -40,7 +41,18 @@ export const createIncomingTransaction = form(
 			});
 			return { success: true };
 		} catch (e) {
-			handleQueryErrors(e);
+			handleQueryErrors(e, (postgresError) => {
+				if (postgresError.code === '23505') {
+					switch (postgresError.constraint_name) {
+						case 'incoming_transactions_supplier_id_delivery_ref_key':
+							invalid(
+								issue.deliveryID(
+									`This delivery order has already been logged. Verify it's the right supplier & DO, or you can edit the existing one.`
+								)
+							);
+					}
+				}
+			});
 		}
 	}
 );
