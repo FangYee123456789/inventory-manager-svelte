@@ -39,5 +39,5 @@ export type Item = {
 	thumbnail: string;
 	photos: { item: string }[] | [];
 	quantity: number;
-	lastChanged: Date;
+	lastStocked: Date;
 };
