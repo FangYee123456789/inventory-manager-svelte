@@ -1,4 +1,4 @@
-import { form } from '$app/server';
+import { form, getRequestEvent } from '$app/server';
 import { master, zNumber, zString } from '$lib/types/schemaTypes';
 import * as z from 'zod';
 
@@ -11,6 +11,7 @@ export const createTransaction = form(
 		quantities: z.array(zNumber.min(1, 'Quantity must be at least 1.'))
 	}),
 	async ({ date, supplier, id, masters, quantities }) => {
-		console.log(date, supplier, id, masters, quantities);
+		const { locals } = getRequestEvent();
+		console.log(date, supplier, id, masters, quantities, locals.user.id);
 	}
 );
