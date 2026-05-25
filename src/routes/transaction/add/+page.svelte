@@ -52,6 +52,7 @@
 		field={supplier}
 		list={data.suppliers}
 		subtitle="New suppliers can be added as needed"
+		placeholder="Enter supplier name"
 	/>
 	<Input
 		label="DO Number"
@@ -65,7 +66,8 @@
 			<span class="label">Add items:</span>
 			<input type="text" bind:value={masterInput} placeholder="Enter master number" />
 			<button
-				class="btn rounded-s-none btn-primary"
+				aria-label="add-item"
+				class="btn rounded-s-none btn-secondary"
 				type="button"
 				onclick={async () => {
 					const result = await getItemName(masterInput.toLowerCase().trim()).run();
@@ -80,7 +82,7 @@
 						quantity: 1
 					};
 					items.push(newItem);
-				}}>Add item</button
+				}}><span class="icon-[ic--baseline-plus]"></span></button
 			>
 		</label>
 		<InputIssues field={masters} />
