@@ -43,7 +43,7 @@ export type Item = {
 };
 
 export type DB_Stock = {
-	incoming_id: string;
+	transaction_id: string;
 	item_id: string;
 	quantity: number;
 };

@@ -99,7 +99,7 @@ function generateDB_StockArray(
 	const items: DB_Stock[] = [];
 	itemIDs.forEach((id, i) => {
 		items[i] = {
-			incoming_id: transactionID,
+			transaction_id: transactionID,
 			item_id: id,
 			quantity: quantities[i]
 		};
