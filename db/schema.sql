@@ -174,9 +174,13 @@ ALTER TABLE public.outgoing_items OWNER TO inventory_user;
 --
 
 CREATE VIEW public.net_quantity AS
- SELECT (sum(i.quantity) - sum(o.quantity)) AS net_quantity
+ SELECT COALESCE(i.item_id, o.item_id) AS item_id,
+    sum(i.quantity) AS incoming_quantity,
+    sum(o.quantity) AS outgoing_quantity,
+    (COALESCE(sum(i.quantity), (0)::numeric) - COALESCE(sum(o.quantity), (0)::numeric)) AS net
    FROM (public.incoming_items i
-     JOIN public.outgoing_items o ON ((i.item_id = o.item_id)));
+     FULL JOIN public.outgoing_items o USING (item_id))
+  GROUP BY COALESCE(i.item_id, o.item_id);
 
 
 ALTER VIEW public.net_quantity OWNER TO inventory_user;
