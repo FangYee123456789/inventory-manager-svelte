@@ -7,3 +7,10 @@ export type EnhanceParams = {
 		updates: (...updates: RemoteQueryUpdate[]) => Promise<boolean>;
 	};
 };
+
+export type TransactionItem = {
+	id: string;
+	master: string;
+	name: string;
+	quantity: number;
+};

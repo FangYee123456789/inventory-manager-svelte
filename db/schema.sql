@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict ECaShw7vfidqSymZ7pHCjXAwuxpnrz41x1K0dkRtSmVUgseFDWxGHEe0grezfuz
+\restrict PKBFApv4hJklxgz8RFoTzbuLVLaoq0xlhkeM05trJZDV7ae4nPE1rrkX7LEcjeC
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -82,7 +82,7 @@ ALTER TABLE public.categories ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 --
 
 CREATE TABLE public.incoming_items (
-    incoming_id bigint NOT NULL,
+    transaction_id bigint CONSTRAINT incoming_items_incoming_id_not_null NOT NULL,
     item_id bigint NOT NULL,
     quantity bigint NOT NULL,
     CONSTRAINT chk_natural CHECK ((quantity > 0))
@@ -160,7 +160,7 @@ ALTER TABLE public.items ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 --
 
 CREATE TABLE public.outgoing_items (
-    outgoing_id bigint NOT NULL,
+    transaction_id bigint CONSTRAINT outgoing_items_outgoing_id_not_null NOT NULL,
     item_id bigint NOT NULL,
     quantity bigint NOT NULL,
     CONSTRAINT chk_natural CHECK ((quantity > 0))
@@ -174,9 +174,13 @@ ALTER TABLE public.outgoing_items OWNER TO inventory_user;
 --
 
 CREATE VIEW public.net_quantity AS
- SELECT (sum(i.quantity) - sum(o.quantity)) AS net_quantity
+ SELECT COALESCE(i.item_id, o.item_id) AS item_id,
+    sum(i.quantity) AS incoming_quantity,
+    sum(o.quantity) AS outgoing_quantity,
+    (COALESCE(sum(i.quantity), (0)::numeric) - COALESCE(sum(o.quantity), (0)::numeric)) AS net
    FROM (public.incoming_items i
-     JOIN public.outgoing_items o ON ((i.item_id = o.item_id)));
+     FULL JOIN public.outgoing_items o USING (item_id))
+  GROUP BY COALESCE(i.item_id, o.item_id);
 
 
 ALTER VIEW public.net_quantity OWNER TO inventory_user;
@@ -302,7 +306,7 @@ ALTER TABLE ONLY public.categories
 --
 
 ALTER TABLE ONLY public.incoming_items
-    ADD CONSTRAINT incoming_items_pkey PRIMARY KEY (incoming_id, item_id);
+    ADD CONSTRAINT incoming_items_pkey PRIMARY KEY (transaction_id, item_id);
 
 
 --
@@ -350,7 +354,7 @@ ALTER TABLE ONLY public.items
 --
 
 ALTER TABLE ONLY public.outgoing_items
-    ADD CONSTRAINT outgoing_items_pkey PRIMARY KEY (outgoing_id, item_id);
+    ADD CONSTRAINT outgoing_items_pkey PRIMARY KEY (transaction_id, item_id);
 
 
 --
@@ -414,7 +418,7 @@ ALTER TABLE ONLY public.users
 --
 
 ALTER TABLE ONLY public.incoming_items
-    ADD CONSTRAINT incoming_items_incoming_id_fkey FOREIGN KEY (incoming_id) REFERENCES public.incoming_transactions(id);
+    ADD CONSTRAINT incoming_items_incoming_id_fkey FOREIGN KEY (transaction_id) REFERENCES public.incoming_transactions(id);
 
 
 --
@@ -470,7 +474,7 @@ ALTER TABLE ONLY public.outgoing_items
 --
 
 ALTER TABLE ONLY public.outgoing_items
-    ADD CONSTRAINT outgoing_items_outgoing_id_fkey FOREIGN KEY (outgoing_id) REFERENCES public.outgoing_transactions(id);
+    ADD CONSTRAINT outgoing_items_outgoing_id_fkey FOREIGN KEY (transaction_id) REFERENCES public.outgoing_transactions(id);
 
 
 --
@@ -500,5 +504,5 @@ GRANT ALL ON SCHEMA public TO inventory_user;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict ECaShw7vfidqSymZ7pHCjXAwuxpnrz41x1K0dkRtSmVUgseFDWxGHEe0grezfuz
+\unrestrict PKBFApv4hJklxgz8RFoTzbuLVLaoq0xlhkeM05trJZDV7ae4nPE1rrkX7LEcjeC
 
