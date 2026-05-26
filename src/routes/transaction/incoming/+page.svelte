@@ -5,25 +5,15 @@
 	import InputIssues from '$lib/components/base/inputIssues.svelte';
 	import { getItemNameByMaster } from '$lib/remote/item.remote.js';
 	import { createIncomingTransaction } from '$lib/remote/transaction.remote.js';
+	import type { TransactionItem } from '$lib/types/types.js';
+	import { truncateString } from '$lib/utils/stringTransform.js';
 	import { toast } from 'svelte-sonner';
-
-	type itemQuantity = {
-		id: string;
-		master: string;
-		name: string;
-		quantity: number;
-	};
 
 	const { date, supplier, deliveryID, ids, quantities } = createIncomingTransaction.fields;
 
 	const { data } = $props();
 	let masterInput = $state<string>('');
-	let items = $state<itemQuantity[]>([]);
-
-	function truncateString(str: string, maxLength: number): string {
-		if (str.length <= maxLength) return str;
-		return str.slice(0, maxLength - 3) + '...';
-	}
+	let items = $state<TransactionItem[]>([]);
 </script>
 
 <Form
