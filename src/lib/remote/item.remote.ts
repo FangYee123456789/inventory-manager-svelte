@@ -38,11 +38,12 @@ export const getItemsFullInfo = query(async () => {
 			i.supplier_id AS "supplierID",
 			i.thumbnail,
 			i.photos,
-			i.initial_quantity AS "quantity",
+			q.net AS "quantity",
 			i.last_stocked AS "lastStocked"
 			FROM items i
 			JOIN categories c ON i.category_id = c.id
-			JOIN suppliers s ON i.supplier_id = s.id`;
+			JOIN suppliers s ON i.supplier_id = s.id
+			JOIN net_quantity q ON i.id = q.item_id`;
 	} catch (e) {
 		handleQueryErrors(e);
 	}
@@ -60,11 +61,12 @@ export const getItemFullInfo = query(zString, async (id) => {
 			i.supplier_id AS "supplierID",
 			i.thumbnail,
 			i.photos,
-			i.initial_quantity AS "quantity",
+			q.net AS "quantity",
 			i.last_stocked AS "lastStocked"
 			FROM items i
 			JOIN categories c ON i.category_id = c.id
 			JOIN suppliers s ON i.supplier_id = s.id
+			JOIN net_quantity q ON i.id = q.item_id
 			WHERE i.id = ${id}`;
 		if (result.count !== 1) error(404, 'Item not found.');
 		return result[0];
