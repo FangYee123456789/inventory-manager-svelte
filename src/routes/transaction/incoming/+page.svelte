@@ -3,6 +3,7 @@
 	import Form from '$lib/components/base/form.svelte';
 	import Input from '$lib/components/base/input.svelte';
 	import InputIssues from '$lib/components/base/inputIssues.svelte';
+	import TransactionAccordion from '$lib/components/transactionAccordion.svelte';
 	import { getItemNameByMaster } from '$lib/remote/item.remote.js';
 	import { createIncomingTransaction } from '$lib/remote/transaction.remote.js';
 	import type { TransactionItem } from '$lib/types/types.js';
@@ -106,3 +107,4 @@
 	</fieldset>
 	<button class="btn btn-soft btn-primary">Add Delivery Order</button>
 </Form>
+<TransactionAccordion transactions={data.transactions} />
