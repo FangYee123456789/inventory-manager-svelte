@@ -1,6 +1,11 @@
-import { form, getRequestEvent } from '$app/server';
+import { form, getRequestEvent, query } from '$app/server';
 import { sql } from '$lib/server/postgres';
-import type { DB_Stock } from '$lib/types/databaseTypes';
+import type {
+	CompleteIncomingTransaction,
+	DB_Stock,
+	IndividualIncomingTransaction,
+	ItemTransaction
+} from '$lib/types/databaseTypes';
 import { master, zNumber, zString } from '$lib/types/schemaTypes';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
 import { invalid } from '@sveltejs/kit';
@@ -78,7 +83,6 @@ export const createOutgoingTransaction = form(
 					INSERT INTO outgoing_transactions(
 					logger_id, created_at, expend_date, expender, remarks)
 					VALUES(${locals.user.id}, ${new Date()}, ${date}, ${expender}, ${remarks}) RETURNING id`;
-
 				const items = generateDB_StockArray(ids, quantities, transactionResult.id);
 
 				await sql`INSERT INTO outgoing_items ${sql(items)}`;
@@ -90,6 +94,33 @@ export const createOutgoingTransaction = form(
 		}
 	}
 );
+
+export const getIncomingTransactions = query(async () => {
+	try {
+		const result = await sql<IndividualIncomingTransaction[]>`
+		SELECT inc_t.id, 
+			inc_t.created_at AS "createdAt", 
+			inc_t.delivery_date AS "deliveryDate", 
+			s.name AS "supplier", 
+			inc_t.delivery_ref AS "deliveryID",
+			i.master_number AS master,
+			inc_i.item_id AS "itemID",
+			i.name AS "itemName",
+			inc_i.quantity
+		FROM incoming_transactions inc_t
+		JOIN incoming_items inc_i
+		ON inc_t.id = inc_i.transaction_id
+		JOIN items i
+		ON inc_i.item_id = i.id
+		JOIN suppliers s
+		ON inc_t.supplier_id = s.id
+		ORDER BY inc_t.created_at desc`;
+		const sortedTransactions = sortTransactions(result);
+		return sortedTransactions;
+	} catch (e) {
+		handleQueryErrors(e);
+	}
+});
 
 function generateDB_StockArray(
 	itemIDs: string[],
@@ -105,4 +136,45 @@ function generateDB_StockArray(
 		};
 	});
 	return items;
+}
+
+function sortTransactions(
+	transactions: IndividualIncomingTransaction[]
+): CompleteIncomingTransaction[] {
+	if (transactions.length === 0) return [];
+	let count: number = -1; //So that it increments to 0 on the first item
+	let currentID: string = '';
+	const completeList: CompleteIncomingTransaction[] = [];
+
+	for (let i = 0; i < transactions.length; i++) {
+		const {
+			id,
+			createdAt,
+			deliveryDate,
+			supplier,
+			deliveryID,
+			itemID,
+			master,
+			itemName,
+			quantity
+		} = transactions[i];
+		const item: ItemTransaction = { id: itemID, master, name: itemName, quantity };
+
+		if (id !== currentID) {
+			count++;
+			currentID = id;
+			completeList[count] = {
+				id,
+				createdAt,
+				deliveryDate,
+				supplier,
+				deliveryID,
+				items: [item]
+			};
+		} else {
+			completeList[count].items.push(item);
+		}
+	}
+
+	return completeList;
 }

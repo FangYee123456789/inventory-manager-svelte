@@ -8,9 +8,4 @@ export type EnhanceParams = {
 	};
 };
 
-export type TransactionItem = {
-	id: string;
-	master: string;
-	name: string;
-	quantity: number;
-};
+
