@@ -1,6 +1,6 @@
 import { form, query } from '$app/server';
 import { sql } from '$lib/server/postgres';
-import type { Item } from '$lib/types/databaseTypes';
+import type { DetailedItem } from '$lib/types/databaseTypes';
 import { master, zBoolean, zImgFile, zNumber, zString } from '$lib/types/schemaTypes';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
 import { error, invalid } from '@sveltejs/kit';
@@ -28,7 +28,7 @@ export const getItems = query(async () => {
 
 export const getItemsFullInfo = query(async () => {
 	try {
-		return await sql<Item[]>`SELECT
+		return await sql<DetailedItem[]>`SELECT
 			i.id,
 			i.master_number AS "master",
 			i.name,
@@ -51,7 +51,7 @@ export const getItemsFullInfo = query(async () => {
 
 export const getItemFullInfo = query(zString, async (id) => {
 	try {
-		const result = await sql<Item[]>`SELECT
+		const result = await sql<DetailedItem[]>`SELECT
 			i.id,
 			i.master_number AS "master",
 			i.name,
@@ -112,7 +112,7 @@ export const createItem = form(
 				if (!categoryResult || !supplierResult)
 					throw new Error('Create Item: Category or Supplier result is undefined');
 
-				const [itemResult] = await sql<Item[]>`
+				const [itemResult] = await sql<DetailedItem[]>`
 				WITH i AS (
 					INSERT INTO items 
 					(master_number, name, category_id, supplier_id, initial_quantity, thumbnail, photos)
@@ -222,7 +222,12 @@ export const editSupplier = form(
 
 export const getItemNameByMaster = query(zString, async (master) => {
 	try {
-		const result = await sql<Item[]>`SELECT id, name FROM items WHERE master_number = ${master}`;
+		const result = await sql<
+			{
+				id: string;
+				name: string;
+			}[]
+		>`SELECT id, name FROM items WHERE master_number = ${master}`;
 		if (result.count !== 1) return undefined;
 		return result[0];
 	} catch (e) {

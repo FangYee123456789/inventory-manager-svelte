@@ -4,16 +4,16 @@
 	import Input from '$lib/components/base/input.svelte';
 	import InputFile from '$lib/components/base/inputFile.svelte';
 	import InputIssues from '$lib/components/base/inputIssues.svelte';
-	import { createItem } from '$lib/remote/item.remote.js';
-	import type { Item } from '$lib/types/databaseTypes.js';
 	import ItemCard from '$lib/components/itemCard.svelte';
+	import { createItem } from '$lib/remote/item.remote.js';
+	import type { DetailedItem } from '$lib/types/databaseTypes.js';
 	import PhotoPreview from './photoPreview.svelte';
 
 	const { master, name, category, supplier, quantity, thumbnail, photos, isDisabled } =
 		createItem.fields;
 
 	const { data } = $props();
-	let addedItems = $state<Item[]>([]);
+	let addedItems = $state<DetailedItem[]>([]);
 	let deletedItems = $state<string[]>([]);
 	let filteredItems = $derived.by(() => {
 		return addedItems.filter(({ master }) => !deletedItems.includes(master));
