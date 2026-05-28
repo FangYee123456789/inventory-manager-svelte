@@ -7,5 +7,3 @@ export type EnhanceParams = {
 		updates: (...updates: RemoteQueryUpdate[]) => Promise<boolean>;
 	};
 };
-
-
