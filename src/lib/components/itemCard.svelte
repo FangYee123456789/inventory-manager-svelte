@@ -3,7 +3,7 @@
 	import { resolve } from '$app/paths';
 	import ImageModal from '$lib/components/imageModal.svelte';
 	import { deleteItem } from '$lib/remote/item.remote';
-	import type { Item } from '$lib/types/databaseTypes';
+	import type { DetailedItem } from '$lib/types/databaseTypes';
 	import { toast } from 'svelte-sonner';
 
 	let {
@@ -16,7 +16,7 @@
 		thumbnail,
 		photos,
 		deletedItems = undefined
-	}: Item & { deletedItems?: string[] | undefined } = $props();
+	}: DetailedItem & { deletedItems?: string[] | undefined } = $props();
 
 	function openDeleteConfirmation() {
 		const modal = document.querySelector(`#confirm-modal${master}`);
