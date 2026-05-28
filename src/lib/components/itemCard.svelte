@@ -30,7 +30,7 @@
 	}
 </script>
 
-<div class="card bg-accent shadow-sm">
+<div class="card max-w-50 bg-accent shadow-sm">
 	<ImageModal id={master} thumbnailSrc={thumbnail} gallerySrc={photos} />
 	<div class="card-body p-4 text-gray-800">
 		<h2 class="card-title flex-col items-start gap-0 text-2xl">
