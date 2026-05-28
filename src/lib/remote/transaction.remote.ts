@@ -121,6 +121,29 @@ export const getIncomingTransactions = query(async () => {
 	}
 });
 
+export const getOutgoingTransactions = query(async () => {
+	try {
+		const result = await sql<IndividualTransaction[]>`
+		SELECT out_t.id,
+			out_t.created_at AS "createdAt",
+			out_t.expend_date AS "expendDate",
+			out_t.expender,
+			out_t.remarks,
+			i.master_number AS "master",
+			i.id AS "itemID",
+			i.name AS "itemName",
+			out_i.quantity
+		FROM outgoing_transactions out_t
+		JOIN outgoing_items out_i
+		ON out_t.id = out_i.transaction_id
+		JOIN items i
+		ON out_i.item_id = i.id;`;
+		return sortTransactions(result);
+	} catch (e) {
+		handleQueryErrors(e);
+	}
+});
+
 function generateDB_StockArray(
 	itemIDs: string[],
 	quantities: number[],
