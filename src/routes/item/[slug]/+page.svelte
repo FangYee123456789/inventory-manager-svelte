@@ -60,7 +60,8 @@
 {/snippet}
 
 <!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
-{#snippet editComboboxForm(remoteForm: any,
+{#snippet editComboboxForm(
+	remoteForm: any,
 	field: unknown,
 	list: Generic[],
 	label: string,

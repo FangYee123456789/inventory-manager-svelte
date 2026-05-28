@@ -31,12 +31,7 @@
 			if (createItem.result?.item) addedItems.push(createItem.result.item);
 		}}
 	>
-		<Input
-			label="Master"
-			type="text"
-			field={master}
-			placeholder="Enter master number"
-		/>
+		<Input label="Master" type="text" field={master} placeholder="Enter master number" />
 		<Input label="Name" type="text" field={name} placeholder="Enter item name" />
 		<Combobox
 			label="Category"

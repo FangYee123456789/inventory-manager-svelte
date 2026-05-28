@@ -1,21 +1,28 @@
 <script lang="ts">
-	import type { CompleteIncomingTransaction } from '$lib/types/databaseTypes';
-	import { formatRelative } from 'date-fns';
+	import type { CompleteTransaction } from '$lib/types/databaseTypes';
+	import { formatRelativeCustom } from '$lib/utils/dateTransform';
+	import { truncateString } from '$lib/utils/stringTransform';
 
 	type Props = {
-		transactions: CompleteIncomingTransaction[];
+		transactions: CompleteTransaction[];
 	};
 
 	const { transactions }: Props = $props();
 </script>
 
-{#each transactions as { id, createdAt, supplier, deliveryID, items } (id)}
+{#each transactions as { id, createdAt, supplier, deliveryID, expender, remarks, items } (id)}
 	<details class="collapse border border-base-300 bg-base-100" name="my-accordion-det-1">
 		<summary class="collapse-title font-semibold">
-			<div class="flex items-center justify-between">
-				<span>{supplier}, {deliveryID} </span>
+			<div class="flex items-center justify-between gap-10">
+				<span
+					>{supplier ? supplier : expender}{deliveryID
+						? ` ${deliveryID}`
+						: remarks
+							? `, ${remarks}`
+							: ''}
+				</span>
 				<span>
-					{formatRelative(createdAt, new Date())}
+					{formatRelativeCustom(createdAt)}
 					<button class="btn ms-2 btn-soft btn-accent" aria-label="focus">
 						<span class="icon-[ion--navigate]"></span>
 					</button>
@@ -25,7 +32,11 @@
 		<div class="collapse-content text-sm">
 			<ul>
 				{#each items as item, i (i)}
-					<li class="ms-6 list-disc">{item.id} {item.name} +{item.quantity}</li>
+					<li class="ms-6 list-disc">
+						{item.id}
+						{truncateString(item.name, 30)}
+						{deliveryID ? '+' : '-'}{item.quantity}
+					</li>
 				{/each}
 			</ul>
 		</div>

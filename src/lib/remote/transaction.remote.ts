@@ -1,10 +1,10 @@
 import { form, getRequestEvent, query } from '$app/server';
 import { sql } from '$lib/server/postgres';
 import type {
-	CompleteIncomingTransaction,
+	CompleteTransaction,
 	DB_Stock,
-	IndividualIncomingTransaction,
-	ItemTransaction
+	IndividualTransaction,
+	Item
 } from '$lib/types/databaseTypes';
 import { master, zNumber, zString } from '$lib/types/schemaTypes';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
@@ -97,7 +97,7 @@ export const createOutgoingTransaction = form(
 
 export const getIncomingTransactions = query(async () => {
 	try {
-		const result = await sql<IndividualIncomingTransaction[]>`
+		const result = await sql<IndividualTransaction[]>`
 		SELECT inc_t.id, 
 			inc_t.created_at AS "createdAt", 
 			inc_t.delivery_date AS "deliveryDate", 
@@ -121,6 +121,30 @@ export const getIncomingTransactions = query(async () => {
 	}
 });
 
+export const getOutgoingTransactions = query(async () => {
+	try {
+		const result = await sql<IndividualTransaction[]>`
+		SELECT out_t.id,
+			out_t.created_at AS "createdAt",
+			out_t.expend_date AS "expendDate",
+			out_t.expender,
+			out_t.remarks,
+			i.master_number AS "master",
+			i.id AS "itemID",
+			i.name AS "itemName",
+			out_i.quantity
+		FROM outgoing_transactions out_t
+		JOIN outgoing_items out_i
+		ON out_t.id = out_i.transaction_id
+		JOIN items i
+		ON out_i.item_id = i.id
+		ORDER BY out_t.created_at desc;`;
+		return sortTransactions(result);
+	} catch (e) {
+		handleQueryErrors(e);
+	}
+});
+
 function generateDB_StockArray(
 	itemIDs: string[],
 	quantities: number[],
@@ -137,13 +161,11 @@ function generateDB_StockArray(
 	return items;
 }
 
-function sortTransactions(
-	transactions: IndividualIncomingTransaction[]
-): CompleteIncomingTransaction[] {
+function sortTransactions(transactions: IndividualTransaction[]): CompleteTransaction[] {
 	if (transactions.length === 0) return [];
 	let count: number = -1; //So that it increments to 0 on the first item
 	let currentID: string = '';
-	const completeList: CompleteIncomingTransaction[] = [];
+	const completeList: CompleteTransaction[] = [];
 
 	for (let i = 0; i < transactions.length; i++) {
 		const {
@@ -152,24 +174,38 @@ function sortTransactions(
 			deliveryDate,
 			supplier,
 			deliveryID,
+			expendDate,
+			expender,
+			remarks,
 			itemID,
 			master,
 			itemName,
 			quantity
 		} = transactions[i];
-		const item: ItemTransaction = { id: itemID, master, name: itemName, quantity };
+		const item: Item = { id: itemID, master, name: itemName, quantity };
 
 		if (id !== currentID) {
 			count++;
 			currentID = id;
-			completeList[count] = {
-				id,
-				createdAt,
-				deliveryDate,
-				supplier,
-				deliveryID,
-				items: [item]
-			};
+			if (deliveryDate) {
+				completeList[count] = {
+					id,
+					createdAt,
+					deliveryDate,
+					supplier,
+					deliveryID,
+					items: [item]
+				};
+			} else {
+				completeList[count] = {
+					id,
+					createdAt,
+					expendDate,
+					expender,
+					remarks,
+					items: [item]
+				};
+			}
 		} else {
 			completeList[count].items.push(item);
 		}
