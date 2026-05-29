@@ -1,6 +1,6 @@
 import { form, query } from '$app/server';
 import { sql } from '$lib/server/postgres';
-import { publicUrl, uploadFile } from '$lib/server/supabase';
+import { publicUrl, uploadFile } from '$lib/utils/supabase';
 import type { DetailedItem } from '$lib/types/databaseTypes';
 import { master, zBoolean, zImgFile, zNumber, zString } from '$lib/types/schemaTypes';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
