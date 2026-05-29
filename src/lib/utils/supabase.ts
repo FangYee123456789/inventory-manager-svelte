@@ -16,7 +16,7 @@ export async function uploadFile(file: File, name: string) {
 		console.log(error);
 		svelteError(500, 'Failed to upload file.');
 	} else {
-		return await publicUrl(data.path);
+		return data;
 	}
 }
 
