@@ -15,7 +15,7 @@
 		supplier,
 		quantity,
 		thumbnail,
-		photos,
+		gallery,
 		deletedItems = undefined
 	}: DetailedItem & { deletedItems?: string[] | undefined } = $props();
 
@@ -31,7 +31,7 @@
 </script>
 
 <div class="card max-w-50 bg-accent shadow-sm">
-	<ImageModal id={master} thumbnailSrc={thumbnail} gallerySrc={photos} />
+	<ImageModal id={master} thumbnailSrc={thumbnail} gallerySrc={gallery} />
 	<div class="card-body p-4 text-gray-800">
 		<h2 class="card-title flex-col items-start gap-0 text-2xl">
 			{truncateString(name, 15)}

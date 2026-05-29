@@ -18,7 +18,7 @@ export const getItems = query(async () => {
 			category_id AS "categoryID",
 			supplier_id AS "supplierID",
 			thumbnail,
-			photos,
+			gallery,
 			initial_quantity AS "quantity",
 			last_stocked AS "lastStocked"
 			FROM items`;
@@ -38,7 +38,7 @@ export const getItemsFullInfo = query(async () => {
 			s.name AS "supplier",
 			i.supplier_id AS "supplierID",
 			i.thumbnail,
-			i.photos,
+			i.gallery,
 			q.net AS "quantity",
 			i.last_stocked AS "lastStocked"
 			FROM items i
@@ -61,7 +61,7 @@ export const getItemFullInfo = query(zString, async (id) => {
 			s.name AS "supplier",
 			i.supplier_id AS "supplierID",
 			i.thumbnail,
-			i.photos,
+			i.gallery,
 			q.net AS "quantity",
 			i.last_stocked AS "lastStocked"
 			FROM items i
@@ -84,7 +84,7 @@ export const createItem = form(
 		supplier: zString.min(1, 'Supplier cannot be empty.'),
 		quantity: zNumber,
 		thumbnail: zImgFile,
-		photos: z.array(zImgFile),
+		gallery: z.array(zImgFile),
 		isDisabled: zBoolean
 	}),
 	async ({
@@ -94,10 +94,10 @@ export const createItem = form(
 		supplier,
 		quantity,
 		thumbnail
-		// photos,
+		// gallery,
 		// isDisabled = false
 	}) => {
-		const photosArray = [
+		const galleryArray = [
 			{ item: 'http://dummyimage.com/108x100.png/ff4444/ffffff' },
 			{ item: 'http://dummyimage.com/116x100.png/dddddd/000000' },
 			{ item: 'http://dummyimage.com/182x100.png/cc0000/ffffff' },
@@ -120,7 +120,7 @@ export const createItem = form(
 				const [itemResult] = await sql<DetailedItem[]>`
 				WITH i AS (
 					INSERT INTO items
-					(master_number, name, category_id, supplier_id, initial_quantity, thumbnail, photos)
+					(master_number, name, category_id, supplier_id, initial_quantity, thumbnail, gallery)
 					VALUES(
 					${master},
 					${name},
@@ -128,7 +128,7 @@ export const createItem = form(
 					${supplierResult.id},
 					${quantity},
 					${thumbnailUrl},
-					${sql.json(photosArray)})
+					${sql.json(galleryArray)})
 					RETURNING *
 				)
 				SELECT i.master_number AS "master",
@@ -140,7 +140,7 @@ export const createItem = form(
 				s.id AS "supplierID",
 				i.initial_quantity AS "quantity",
 				i.thumbnail,
-				i.photos
+				i.gallery
 				FROM i
 				JOIN categories c ON i.category_id = c.id
 				JOIN suppliers s ON i.supplier_id = s.id;`;

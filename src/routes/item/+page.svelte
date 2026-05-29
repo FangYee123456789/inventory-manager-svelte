@@ -93,7 +93,7 @@
 {/snippet}
 
 {#snippet ItemRow(
-	{ id, master, name, category, thumbnail, photos, quantity }: DetailedItem,
+	{ id, master, name, category, thumbnail, gallery, quantity }: DetailedItem,
 	selectedItems: SvelteSet<string>
 )}
 	<tr class="hover:bg-base-300">
@@ -118,7 +118,7 @@
 		</th>
 		<th class="w-25 text-center text-2xl">{master}</th>
 		<th class="flex w-50 items-center justify-center">
-			<ImageModal id={master} thumbnailSrc={thumbnail} gallerySrc={photos} />
+			<ImageModal id={master} thumbnailSrc={thumbnail} gallerySrc={gallery} />
 		</th>
 		<th><a href={resolve('/item/[slug]', { slug: id })} class="underline">{name}</a></th>
 		<th>{category}</th>

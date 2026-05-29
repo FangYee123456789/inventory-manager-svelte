@@ -9,7 +9,7 @@
 	import type { DetailedItem } from '$lib/types/databaseTypes.js';
 	import PhotoPreview from './photoPreview.svelte';
 
-	const { master, name, category, supplier, quantity, thumbnail, photos, isDisabled } =
+	const { master, name, category, supplier, quantity, thumbnail, gallery, isDisabled } =
 		createItem.fields;
 
 	const { data } = $props();
@@ -52,7 +52,7 @@
 		<InputFile
 			label="Pick additional photos"
 			type="file multiple"
-			field={photos}
+			field={gallery}
 			subtitle="Gallery photos"
 		/>
 		<div class="mb-2">
@@ -66,7 +66,7 @@
 	</Form>
 
 	<div class="flex flex-col">
-		<PhotoPreview thumbnailFile={thumbnail.value()} galleryFiles={photos.value()} />
+		<PhotoPreview thumbnailFile={thumbnail.value()} galleryFiles={gallery.value()} />
 	</div>
 	<div>
 		{#each filteredItems as item (item.id)}
