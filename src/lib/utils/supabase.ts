@@ -1,5 +1,6 @@
 import { PUBLIC_SUPABASE_PUBLISHABLE_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
 import { createClient } from '@supabase/supabase-js';
+import { error as svelteError } from '@sveltejs/kit';
 
 const supabaseUrl = PUBLIC_SUPABASE_URL;
 const supabaseKey = PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -10,12 +11,12 @@ export async function uploadFile(file: File, name: string) {
 	const { data, error } = await supabase.storage
 		.from('item-photos')
 		.upload(`public/${name}.jpg`, file);
-	console.log(data);
 
 	if (error) {
-		console.error(error);
+		console.log(error);
+		svelteError(500, 'Failed to upload file.');
 	} else {
-		return data;
+		return await publicUrl(data.path);
 	}
 }
 
