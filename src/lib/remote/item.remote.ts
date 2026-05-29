@@ -85,17 +85,24 @@ export const createItem = form(
 		thumbnail: zImgFile,
 		gallery: z.array(zImgFile),
 		thumbnailUrl: zString,
+		galleryUrls: z.array(zString),
 		isDisabled: zBoolean
 	}),
-	async ({ master, name, category, supplier, quantity, thumbnailUrl, isDisabled = false }) => {
-		const galleryArray = [
-			{ item: 'http://dummyimage.com/108x100.png/ff4444/ffffff' },
-			{ item: 'http://dummyimage.com/116x100.png/dddddd/000000' },
-			{ item: 'http://dummyimage.com/182x100.png/cc0000/ffffff' },
-			{ item: 'http://dummyimage.com/239x100.png/ff4444/ffffff' },
-			{ item: 'http://dummyimage.com/194x100.png/cc0000/ffffff' }
-		];
+	async ({
+		master,
+		name,
+		category,
+		supplier,
+		quantity,
+		thumbnailUrl,
+		galleryUrls,
+		isDisabled = false
+	}) => {
 		try {
+			const galleryUrlsObj = galleryUrls.map((url) => {
+				return { item: url };
+			});
+
 			const newItem = await sql.begin(async (sql) => {
 				const categoryResult = await getOrCreateCategory(category);
 				const supplierResult = await getOrCreateSupplier(supplier);
@@ -114,7 +121,7 @@ export const createItem = form(
 					${supplierResult.id},
 					${quantity},
 					${thumbnailUrl},
-					${sql.json(galleryArray)},
+					${sql.json(galleryUrlsObj)},
 					${isDisabled})
 					RETURNING *
 				)

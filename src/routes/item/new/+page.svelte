@@ -20,7 +20,8 @@
 		thumbnail,
 		gallery,
 		isDisabled,
-		thumbnailUrl
+		thumbnailUrl,
+		galleryUrls
 	} = createItem.fields;
 
 	const { data } = $props();
@@ -29,6 +30,7 @@
 	let filteredItems = $derived.by(() => {
 		return addedItems.filter(({ master }) => !deletedItems.includes(master));
 	});
+	let galleryUrlArray = $state<string[]>([]);
 
 	async function handleFormSubmit(
 		e: MouseEvent & {
@@ -42,6 +44,15 @@
 		const thumbnailFile = thumbnail.value();
 		if (!thumbnailFile) return;
 		thumbnailUrl.set(await getCompressedUrl(thumbnailFile, `thumbnail_${Date.now()}`));
+
+		const galleryFiles = gallery.value();
+		if (!galleryFiles) return;
+		for (const [i, file] of galleryFiles.entries()) {
+			if (!file) continue;
+			galleryUrlArray.push(await getCompressedUrl(file, `gallery${i}_${Date.now()}`));
+		}
+
+		galleryUrls.set(galleryUrlArray);
 
 		await tick();
 
@@ -61,6 +72,9 @@
 		}}
 	>
 		<input {...thumbnailUrl.as('text')} class="hidden" />
+		{#each galleryUrlArray as url, i (i)}
+			<input {...galleryUrls[i].as('text', url)} class="hidden" />
+		{/each}
 		<Input label="Master" type="text" field={master} placeholder="Enter master number" />
 		<Input label="Name" type="text" field={name} placeholder="Enter item name" />
 		<Combobox
