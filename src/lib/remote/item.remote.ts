@@ -163,6 +163,7 @@ export const editMaster = form(z.object({ id: zString, master }), async ({ id, m
 	try {
 		const result = await sql`UPDATE items SET master_number = ${master} WHERE id = ${id}`;
 		if (result.count !== 1) invalid(issue.master('Failed to update.'));
+		return { success: true };
 	} catch (e) {
 		// Check if deletedItems is present
 		handleQueryErrors(e);
