@@ -66,7 +66,7 @@ export const getItemFullInfo = query(zString, async (id) => {
 			FROM items i
 			JOIN categories c ON i.category_id = c.id
 			JOIN suppliers s ON i.supplier_id = s.id
-			JOIN net_quantity q ON i.id = q.item_id
+			LEFT OUTER JOIN net_quantity q ON i.id = q.item_id
 			WHERE i.id = ${id}`;
 		if (result.count !== 1) error(404, 'Item not found.');
 		return result[0];
