@@ -216,6 +216,18 @@ export const editSupplier = form(
 			});
 
 			if (updatedItem.count !== 1) invalid(issue.supplier('Failed to update'));
+export const editThumbnail = form(
+	z.object({ id: zString, thumbnail: zImgFile, thumbnailUrl: zString }),
+	async ({ id, thumbnailUrl }, issue) => {
+		try {
+			const result = await sql`UPDATE items SET thumbnail = ${thumbnailUrl} WHERE id = ${id}`;
+			if (result.count !== 1) invalid(issue.thumbnail('Failed to update'));
+			return { success: true };
+		} catch (e) {
+			handleQueryErrors(e);
+		}
+	}
+);
 		} catch (e) {
 			handleQueryErrors(e);
 		}
