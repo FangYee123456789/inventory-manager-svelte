@@ -216,6 +216,13 @@ export const editSupplier = form(
 			});
 
 			if (updatedItem.count !== 1) invalid(issue.supplier('Failed to update'));
+			return { success: true };
+		} catch (e) {
+			handleQueryErrors(e);
+		}
+	}
+);
+
 export const editThumbnail = form(
 	z.object({ id: zString, thumbnail: zImgFile, thumbnailUrl: zString }),
 	async ({ id, thumbnailUrl }, issue) => {
@@ -228,6 +235,18 @@ export const editThumbnail = form(
 		}
 	}
 );
+
+export const editGallery = form(
+	z.object({ id: zString, gallery: z.array(zImgFile), galleryUrls: z.array(zString) }),
+	async ({ id, galleryUrls }, issue) => {
+		try {
+			const galleryUrlsObj = galleryUrls.map((url) => {
+				return { item: url };
+			});
+			const result =
+				await sql`UPDATE items SET gallery = ${sql.json(galleryUrlsObj)} WHERE id = ${id}`;
+			if (result.count !== 1) invalid(issue.gallery('Failed to update'));
+			return { success: true };
 		} catch (e) {
 			handleQueryErrors(e);
 		}
