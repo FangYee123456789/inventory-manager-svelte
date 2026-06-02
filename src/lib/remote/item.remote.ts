@@ -175,6 +175,7 @@ export const editName = form(
 		try {
 			const result = await sql`UPDATE items SET name = ${name} WHERE id = ${id}`;
 			if (result.count !== 1) invalid(issue.name('Failed to update.'));
+			return { success: true };
 		} catch (e) {
 			handleQueryErrors(e);
 		}
@@ -193,6 +194,7 @@ export const editCategory = form(
 			});
 
 			if (updatedItem.count !== 1) invalid(issue.category('Failed to update'));
+			return { success: true };
 		} catch (e) {
 			handleQueryErrors(e);
 		}
