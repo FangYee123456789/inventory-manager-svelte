@@ -42,6 +42,7 @@
 	) {
 		e.preventDefault();
 		checked = true;
+		createItem.validate({ includeUntouched: true });
 		const form = e.currentTarget.form;
 		if (!form) return;
 
