@@ -1,13 +1,13 @@
 import { command, form, query } from '$app/server';
 import { sql } from '$lib/server/postgres';
-import type { DetailedItem } from '$lib/types/databaseTypes';
+import type { DetailedItem, Gallery } from '$lib/types/databaseTypes';
 import { master, zBoolean, zImgFile, zNumber, zString } from '$lib/types/schemaTypes';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
 import { error, invalid } from '@sveltejs/kit';
 import * as z from 'zod';
 import { getOrCreateCategory } from './category.remote';
 import { getOrCreateSupplier } from './supplier.remote';
-import { uploadImage } from './upload.remote';
+import { uploadImage, uploadMultipleImages } from './upload.remote';
 
 export const getItems = query(async () => {
 	try {
@@ -84,9 +84,7 @@ export const createItem = form(
 		supplier: zString.min(1, 'Supplier cannot be empty.'),
 		quantity: zNumber,
 		thumbnail: zImgFile,
-		gallery: z.array(zImgFile).default([]),
-		thumbnailUrl: zString,
-		galleryUrls: z.array(zString).default([]),
+		gallery: z.array(zImgFile).optional(),
 		isDisabled: zBoolean
 	}),
 	async ({
@@ -95,14 +93,22 @@ export const createItem = form(
 		category,
 		supplier,
 		quantity,
-		thumbnailUrl,
-		galleryUrls,
+		thumbnail,
+		gallery,
 		isDisabled = false
 	}) => {
 		try {
-			const galleryUrlsObj = galleryUrls.map((url) => {
-				return { item: url };
-			});
+			const thumbnailUrl = await uploadImage({ file: thumbnail, name: `thumbnail` });
+			if (!thumbnailUrl)
+				throw new Error('uploadImage did not return url but did not throw an error');
+
+			let galleryUrls: Gallery = [];
+			if (gallery) {
+				galleryUrls = await uploadMultipleImages({
+					files: gallery,
+					name: 'gallery'
+				});
+			}
 
 			const newItem = await sql.begin(async (sql) => {
 				const categoryResult = await getOrCreateCategory(category);
@@ -122,7 +128,7 @@ export const createItem = form(
 					${supplierResult.id},
 					${quantity},
 					${thumbnailUrl},
-					${sql.json(galleryUrlsObj)},
+					${sql.json(galleryUrls)},
 					${isDisabled})
 					RETURNING *
 				)
