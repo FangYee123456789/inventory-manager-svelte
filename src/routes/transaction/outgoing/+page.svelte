@@ -35,7 +35,7 @@
 			value={new Date().toISOString().split('T')[0]}
 		/>
 		<Input label="User" type="text" field={expender} placeholder="John" subtitle="Who used it" />
-		<Input label="DO Number" field={remarks} type="text" placeholder="E.g. Area item was used at" />
+		<Input label="Remarks" field={remarks} type="text" placeholder="E.g. Area item was used at" />
 		<div class="divider mt-0"></div>
 		<fieldset class="mb-4">
 			<label class="input mb-2 w-full pr-0">
