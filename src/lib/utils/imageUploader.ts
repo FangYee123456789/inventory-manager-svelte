@@ -29,18 +29,16 @@ async function getPublicUrl(name: string) {
 
 async function compressImage(file: File): Promise<File> {
 	const options = {
-		maxSizeMB: 0.1,
+		maxSizeMB: 0.2,
 		maxWidthOrHeight: 500,
 		useWebWorker: true
 	};
 
-	console.log('originalFile instanceof Blob', file instanceof Blob);
-	console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
+	// console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
 
 	try {
 		const compressedFile = await imageCompression(file, options);
-		console.log('compressedFile instanceof Blob', compressedFile instanceof Blob);
-		console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`);
+		console.log(`${compressedFile.size / 1024 / 1024} MB`);
 		return compressedFile;
 	} catch (error) {
 		console.log(error);
@@ -48,7 +46,7 @@ async function compressImage(file: File): Promise<File> {
 	}
 }
 
-async function getCompressedUrl(file: File, name: string): Promise<string> {
+export async function getCompressedUrl(file: File, name: string): Promise<string> {
 	const compressedFile = await compressImage(file);
 	const uploadData = await uploadFile(compressedFile, name);
 	const url = await getPublicUrl(uploadData.path);
@@ -61,17 +59,4 @@ export async function getOneCompressedUrl(
 ): Promise<string> {
 	if (file) return await getCompressedUrl(file, name);
 	return '';
-}
-
-export async function getMultipleCompressedUrl(
-	files: (File | undefined)[],
-	name: string = `gallery_${Date.now()}`
-): Promise<string[]> {
-	const returnArray: string[] = [];
-	if (files) {
-		for (const [i, file] of files.entries()) {
-			if (file) returnArray.push(await getCompressedUrl(file, `${name}_${i}`));
-		}
-	}
-	return returnArray;
 }

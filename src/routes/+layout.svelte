@@ -24,12 +24,18 @@
 				class="dropdown-content menu z-1 w-52 rounded-box bg-base-100 p-2 shadow-sm"
 			>
 				<li><a href={resolve('/item')}>Item List</a></li>
-				<div class="divider m-0.5">QS</div>
-				<li><a href={resolve('/item/new')}>Add Item</a></li>
-				<div class="divider m-0.5">Procurement</div>
-				<li><a href={resolve('/transaction/incoming')}>Add Delivery Order</a></li>
-				<div class="divider m-0.5">Project</div>
-				<li><a href={resolve('/transaction/outgoing')}>Remove Quantity</a></li>
+				{#if data.user?.role === 'QS' || data.user?.role === 'Admin'}
+					<div class="divider m-0.5">QS</div>
+					<li><a href={resolve('/item/new')}>Add Item</a></li>
+				{/if}
+				{#if data.user?.role === `Procurement` || data.user?.role === 'Admin'}
+					<div class="divider m-0.5">Procurement</div>
+					<li><a href={resolve('/transaction/incoming')}>Add Delivery Order</a></li>
+				{/if}
+				{#if data.user?.role === 'Project' || data.user?.role === 'Admin'}
+					<div class="divider m-0.5">Project</div>
+					<li><a href={resolve('/transaction/outgoing')}>Remove Quantity</a></li>
+				{/if}
 			</ul>
 		</div>
 	</div>
@@ -37,6 +43,7 @@
 	<div class="me-2 navbar-end">
 		{#if data.user}
 			<div class="dropdown dropdown-end">
+				<span>{data.user.role}</span>
 				<div tabindex="0" role="button" class="btn avatar btn-circle btn-ghost">
 					<div class="w-10 rounded-full bg-green-600"></div>
 				</div>
@@ -53,10 +60,12 @@
 						>
 							Profile
 						</a>
-						<a href={resolve('/user/new')}>Add new user</a>
+						{#if data.user.role === 'Admin'}
+							<a href={resolve('/user/new')}>Add new user</a>
+						{/if}
 						<button
 							onclick={async () => {
-								await signOut(data.session.id);
+								await signOut(data.session!.id);
 								invalidateAll();
 								toast.success('Signed out');
 							}}
