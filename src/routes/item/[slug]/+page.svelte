@@ -82,74 +82,76 @@
 	404 not found
 {:else}
 	<div class="flex">
-		<div class="max-w-75">
-			{@render editForm(
-				editMaster,
-				editMaster.fields.master,
-				master,
-				'Master',
-				'Failed to update master number.',
-				'Successfully updated master number.'
-			)}
-			{@render editForm(
-				editName,
-				editName.fields.name,
-				name,
-				'Name',
-				'Failed to update name.',
-				'Successfully updated name.'
-			)}
-			{@render editComboboxForm(
-				editCategory,
-				editCategory.fields.category,
-				data.categories,
-				'Category',
-				'Failed to update category.',
-				'Successfully updated category.',
-				category
-			)}
-			{@render editComboboxForm(
-				editSupplier,
-				editSupplier.fields.supplier,
-				data.suppliers,
-				'Supplier',
-				'Failed to update supplier.',
-				'Successfully updated supplier.',
-				supplier
-			)}
-		</div>
-		<div>
-			<Form
-				remoteForm={editThumbnail}
-				errorMsg="Failed to update thumbnail."
-				successMsg="Thumbnail has been updated."
-				afterSubmit={() => (checked = false)}
-			>
-				<input {...thumbnailID.as('hidden', id)} />
-				<input {...thumbnailUrl.as('text')} class="hidden" />
-				<InputFile label="Thumbnail" type="file" field={thumbnail} subtitle="Main photo" />
-				<button class="btn btn-primary" onclick={(e) => handleThumbnailSubmit(e)}>Update</button>
-			</Form>
-			<Form
-				remoteForm={editGallery}
-				errorMsg="Failed to update gallery."
-				successMsg="Gallery has been updated."
-				afterSubmit={() => (checked = false)}
-			>
-				<input {...galleryID.as('hidden', id)} />
-				{#each galleryUrlArray as url, i (i)}
-					<input {...galleryUrls[i].as('text', url)} class="hidden" />
-				{/each}
-				<InputFile
-					label="Additional Photos"
-					type="file multiple"
-					field={gallery}
-					subtitle="Gallery photos"
-				/>
-				<button class="btn btn-primary" onclick={(e) => handleGallerySubmit(e)}>Update</button>
-			</Form>
-		</div>
-		<div><PhotoPreview thumbnailFile={thumbnail.value()} galleryFiles={gallery.value()} /></div>
+		{#if data.user?.role === 'Admin' || data.user?.role === 'QS'}
+			<div class="max-w-75">
+				{@render editForm(
+					editMaster,
+					editMaster.fields.master,
+					master,
+					'Master',
+					'Failed to update master number.',
+					'Successfully updated master number.'
+				)}
+				{@render editForm(
+					editName,
+					editName.fields.name,
+					name,
+					'Name',
+					'Failed to update name.',
+					'Successfully updated name.'
+				)}
+				{@render editComboboxForm(
+					editCategory,
+					editCategory.fields.category,
+					data.categories,
+					'Category',
+					'Failed to update category.',
+					'Successfully updated category.',
+					category
+				)}
+				{@render editComboboxForm(
+					editSupplier,
+					editSupplier.fields.supplier,
+					data.suppliers,
+					'Supplier',
+					'Failed to update supplier.',
+					'Successfully updated supplier.',
+					supplier
+				)}
+			</div>
+			<div>
+				<Form
+					remoteForm={editThumbnail}
+					errorMsg="Failed to update thumbnail."
+					successMsg="Thumbnail has been updated."
+					afterSubmit={() => (checked = false)}
+				>
+					<input {...thumbnailID.as('hidden', id)} />
+					<input {...thumbnailUrl.as('text')} class="hidden" />
+					<InputFile label="Thumbnail" type="file" field={thumbnail} subtitle="Main photo" />
+					<button class="btn btn-primary" onclick={(e) => handleThumbnailSubmit(e)}>Update</button>
+				</Form>
+				<Form
+					remoteForm={editGallery}
+					errorMsg="Failed to update gallery."
+					successMsg="Gallery has been updated."
+					afterSubmit={() => (checked = false)}
+				>
+					<input {...galleryID.as('hidden', id)} />
+					{#each galleryUrlArray as url, i (i)}
+						<input {...galleryUrls[i].as('text', url)} class="hidden" />
+					{/each}
+					<InputFile
+						label="Additional Photos"
+						type="file multiple"
+						field={gallery}
+						subtitle="Gallery photos"
+					/>
+					<button class="btn btn-primary" onclick={(e) => handleGallerySubmit(e)}>Update</button>
+				</Form>
+			</div>
+			<div><PhotoPreview thumbnailFile={thumbnail.value()} galleryFiles={gallery.value()} /></div>
+		{/if}
 		<div>
 			<ItemCard {...data.item} />
 		</div>
