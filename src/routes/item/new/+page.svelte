@@ -8,7 +8,7 @@
 	import ItemCard from '$lib/components/itemCard.svelte';
 	import { createItem } from '$lib/remote/item.remote.js';
 	import type { DetailedItem } from '$lib/types/databaseTypes.js';
-	import { getMultipleCompressedUrl, getOneCompressedUrl } from '$lib/utils/imageUploader.js';
+	import { getOneCompressedUrl, getCompressedUrl } from '$lib/utils/imageUploader.js';
 	import { tick } from 'svelte';
 	import PhotoPreview from './photoPreview.svelte';
 
