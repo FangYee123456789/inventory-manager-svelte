@@ -5,6 +5,7 @@ import { supabase } from '$lib/server/supabase';
 import { error } from '@sveltejs/kit';
 import z from 'zod';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
+import type { Gallery } from '$lib/types/databaseTypes';
 
 export const uploadImage = command(
 	z.object({ file: zImgFile, name: zString }),
@@ -17,6 +18,19 @@ export const uploadImage = command(
 		} catch (e) {
 			handleQueryErrors(e);
 		}
+	}
+);
+
+export const uploadMultipleImages = command(
+	z.object({ files: z.array(zImgFile), name: zString }),
+	async ({ files, name }): Promise<Gallery> => {
+		const urls: Gallery = [];
+		for (const [i, file] of files.entries()) {
+			const url = await uploadImage({ file, name: `${name}_${i}` });
+			if (!url) throw new Error('uploadImage did not return url but did not throw an error');
+			urls.push({ item: url });
+		}
+		return urls;
 	}
 );
 
