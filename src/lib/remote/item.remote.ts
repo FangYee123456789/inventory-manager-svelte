@@ -7,6 +7,7 @@ import { error, invalid } from '@sveltejs/kit';
 import * as z from 'zod';
 import { getOrCreateCategory } from './category.remote';
 import { getOrCreateSupplier } from './supplier.remote';
+import { uploadImage } from './upload.remote';
 
 export const getItems = query(async () => {
 	try {
@@ -224,10 +225,13 @@ export const editSupplier = form(
 );
 
 export const editThumbnail = form(
-	z.object({ id: zString, thumbnail: zImgFile, thumbnailUrl: zString }),
-	async ({ id, thumbnailUrl }, issue) => {
+	z.object({ id: zString, thumbnail: zImgFile }),
+	async ({ id, thumbnail }, issue) => {
 		try {
-			const result = await sql`UPDATE items SET thumbnail = ${thumbnailUrl} WHERE id = ${id}`;
+			const url = await uploadImage({ file: thumbnail, name: `thumbnail_${id}` });
+			if (!url) throw new Error('uploadImage did not return url but did not throw an error');
+
+			const result = await sql`UPDATE items SET thumbnail = ${url} WHERE id = ${id}`;
 			if (result.count !== 1) invalid(issue.thumbnail('Failed to update'));
 			return { success: true };
 		} catch (e) {
