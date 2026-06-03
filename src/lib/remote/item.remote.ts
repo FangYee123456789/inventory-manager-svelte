@@ -1,4 +1,4 @@
-import { form, query } from '$app/server';
+import { command, form, query } from '$app/server';
 import { sql } from '$lib/server/postgres';
 import type { DetailedItem } from '$lib/types/databaseTypes';
 import { master, zBoolean, zImgFile, zNumber, zString } from '$lib/types/schemaTypes';
@@ -263,6 +263,20 @@ export const getItemNameByMaster = query(zString, async (master) => {
 		>`SELECT id, name FROM items WHERE master_number = ${master}`;
 		if (result.count !== 1) return undefined;
 		return result[0];
+	} catch (e) {
+		handleQueryErrors(e);
+	}
+});
+
+export const updateMultipleLastStocked = command(z.array(zString), async (ids) => {
+	try {
+		const result = await sql`
+		UPDATE items i
+		SET last_stocked = ${Date.now()} 
+		WHERE i.id = ANY(${ids}::int[])
+		`;
+		console.log(result);
+		return result;
 	} catch (e) {
 		handleQueryErrors(e);
 	}
