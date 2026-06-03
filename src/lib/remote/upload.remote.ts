@@ -12,9 +12,7 @@ export const uploadImage = command(
 		try {
 			const optimizedBuffer = await compressImageFile(file);
 			const uploadData = await uploadBuffer(optimizedBuffer, name);
-			console.log('After upload');
 			const url = await getPublicUrl(uploadData.path);
-			console.log('after url');
 			return url;
 		} catch (e) {
 			handleQueryErrors(e);
@@ -34,8 +32,7 @@ async function uploadBuffer(buffer: Uint8Array, name: string) {
 	const { data, error: supabaseError } = await supabase.storage
 		.from('item-photos')
 		.upload(`public/${name}_${Date.now()}.webp`, buffer, {
-			contentType: 'image/webp',
-			upsert: true
+			contentType: 'image/webp'
 		});
 
 	if (supabaseError) {
