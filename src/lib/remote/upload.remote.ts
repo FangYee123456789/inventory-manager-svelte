@@ -1,0 +1,52 @@
+import { zImgFile, zString } from '$lib/types/schemaTypes';
+import { command } from '$app/server';
+import sharp from 'sharp';
+import { supabase } from '$lib/server/supabase';
+import { error } from '@sveltejs/kit';
+import z from 'zod';
+import { handleQueryErrors } from '$lib/utils/errorHandling';
+
+export const uploadImage = command(
+	z.object({ file: zImgFile, name: zString }),
+	async ({ file, name }) => {
+		try {
+			const optimizedBuffer = await compressImageFile(file);
+			const uploadData = await uploadBuffer(optimizedBuffer, name);
+			console.log('After upload');
+			const url = await getPublicUrl(uploadData.path);
+			console.log('after url');
+			return url;
+		} catch (e) {
+			handleQueryErrors(e);
+		}
+	}
+);
+
+async function compressImageFile(file: File): Promise<Uint8Array> {
+	const arrayBuffer = await file.arrayBuffer();
+	const buffer = Buffer.from(arrayBuffer);
+	const optimizedBuffer = await sharp(buffer).resize(300).webp().toBuffer();
+	console.log(buffer.length, ' ', optimizedBuffer.length);
+	return new Uint8Array(optimizedBuffer);
+}
+
+async function uploadBuffer(buffer: Uint8Array, name: string) {
+	const { data, error: supabaseError } = await supabase.storage
+		.from('item-photos')
+		.upload(`public/${name}_${Date.now()}.webp`, buffer, {
+			contentType: 'image/webp',
+			upsert: true
+		});
+
+	if (supabaseError) {
+		console.log(supabaseError);
+		error(500, 'Failed to upload file.');
+	} else {
+		return data;
+	}
+}
+
+async function getPublicUrl(name: string) {
+	const { data } = supabase.storage.from('item-photos').getPublicUrl(name);
+	return data.publicUrl;
+}
