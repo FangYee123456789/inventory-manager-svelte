@@ -99,7 +99,7 @@
 					label: 'Gallery',
 					field: editGallery.fields.gallery,
 					type: 'file multiple',
-					subtitle: 'Gallery photos'
+					subtitle: 'Submitting with 0 files will clear the gallery photos.'
 				})}
 			</div>
 		{/if}
