@@ -109,7 +109,7 @@
 							element.parentElement?.parentElement?.parentElement?.classList.add('bg-base-300');
 							selectedItems.add(master);
 						} else {
-							element.parentElement?.parentElement?.classList.remove('bg-base-300');
+							element.parentElement?.parentElement?.parentElement?.classList.remove('bg-base-300');
 							selectedItems.delete(master);
 						}
 					}}
