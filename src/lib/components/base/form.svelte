@@ -18,12 +18,9 @@
 
 	async function enhanceCallback({ form, data, submit }: EnhanceParams) {
 		//this should never happen but ts is funky like that
-		if (!form || !data || !submit) return;
-
+		if (!form || !data || !submit) throw new Error('form enhance callback null variables');
 		isLoading = true;
-
 		beforeSubmit(data);
-
 		if (await submit()) {
 			const { success, msg } = remoteForm.result;
 			if (success) {
