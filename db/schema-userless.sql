@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict ENUITqPfgG1BXWmBffnrRlgqQUD3umYaXA4GgclG19HGiV6LGVUON7iWwo6zoPe
+\restrict O0usg6xOxXEWKgqygHVMVzjefsEqDnHaj6pFRvGwBeodJ4v2MTf1OhoqMXdi17q
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 18.3
@@ -3214,13 +3214,23 @@ CREATE TABLE public.outgoing_items (
 --
 
 CREATE VIEW public.net_quantity AS
- SELECT COALESCE(i.item_id, o.item_id) AS item_id,
-    sum(i.quantity) AS incoming_quantity,
-    sum(o.quantity) AS outgoing_quantity,
-    (COALESCE(sum(i.quantity), (0)::numeric) - COALESCE(sum(o.quantity), (0)::numeric)) AS net
-   FROM (public.incoming_items i
-     FULL JOIN public.outgoing_items o USING (item_id))
-  GROUP BY COALESCE(i.item_id, o.item_id);
+ SELECT i.item_id,
+    COALESCE(inc.total_incoming, (0)::numeric) AS incoming_quantity,
+    COALESCE("out".total_outgoing, (0)::numeric) AS outgoing_quantity,
+    (COALESCE(inc.total_incoming, (0)::numeric) - COALESCE("out".total_outgoing, (0)::numeric)) AS net
+   FROM ((( SELECT incoming_items.item_id
+           FROM public.incoming_items
+        UNION
+         SELECT outgoing_items.item_id
+           FROM public.outgoing_items) i
+     LEFT JOIN ( SELECT incoming_items.item_id,
+            sum(incoming_items.quantity) AS total_incoming
+           FROM public.incoming_items
+          GROUP BY incoming_items.item_id) inc ON ((i.item_id = inc.item_id)))
+     LEFT JOIN ( SELECT outgoing_items.item_id,
+            sum(outgoing_items.quantity) AS total_outgoing
+           FROM public.outgoing_items
+          GROUP BY outgoing_items.item_id) "out" ON ((i.item_id = "out".item_id)));
 
 
 --
@@ -7021,5 +7031,5 @@ CREATE EVENT TRIGGER pgrst_drop_watch ON sql_drop
 -- PostgreSQL database dump complete
 --
 
-\unrestrict ENUITqPfgG1BXWmBffnrRlgqQUD3umYaXA4GgclG19HGiV6LGVUON7iWwo6zoPe
+\unrestrict O0usg6xOxXEWKgqygHVMVzjefsEqDnHaj6pFRvGwBeodJ4v2MTf1OhoqMXdi17q
 
