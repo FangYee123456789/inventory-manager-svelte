@@ -14,6 +14,7 @@
 
 	const { data } = $props();
 	let masterInput = $state<string>('');
+	let lastInput = $state<string>('');
 	let items = $state<Item[]>([]);
 </script>
 
@@ -57,6 +58,8 @@
 					class="btn rounded-s-none btn-secondary"
 					type="button"
 					onclick={async () => {
+						if (lastInput === masterInput) return;
+						lastInput = masterInput;
 						let isDuplicate = items.some((item) => item.id === masterInput);
 						if (isDuplicate) return;
 						const result = await getItemNameByMaster(masterInput.toLowerCase().trim()).run();
