@@ -38,6 +38,7 @@
 				{/if}
 			</ul>
 		</div>
+		<a class="" href={resolve('/transaction')}>Transactions</a>
 	</div>
 	<div class="navbar-center"></div>
 	<div class="me-2 navbar-end">
