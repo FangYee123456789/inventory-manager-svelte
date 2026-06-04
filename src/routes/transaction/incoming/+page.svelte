@@ -68,17 +68,15 @@
 						const result = await getItemNameByMaster(masterInput.toLowerCase().trim()).run();
 						if (!result) {
 							toast.error(`Master number ${masterInput} not found.`);
-							isLoading = false;
-							return;
+						} else {
+							const newItem: Item = {
+								id: result.id,
+								master: masterInput,
+								name: result.name,
+								quantity: 1
+							};
+							items.push(newItem);
 						}
-
-						const newItem: Item = {
-							id: result.id,
-							master: masterInput,
-							name: result.name,
-							quantity: 1
-						};
-						items.push(newItem);
 						isLoading = false;
 					}}><span class="icon-[ic--baseline-plus]"></span></button
 				>
