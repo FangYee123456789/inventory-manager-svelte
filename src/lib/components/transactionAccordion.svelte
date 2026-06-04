@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { CompleteTransaction } from '$lib/types/databaseTypes';
 	import { formatRelativeCustom } from '$lib/utils/dateTransform';
-	import { truncateString } from '$lib/utils/stringTransform';
 
 	type Props = {
 		transactions: CompleteTransaction[];
@@ -30,7 +29,7 @@
 				{#each items as item, i (i)}
 					<li class="ms-6 list-disc">
 						{item.master}
-						{truncateString(item.name, 30)}
+						{item.name}
 						{deliveryID ? '+' : '-'}{item.quantity}
 					</li>
 				{/each}
