@@ -40,7 +40,8 @@ export const getItemsFullInfo = query(async () => {
 			i.thumbnail,
 			i.gallery,
 			q.net AS "quantity",
-			i.last_stocked AS "lastStocked"
+			i.last_stocked AS "lastStocked",
+			i.minimum_quantity AS "minimumQuantity"
 			FROM items i
 			JOIN categories c ON i.category_id = c.id
 			JOIN suppliers s ON i.supplier_id = s.id

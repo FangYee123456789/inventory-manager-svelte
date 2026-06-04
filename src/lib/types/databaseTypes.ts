@@ -49,6 +49,7 @@ export type DetailedItem = Item & {
 	thumbnail: string;
 	gallery: { item: string }[] | [];
 	lastStocked: Date;
+	minimumQuantity: number;
 };
 
 export type Transaction = {

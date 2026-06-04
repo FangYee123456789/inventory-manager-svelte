@@ -14,7 +14,8 @@
 		| 'categoryReverse'
 		| 'quantity'
 		| 'quantityReverse'
-		| 'lastStocked';
+		| 'lastStocked'
+		| 'minimumQuantity';
 
 	let sortOption = $state<SortOption>('lastStocked');
 	let sortedItems = $derived.by(() => sortItems(data.items, sortOption));
@@ -22,6 +23,10 @@
 	function sortItems(list: DetailedItem[], sortOption: SortOption): DetailedItem[] {
 		if (sortOption === 'lastStocked') {
 			return list.toSorted((a, b) => b.lastStocked.getTime() - a.lastStocked.getTime());
+		} else if (sortOption === 'minimumQuantity') {
+			return list.toSorted(
+				(a, b) => a.quantity / a.minimumQuantity - b.quantity / b.minimumQuantity
+			);
 		}
 
 		if (sortOption.includes('Reverse')) {
@@ -52,6 +57,12 @@
 		sortOption = 'lastStocked';
 	}}>Last Stocked</button
 >
+<button
+	class="btn {sortOption === 'minimumQuantity' ? '' : 'btn-soft'} ms-4 btn-primary"
+	onclick={() => {
+		sortOption = 'minimumQuantity';
+	}}>Fulfillment</button
+>
 
 <table class="table max-w-200">
 	<thead>
@@ -66,6 +77,7 @@
 			</th>
 			<th>{@render sortingHeader('category', 'categoryReverse', 'Category')}</th>
 			<th class="text-center">{@render sortingHeader('quantity', 'quantityReverse', 'Qty')}</th>
+			<th>Fullfilment</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -93,7 +105,7 @@
 {/snippet}
 
 {#snippet ItemRow(
-	{ id, master, name, category, thumbnail, gallery, quantity }: DetailedItem,
+	{ id, master, name, category, thumbnail, gallery, quantity, minimumQuantity }: DetailedItem,
 	selectedItems: SvelteSet<string>
 )}
 	<tr class="hover:bg-base-300">
@@ -122,6 +134,7 @@
 		</th>
 		<th><a href={resolve('/item/[slug]', { slug: id })} class="underline">{name}</a></th>
 		<th>{category}</th>
-		<th class="text-center">{quantity || 0}</th>
+		<th class="text-center">{quantity || 0} </th>
+		<th>{((quantity / minimumQuantity) * 100).toFixed(2)}%</th>
 	</tr>
 {/snippet}
