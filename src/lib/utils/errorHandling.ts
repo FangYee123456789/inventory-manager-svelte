@@ -16,9 +16,7 @@ export const handleQueryErrors = (e: unknown, customPsqlHandler?: (e: PostgresEr
 };
 
 const isPostgresError = (e: unknown): boolean => {
-	// "instanceof cannot be used here because PostgresError cannot be used a value"
-	// do you genuinely think you deserve to live
-	return (e as PostgresError).code !== undefined;
+	return (e as PostgresError).name === 'PostgresError';
 };
 
 const isValidationError = (e: unknown): boolean => {
