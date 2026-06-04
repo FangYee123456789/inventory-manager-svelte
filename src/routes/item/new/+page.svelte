@@ -4,12 +4,9 @@
 	import Input from '$lib/components/base/input.svelte';
 	import InputFile from '$lib/components/base/inputFile.svelte';
 	import InputIssues from '$lib/components/base/inputIssues.svelte';
-	import LoadingModal from '$lib/components/base/loadingModal.svelte';
 	import ItemCard from '$lib/components/itemCard.svelte';
 	import { createItem } from '$lib/remote/item.remote.js';
 	import type { DetailedItem } from '$lib/types/databaseTypes.js';
-
-	let checked = $state<boolean>(false);
 
 	const { master, name, category, supplier, quantity, thumbnail, gallery, isDisabled } =
 		createItem.fields;
@@ -32,7 +29,6 @@
 		onSuccess={() => {
 			if (createItem.result?.item) addedItems.push(createItem.result.item);
 		}}
-		afterSubmit={() => (checked = false)}
 	>
 		<Input label="Master" type="text" field={master} placeholder="Enter master number" />
 		<Input label="Name" type="text" field={name} placeholder="Enter item name" />
@@ -73,4 +69,3 @@
 		{/each}
 	</div>
 </div>
-<LoadingModal {checked} />
