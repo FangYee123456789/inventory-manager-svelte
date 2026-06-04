@@ -14,8 +14,8 @@
 
 	const { data } = $props();
 	let masterInput = $state<string>('');
-	let lastInput = $state<string>('');
 	let items = $state<Item[]>([]);
+	let isLoading = $state<boolean>(false);
 </script>
 
 <div class="flex">
@@ -57,20 +57,18 @@
 					aria-label="add-item"
 					class="btn rounded-s-none btn-secondary"
 					type="button"
+					disabled={isLoading}
 					onclick={async () => {
-						if (lastInput === masterInput) {
+						isLoading = true;
+						if (items.some((item) => item.master === masterInput)) {
 							toast.error('Item already in table');
-							return;
-						}
-						lastInput = masterInput;
-						let isDuplicate = items.some((item) => item.id === masterInput);
-						if (isDuplicate) {
-							toast.error('Item already in table');
+							isLoading = false;
 							return;
 						}
 						const result = await getItemNameByMaster(masterInput.toLowerCase().trim()).run();
 						if (!result) {
 							toast.error(`Master number ${masterInput} not found.`);
+							isLoading = false;
 							return;
 						}
 
@@ -81,9 +79,11 @@
 							quantity: 1
 						};
 						items.push(newItem);
+						isLoading = false;
 					}}><span class="icon-[ic--baseline-plus]"></span></button
 				>
 			</label>
+			<p>{isLoading ? 'Loading...' : ''}</p>
 			<InputIssues field={ids} />
 			<table class="table table-zebra">
 				<thead>
