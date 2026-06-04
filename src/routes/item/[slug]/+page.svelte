@@ -16,7 +16,13 @@
 	import type { DetailedItem, Generic } from '$lib/types/databaseTypes.js';
 
 	const { data } = $props();
-	let { id, master, name, category, supplier }: DetailedItem = $derived(data.item);
+	let {
+		id,
+		master,
+		name,
+		category
+		// supplier
+	}: DetailedItem = $derived(data.item);
 
 	type SnippetArgs = {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
