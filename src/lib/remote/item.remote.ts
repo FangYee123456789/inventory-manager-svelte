@@ -124,8 +124,8 @@ export const createItem = form(
 					${quantity},
 					${thumbnailUrl},
 					${sql.json(galleryUrls)},
-					${isDisabled}),
-					${minimumQuantity}
+					${isDisabled},
+					${minimumQuantity})
 					RETURNING *
 				)
 				SELECT i.master_number AS "master",
