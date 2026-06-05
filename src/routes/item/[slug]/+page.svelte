@@ -9,6 +9,7 @@
 		editCategory,
 		editGallery,
 		editMaster,
+		editMinimumQuantity,
 		editName,
 		// editSupplier,
 		editThumbnail
@@ -20,8 +21,9 @@
 		id,
 		master,
 		name,
-		category
-		// supplier
+		category,
+		// supplier,
+		minimumQuantity
 	}: DetailedItem = $derived(data.item);
 
 	type SnippetArgs = {
@@ -87,6 +89,15 @@
 					placeholder: supplier,
 					list: data.suppliers
 				})} -->
+				{@render editForm({
+					remoteForm: editMinimumQuantity,
+					errorMsg: 'Failed to update minimum quantity.',
+					successMsg: 'Successfully updated minimum quantity.',
+					label: 'Minimum Quantity',
+					field: editMinimumQuantity.fields.quantity,
+					placeholder: minimumQuantity.toString(),
+					type: 'number'
+				})}
 			</div>
 			<div>
 				{@render editInputFileForm({
