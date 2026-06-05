@@ -49,6 +49,12 @@
 	}
 
 	let selectedItems = new SvelteSet<string>();
+
+	function calculateFullfilment(quantity: number, minimumQuantity: number): string | null {
+		const percentage: number = (quantity / minimumQuantity) * 100;
+		if (!isFinite(percentage)) return '-';
+		return percentage.toFixed(2) + '%';
+	}
 </script>
 
 <button
@@ -135,6 +141,6 @@
 		<th><a href={resolve('/item/[slug]', { slug: id })} class="underline">{name}</a></th>
 		<th>{category}</th>
 		<th class="text-center">{quantity || 0} </th>
-		<th>{((quantity / minimumQuantity) * 100).toFixed(2)}%</th>
+		<th>{calculateFullfilment(quantity, minimumQuantity)}</th>
 	</tr>
 {/snippet}
