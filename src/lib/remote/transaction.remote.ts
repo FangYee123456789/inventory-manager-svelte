@@ -90,6 +90,7 @@ export const createOutgoingTransaction = form(
 					VALUES(${locals.user!.id}, ${new Date()}, ${date}, ${expender}, ${remarks}) RETURNING id`;
 				const items = generateDB_StockArray(ids, quantities, transactionResult.id);
 
+				await updateMultipleLastStocked(ids);
 				await sql`INSERT INTO outgoing_items ${sql(items)}`;
 				return;
 			});
