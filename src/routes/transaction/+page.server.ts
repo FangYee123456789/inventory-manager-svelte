@@ -1,10 +1,17 @@
-import { getAllTransactions } from '$lib/remote/transaction.remote';
+import { getIncomingTransactions, getOutgoingTransactions } from '$lib/remote/transaction.remote';
+import type { CompleteTransaction } from '$lib/types/databaseTypes';
 
 export async function load() {
-	const transactions = await getAllTransactions();
-	if (!transactions) throw new Error('getAllTransactions returned undefined');
+	const incomingTransactions = await getIncomingTransactions();
+	if (!incomingTransactions) throw new Error('getIncomingTransactions returned undefined');
+	const outgoingTransactions = await getOutgoingTransactions();
+	if (!outgoingTransactions) throw new Error('getOutgoingTransactions returned undefined');
 
 	return {
-		transactions
+		transactions: sortByDate([...incomingTransactions, ...outgoingTransactions])
 	};
+}
+
+function sortByDate(transactions: CompleteTransaction[]) {
+	return transactions.toSorted((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 }
