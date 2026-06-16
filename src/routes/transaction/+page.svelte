@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TransactionAccordion from '$lib/components/transactionAccordion.svelte';
+	import TransactionAccordion from '$lib/components/transactionAccordionGroup.svelte';
 
 	const { data } = $props();
 </script>
