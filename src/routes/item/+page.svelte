@@ -2,7 +2,6 @@
 	import { resolve } from '$app/paths';
 	import QuantityChart from '$lib/components/quantityChart.svelte';
 	import type { DetailedItem, Item } from '$lib/types/databaseTypes.js';
-	import { SvelteSet } from 'svelte/reactivity';
 	import ImageModal from '../../lib/components/imageModal.svelte';
 
 	const { data } = $props();
@@ -54,8 +53,7 @@
 		}
 	}
 
-	let selectedItems = new SvelteSet<string>();
-	$inspect(data.quantityTrends);
+	// let selectedItems = new SvelteSet<string>();
 </script>
 
 <svelte:head>
@@ -72,7 +70,7 @@
 <table class="table max-w-200">
 	<thead>
 		<tr>
-			<th></th>
+			<!-- <th></th> -->
 			<th class="w-25 text-center">
 				{@render sortingHeader('master', 'masterReverse', 'Master')}
 			</th>
@@ -87,7 +85,7 @@
 	</thead>
 	<tbody>
 		{#each sortedItems as item (item.id)}
-			{@render ItemRow(item, selectedItems)}
+			{@render ItemRow(item)}
 		{/each}
 	</tbody>
 </table>
@@ -110,13 +108,13 @@
 {/snippet}
 
 {#snippet ItemRow(
-	{ id, master, name, category, thumbnail, gallery, quantity, minimumQuantity }: DetailedItem,
-	selectedItems: SvelteSet<string>
+	{ id, master, name, category, thumbnail, gallery, quantity, minimumQuantity }: DetailedItem
+	// selectedItems: SvelteSet<string>
 )}
 	<tr class="hover:bg-base-300">
-		<td>
-			<!-- svelte-ignore a11y_click_events_have_key_events -->
-			<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+		<!-- <td>
+			svelte-ignore a11y_click_events_have_key_events
+			svelte-ignore a11y_no_noninteractive_element_interactions
 			<label class="p-2" onclick={(e) => e.stopPropagation()}>
 				<input
 					type="checkbox"
@@ -132,7 +130,7 @@
 					}}
 				/>
 			</label>
-		</td>
+		</td> -->
 		<td class="w-25 text-center text-4xl">#{master}</td>
 		<td class="flex w-50 items-center justify-center">
 			<ImageModal id={master} thumbnailSrc={thumbnail} gallerySrc={gallery} />
