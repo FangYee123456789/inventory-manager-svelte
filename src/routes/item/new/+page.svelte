@@ -24,7 +24,7 @@
 	let addedItems = $state<DetailedItem[]>([]);
 	let deletedItems = $state<string[]>([]);
 	let filteredItems = $derived.by(() => {
-		return addedItems.filter(({ master }) => !deletedItems.includes(master));
+		return addedItems.filter(({ master }) => !deletedItems.includes(master)).reverse();
 	});
 </script>
 
