@@ -83,17 +83,20 @@ export const createItem = form(
 		isDisabled: zBoolean,
 		minimumQuantity: zNumber
 	}),
-	async ({
-		master,
-		name,
-		category,
-		// supplier,
-		quantity,
-		thumbnail,
-		gallery,
-		isDisabled = false,
-		minimumQuantity
-	}) => {
+	async (
+		{
+			master,
+			name,
+			category,
+			// supplier,
+			quantity,
+			thumbnail,
+			gallery,
+			isDisabled = false,
+			minimumQuantity
+		},
+		issue
+	) => {
 		try {
 			const thumbnailUrl = await uploadImage({ file: thumbnail, name: `thumbnail` });
 			if (!thumbnailUrl)
@@ -145,7 +148,16 @@ export const createItem = form(
 
 			return { success: true, item: newItem };
 		} catch (e) {
-			handleQueryErrors(e);
+			handleQueryErrors(e, (psqlError) => {
+				if (psqlError.code === '23505') {
+					switch (psqlError.constraint_name) {
+						case 'items_master_number_key':
+							throw invalid(issue.master('Master number is already in use.'));
+						case 'items_name_key':
+							throw invalid(issue.name('Name is already in use.'));
+					}
+				}
+			});
 		}
 	}
 );
