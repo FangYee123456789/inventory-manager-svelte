@@ -4,7 +4,7 @@
 	import Form from '$lib/components/base/form.svelte';
 	import Input from '$lib/components/base/input.svelte';
 	import InputFile from '$lib/components/base/inputFile.svelte';
-	import ItemCard from '$lib/components/itemCard.svelte';
+	import ItemAccordion from '$lib/components/itemAccordion.svelte';
 	import {
 		editCategory,
 		editGallery,
@@ -125,7 +125,7 @@
 			</div>
 		{/if}
 		<div>
-			<ItemCard {...data.item} />
+			<ItemAccordion {...data.item} />
 		</div>
 	</div>
 {/if}

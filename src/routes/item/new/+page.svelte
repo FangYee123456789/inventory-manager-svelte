@@ -4,7 +4,7 @@
 	import Input from '$lib/components/base/input.svelte';
 	import InputFile from '$lib/components/base/inputFile.svelte';
 	import InputIssues from '$lib/components/base/inputIssues.svelte';
-	import ItemCard from '$lib/components/itemCard.svelte';
+	import ItemAccordion from '$lib/components/itemAccordion.svelte';
 	import { createItem } from '$lib/remote/item.remote.js';
 	import type { DetailedItem } from '$lib/types/databaseTypes.js';
 
@@ -85,7 +85,7 @@
 	</Form>
 	<div>
 		{#each filteredItems as item (item.id)}
-			<ItemCard {...item} {deletedItems} />
+			<ItemAccordion {...item} {deletedItems} />
 		{/each}
 	</div>
 </div>
