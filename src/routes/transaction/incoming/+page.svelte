@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>Incoming Transactions</title>
+	<title>Add Delivery Order</title>
 </svelte:head>
 
 <TransactionForm

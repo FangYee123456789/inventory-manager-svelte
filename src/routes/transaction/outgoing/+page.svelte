@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-	<title>Outgoing Transactions</title>
+	<title>Add item expenditure</title>
 </svelte:head>
 
 <TransactionForm
