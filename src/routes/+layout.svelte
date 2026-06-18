@@ -27,6 +27,15 @@
 					<div class="divider m-0.5">QS</div>
 					<li><a href={resolve('/item/new')}>Add Item</a></li>
 				{/if}
+			</ul>
+		</div>
+		<div class="dropdown">
+			<div tabindex="0" role="button" class="m-1 cursor-pointer text-2xl">Transactions</div>
+			<ul
+				tabindex="-1"
+				class="dropdown-content menu z-1 w-52 rounded-box bg-blue-500 p-2 shadow-sm"
+			>
+				<li><a class="" href={resolve('/transaction')}>Transaction List</a></li>
 				{#if ['Admin', 'Procurement'].includes(data.user?.role ?? '')}
 					<div class="divider m-0.5">Procurement</div>
 					<li><a href={resolve('/transaction/incoming')}>Add Delivery Order</a></li>
