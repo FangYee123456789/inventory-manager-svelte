@@ -15,7 +15,12 @@
 	});
 
 	async function initializeChart() {
-		if (!chartData) return;
+		if (!chartData || !targetElementID) {
+			console.error('Props are missing');
+			return;
+		}
+		// @ts-expect-error dude it throws an error that Chart doesn't accept HTMLElement
+		// I can't win
 		new Chart(document.getElementById(targetElementID), {
 			type: 'line',
 			data: {
