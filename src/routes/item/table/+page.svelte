@@ -1,5 +1,6 @@
 <script lang="ts">
-	import XLSX from 'xlsx';
+	import { tableToCSV } from '$lib/utils/tableToCSV.js';
+	import { toast } from 'svelte-sonner';
 
 	const { data } = $props();
 	const dates = $derived.by(() => {
@@ -9,19 +10,17 @@
 	});
 
 	function onclick() {
-		var tables = document.getElementsByTagName('table');
-		var wb = XLSX.utils.book_new();
-		for (var i = 0; i < tables.length; ++i) {
-			var ws = XLSX.utils.table_to_sheet(tables[i], { raw: true });
-			XLSX.utils.book_append_sheet(wb, ws, 'Table' + i);
+		const table = document.querySelector('#timeline-table');
+		if (!table) {
+			toast.error('No table found');
+			return;
 		}
-
-		XLSX.writeFile(wb, 'export.xlsx');
+		tableToCSV(table, 'export');
 	}
 </script>
 
 <button {onclick} class="btn btn-primary">Export table</button>
-<table class="table">
+<table class="table" id="timeline-table">
 	<thead>
 		<tr>
 			<th>Master</th>
