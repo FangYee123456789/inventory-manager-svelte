@@ -77,3 +77,114 @@ Supabase is only used in `./lib/remote/upload.remote.ts` for hosting images.
 - Password input validation lacks regex.
 - There is no inactivity timeout implemented for sessions.
 
+## Database
+### Schema Design
+It is suggested to view this in a psql GUI. \
+
+## Table `categories`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `int8` | Primary Identity |
+| `name` | `citext` |  Unique |
+
+## Table `incoming_items`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `transaction_id` | `int8` | Primary |
+| `item_id` | `int8` | Primary |
+| `quantity` | `int8` |  |
+
+## Table `incoming_transactions`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `int8` | Primary Identity |
+| `logger_id` | `int8` |  |
+| `created_at` | `timestamptz` |  |
+| `delivery_date` | `date` |  |
+| `supplier_id` | `int8` |  |
+| `delivery_ref` | `citext` |  |
+
+## Table `items`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `int8` | Primary Identity |
+| `name` | `citext` |  Unique |
+| `category_id` | `int8` |  |
+| `thumbnail` | `text` |  |
+| `gallery` | `jsonb` |  Nullable |
+| `master_number` | `text` |  Unique |
+| `initial_quantity` | `int8` |  |
+| `last_stocked` | `timestamptz` |  |
+| `disabled` | `bool` |  |
+| `minimum_quantity` | `int8` |  |
+
+## Table `outgoing_items`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `transaction_id` | `int8` | Primary |
+| `item_id` | `int8` | Primary |
+| `quantity` | `int8` |  |
+
+## Table `outgoing_transactions`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `int8` | Primary Identity |
+| `logger_id` | `int8` |  |
+| `created_at` | `timestamptz` |  |
+| `expend_date` | `date` |  |
+| `expender` | `text` |  |
+| `remarks` | `text` |  Nullable |
+
+## Table `sessions`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `text` | Primary |
+| `secret_hash` | `bytea` |  |
+| `created_at` | `int4` |  |
+| `user_id` | `int8` |  |
+
+## Table `suppliers`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `int8` | Primary Identity |
+| `name` | `citext` |  Unique |
+
+## Table `users`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `int8` | Primary Identity |
+| `email` | `citext` |  Unique |
+| `name` | `citext` |  Unique |
+| `password_hash` | `text` |  |
+| `role` | `role` |  |
+| `initial_quantity` | `int8` |  |
+
+
+
