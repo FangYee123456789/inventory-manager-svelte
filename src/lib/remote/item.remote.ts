@@ -37,7 +37,8 @@ export const getItemsFullInfo = query(async () => {
 			i.gallery,
 			q.net AS "quantity",
 			i.last_stocked AS "lastStocked",
-			i.minimum_quantity AS "minimumQuantity"
+			i.minimum_quantity AS "minimumQuantity",
+			i.disabled
 			FROM items i
 			JOIN categories c ON i.category_id = c.id
 			LEFT OUTER JOIN net_quantity q ON i.id = q.item_id`;
