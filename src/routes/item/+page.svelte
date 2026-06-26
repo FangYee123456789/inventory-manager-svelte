@@ -115,8 +115,10 @@
 }: DetailedItem)}
 	<tr class="hover:bg-base-300">
 		<td class="w-25 text-center text-4xl">#{master}</td>
-		<td class="flex w-50 items-center justify-center">
-			<ImageModal id={master} thumbnailSrc={thumbnail} gallerySrc={gallery} />
+		<td>
+			<div class="flex w-50 items-center justify-center">
+				<ImageModal id={master} thumbnailSrc={thumbnail} gallerySrc={gallery} />
+			</div>
 		</td>
 		<td class="max-w-50 wrap-break-word">
 			<a href={resolve('/item/[slug]', { slug: id })} class="underline">{name}</a>
