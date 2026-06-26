@@ -179,16 +179,20 @@ It is recommended to view it inside a postgres GUI instead.
 
 - Sveltekit's experimental Remote Functions feature is used for the majority of client-server communication.
 - In their June 2026 changelog, breaking changes were introduced for enhancing forms. As such, Sveltekit has been locked to a previous version.
-  Supabase is only used in `./lib/remote/upload.remote.ts` for hosting images.
+  Supabase is only used in `$lib/remote/upload.remote.ts` for hosting images.
 - Initial loading speed of pages after deployment will take a little long.
-- Svelte 
 
 ### Missing Implementation/Improvements
 
 - Account creation is very simple and there is no admin interface. If a new Admin account needs to be added, it has to be done by inserting directly into the database or by manually editing the role of a user. Email confirmation was planned, but never done. Instead, new accounts are created with `12345678`. The password can be changed once the user signs in.
 - Password input validation lacks regex.
 - There is no inactivity timeout implemented for sessions.
+- Expired sessions aren't deleted in the database.
+- `itemAccordion` and `transactionAccordion` components share similar code and could be refactored.
+- The queries used for the Chart.js display should be replaced with the newer `/item/timeline` queries.
+- Minimal Postgres.js syntax is used in queries.
+- `photoPreview` has not been updated after a rewrite of `/item/new`.
 
 ### Troubleshooting
 #### An impossible situation occured
-This occurs when attempting to import a server-side function/file into a frontend file.
+This happens rarely when attempting to import a `$lib/server` module in `./src/routes`
