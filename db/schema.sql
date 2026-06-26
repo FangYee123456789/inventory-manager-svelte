@@ -3579,8 +3579,7 @@ CREATE TABLE public.users (
     email public.citext NOT NULL,
     name public.citext NOT NULL,
     password_hash text NOT NULL,
-    role public.role NOT NULL,
-    initial_quantity bigint DEFAULT 0 NOT NULL
+    role public.role NOT NULL
 );
 
 
