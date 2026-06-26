@@ -3,6 +3,7 @@
 	import { toast } from 'svelte-sonner';
 
 	const { data } = $props();
+	//Iterates through the first item to retrieve each week's date.
 	const dates = $derived.by(() => {
 		const itemIDs = Object.keys(data.timeline);
 		if (itemIDs.length === 0) return undefined;

@@ -157,6 +157,7 @@ export const getOutgoingTransactions = query(async () => {
 
 export const getAllTransactions = query(async () => {
 	try {
+		//Returns a table with the attributes of both incoming & outgoing
 		const result = await sql`
 	SELECT
        inc_t.id,
@@ -204,6 +205,7 @@ export const getAllTransactions = query(async () => {
 	}
 });
 
+// Transforms the data to match table schema for insertion
 function generateDB_StockArray(
 	itemIDs: string[],
 	quantities: number[],
@@ -220,9 +222,11 @@ function generateDB_StockArray(
 	return items;
 }
 
+// see sortQuantityTrendTimeline() for a cleaner version.
+// Groups incoming/outgoing_items together by their transactionID.
 function sortTransactions(transactions: IndividualTransaction[]): CompleteTransaction[] {
 	if (transactions.length === 0) return [];
-	let count: number = -1; //So that it increments to 0 on the first item
+	let count: number = -1;
 	let currentID: string = '';
 	const completeList: CompleteTransaction[] = [];
 
@@ -307,6 +311,8 @@ export const getQuantityTrend = query(async () => {
 	}
 });
 
+// see sortQuantityTrendTimeline() for a cleaner version.
+// Groups the weekly balance of each item by the itemID.
 function sortWeeklyNetQuantity(list: WeeklyNetQuantity[]) {
 	if (list.length === 0) return;
 	let currentItemID: string = '';
@@ -336,6 +342,8 @@ export const getQuantityTrendTimeline = query(async () => {
 	}
 });
 
+// Groups each entry in the database query by something.
+// In this case, groups the weekly balance of each item by the itemID.
 function sortQuantityTrendTimeline(list: WeekCumulativeQuantity[]) {
 	const timeline: QuantityTimeline = {};
 	for (const { id, master, name, week, quantity } of list) {
