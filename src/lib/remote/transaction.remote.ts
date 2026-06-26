@@ -74,7 +74,7 @@ export const createOutgoingTransaction = form(
 	z
 		.object({
 			date: z.iso.date(),
-			expender: zString,
+			expender: z.string().trim(),
 			remarks: z.string().trim(),
 			ids: z.array(master, 'Please add an item.'),
 			quantities: z.array(zNumber.min(1, 'Quantity must be at least 1.'))

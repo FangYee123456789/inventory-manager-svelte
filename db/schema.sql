@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 755uucNGNjgZnmWSgYBrIdsAZJhhxIMvh8JGIXbYFzXsg4GVJRSin14BXPvqTZo
+\restrict qI278MaLF3HcMyWJlD9qfSFD581LnciRpGr4acZtbux28hclnknXtftxZ0ErUFv
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 18.3
@@ -3425,7 +3425,7 @@ CREATE TABLE public.outgoing_transactions (
     logger_id bigint NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     expend_date date DEFAULT CURRENT_DATE NOT NULL,
-    expender text NOT NULL,
+    expender text,
     remarks text
 );
 
@@ -7352,5 +7352,5 @@ ALTER EVENT TRIGGER pgrst_drop_watch OWNER TO supabase_admin;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 755uucNGNjgZnmWSgYBrIdsAZJhhxIMvh8JGIXbYFzXsg4GVJRSin14BXPvqTZo
+\unrestrict qI278MaLF3HcMyWJlD9qfSFD581LnciRpGr4acZtbux28hclnknXtftxZ0ErUFv
 
