@@ -93,8 +93,7 @@
 {#snippet sortingHeader(option: SortOption, optionReverse: SortOption, head: string)}
 	<button
 		onclick={() => {
-			if (sortOption === option) sortOption = optionReverse;
-			else sortOption = option;
+			sortOption = sortOption === option ? optionReverse : option;
 		}}
 		>{head}
 		<span class="text-white">
