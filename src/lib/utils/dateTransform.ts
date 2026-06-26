@@ -20,3 +20,7 @@ export function formatMonthDay(date: Date): string {
 export function formatYearMonthDay(date: Date): string {
 	return format(date, 'yyyy/MM/dd');
 }
+
+export function formatYearMonthDayDash(date: Date): string {
+	return format(date, 'yyyy-MM-dd');
+}

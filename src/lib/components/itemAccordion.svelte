@@ -20,12 +20,12 @@
 	}: DetailedItem & { deletedItems?: string[] | undefined } = $props();
 
 	function openDeleteConfirmation() {
-		const modal = document.querySelector(`#confirm-modal${master}`);
+		const modal = document.getElementById(`confirm-modal${master}`);
 		(modal as HTMLDialogElement).showModal();
 	}
 
 	function closeDeleteConfirmation() {
-		const modal = document.querySelector(`#confirm-modal${master}`);
+		const modal = document.getElementById(`confirm-modal${master}`);
 		(modal as HTMLDialogElement).close();
 	}
 </script>

@@ -60,7 +60,7 @@ export const createIncomingTransaction = form(
 						case 'incoming_transactions_supplier_id_delivery_ref_key':
 							invalid(
 								issue.deliveryID(
-									`This delivery order has already been logged. Verify it's the right supplier & DO, or you can edit the existing one.`
+									`This delivery order has already been logged. Verify it's the right supplier & DO.`
 								)
 							);
 					}
@@ -74,7 +74,7 @@ export const createOutgoingTransaction = form(
 	z
 		.object({
 			date: z.iso.date(),
-			expender: zString,
+			expender: z.string().trim(),
 			remarks: z.string().trim(),
 			ids: z.array(master, 'Please add an item.'),
 			quantities: z.array(zNumber.min(1, 'Quantity must be at least 1.'))
@@ -124,7 +124,7 @@ export const getIncomingTransactions = query(async () => {
 		ON inc_i.item_id = i.id
 		JOIN suppliers s
 		ON inc_t.supplier_id = s.id
-		ORDER BY inc_t.created_at desc`;
+		ORDER BY inc_t.created_at DESC, i.id ASC`;
 		return sortTransactions(result);
 	} catch (e) {
 		handleQueryErrors(e);
@@ -148,7 +148,7 @@ export const getOutgoingTransactions = query(async () => {
 		ON out_t.id = out_i.transaction_id
 		JOIN items i
 		ON out_i.item_id = i.id
-		ORDER BY out_t.created_at desc;`;
+		ORDER BY out_t.created_at DESC, i.id ASC`;
 		return sortTransactions(result);
 	} catch (e) {
 		handleQueryErrors(e);
