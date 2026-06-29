@@ -7,6 +7,7 @@
 	import {
 		editCategory,
 		editGallery,
+		editInitialQuantity,
 		editMaster,
 		editMinimumQuantity,
 		editName,
@@ -92,6 +93,15 @@
 					label: 'Minimum Quantity',
 					field: editMinimumQuantity.fields.quantity,
 					placeholder: minimumQuantity.toString(),
+					type: 'number'
+				})}
+				{@render editForm({
+					remoteForm: editInitialQuantity,
+					errorMsg: 'Failed to update initial quantity.',
+					successMsg: 'Successfully updated initial quantity.',
+					label: 'Initial Quantity',
+					field: editInitialQuantity.fields.quantity,
+					placeholder: initialQuantity.toString(),
 					type: 'number'
 				})}
 			</div>

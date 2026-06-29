@@ -283,6 +283,19 @@ export const editMinimumQuantity = form(
 	}
 );
 
+export const editInitialQuantity = form(
+	z.object({ id: zString, quantity: zNumber }),
+	async ({ id, quantity }, issue) => {
+		try {
+			const result = await sql`UPDATE items SET initial_quantity = ${quantity} WHERE id = ${id};`;
+			if (result.count !== 1) invalid(issue.quantity('Failed to update'));
+			return { success: true };
+		} catch (e) {
+			handleQueryErrors(e);
+		}
+	}
+);
+
 export const getItemNameByMaster = query(zString, async (master) => {
 	try {
 		const result = await sql<
