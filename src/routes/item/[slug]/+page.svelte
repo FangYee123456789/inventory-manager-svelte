@@ -22,7 +22,8 @@
 		name,
 		category,
 		// supplier,
-		minimumQuantity
+		minimumQuantity,
+		initialQuantity
 	}: DetailedItem = $derived(data.item);
 
 	type SnippetArgs = {
