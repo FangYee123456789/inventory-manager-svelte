@@ -68,13 +68,13 @@
 			</span>
 		</div>
 	</summary>
-	<div class="collapse-content text-sm">
+	<div class="text-md collapse-content">
 		<ul>
 			{#each items as item, i (i)}
-				<li class="ms-6 list-disc">
-					#{item.master}
-					{item.name}
-					{isIncoming ? '+' : '-'}{item.quantity}
+				<li class="mb-2 list-none">
+					<pre class="inline">#{item.master.padEnd(5, ' ')}</pre>
+					<pre class="inline">{isIncoming ? '+' : '-'}{String(item.quantity).padEnd(5, ' ')}</pre>
+					<span>{item.name}</span>
 				</li>
 			{/each}
 		</ul>
