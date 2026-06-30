@@ -94,10 +94,10 @@
 				{/if}
 				{#if isReverse}
 					{#each nameDateQuant2.toReversed() as { quantity }, i (i)}
-						<td>{quantity}</td>
+						<td class="text-center">{quantity}</td>
 					{/each}{:else}
 					{#each nameDateQuant2 as { quantity }, i (i)}
-						<td>{quantity}</td>
+						<td class="text-center">{quantity}</td>
 					{/each}
 				{/if}
 			</tr>
