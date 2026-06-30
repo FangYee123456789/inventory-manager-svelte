@@ -5,7 +5,7 @@
 
 	const { data } = $props();
 	let isReverse = $state<boolean>(true);
-	let isNameHidden = $state<boolean>(false);
+	let isNameHidden = $state<boolean>(true);
 
 	//Iterates through the first item to retrieve each week's date.
 	const dates = $derived.by(() => {
