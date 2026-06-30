@@ -3,6 +3,7 @@
 	import { toast } from 'svelte-sonner';
 
 	const { data } = $props();
+	let isReverse = $state<boolean>(true);
 	//Iterates through the first item to retrieve each week's date.
 	const dates = $derived.by(() => {
 		const itemIDs = Object.keys(data.timeline);
@@ -19,17 +20,31 @@
 		}
 		tableToCSV(table, 'export');
 	}
+
+	function toggleReverse() {
+		isReverse = !isReverse;
+	}
+
 </script>
 
 <button onclick={exportTable} class="btn btn-primary">Export table</button>
+<button onclick={toggleReverse} class="btn btn-primary"
+	>Showing by {isReverse ? 'latest' : 'last'}</button
+>
 <table class="table" id="timeline-table">
 	<thead>
 		<tr>
 			<th>Master</th>
 			<th>Name</th>
-			{#each dates as { week } (week)}
-				<th scope="col">{week}</th>
-			{/each}
+			{#if isReverse}
+				{#each dates!.toReversed() as { week } (week)}
+					<th scope="col">{week}</th>
+				{/each}
+			{:else}
+				{#each dates as { week } (week)}
+					<th scope="col">{week}</th>
+				{/each}
+			{/if}
 		</tr>
 	</thead>
 	<tbody>
@@ -37,9 +52,14 @@
 			<tr>
 				<th>{nameDateQuant[0].master}</th>
 				<td>{nameDateQuant[0].name}</td>
-				{#each nameDateQuant as { quantity }, i (i)}
-					<td>{quantity}</td>
-				{/each}
+				{#if isReverse}
+					{#each nameDateQuant.toReversed() as { quantity }, i (i)}
+						<td>{quantity}</td>
+					{/each}{:else}
+					{#each nameDateQuant as { quantity }, i (i)}
+						<td>{quantity}</td>
+					{/each}
+				{/if}
 			</tr>
 		{/each}
 	</tbody>
