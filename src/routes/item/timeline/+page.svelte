@@ -84,21 +84,21 @@
 	<tbody>
 		{#each sortedTimeline as [, nameDateQuant], i (i)}
 			<!-- Database returns 1 extra week at the start, so gotta remove it -->
-			<!-- nameDateQuant2 doesn't do anything, but I need the  -->
-			<!-- @const functionality to call splice to mutate the original array -->
-			<!-- and remove the extra first week from the query -->
 			<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
 			{@const nameDateQuant2 = nameDateQuant.splice(0, 1)}
+			<!-- Can't just mutate the original because then it keeps splicing more & more of itself -->
+			{@const nameDateQuant2 = nameDateQuant.toSpliced(0, 1)}
 			<tr>
-				<th class="sticky left-0 z-10 bg-red-800 text-white">{nameDateQuant[0].master}</th>
+				<th class="sticky left-0 z-10 bg-[#246c64] text-2xl text-white"
+					>#{nameDateQuant2[0].master}</th>
 				{#if !isNameHidden}
-					<td>{nameDateQuant[0].name}</td>
+					<td>{nameDateQuant2[0].name}</td>
 				{/if}
 				{#if isReverse}
-					{#each nameDateQuant.toReversed() as { quantity }, i (i)}
+					{#each nameDateQuant2.toReversed() as { quantity }, i (i)}
 						<td>{quantity}</td>
 					{/each}{:else}
-					{#each nameDateQuant as { quantity }, i (i)}
+					{#each nameDateQuant2 as { quantity }, i (i)}
 						<td>{quantity}</td>
 					{/each}
 				{/if}
