@@ -7,8 +7,8 @@
 	const { data } = $props();
 
 	onMount(() => {
-		if (data.wasRedirected) {
-			toast.success('Logged in');
+		if (data.redirectMessage) {
+			toast.success(data.redirectMessage);
 			goto(resolve('/'));
 		}
 	});
