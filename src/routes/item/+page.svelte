@@ -120,7 +120,9 @@
 		{#if data.quantityTrends?.get(id)}
 			<td>
 				<div><canvas id={`chart${id}`}></canvas></div>
-				<QuantityChart chartData={data.quantityTrends?.get(id)} targetElementID={`chart${id}`} />
+				<QuantityChart
+					chartData={data.quantityTrends.get(id)?.toReversed()}
+					targetElementID={`chart${id}`} />
 			</td>
 		{/if}
 	</tr>
