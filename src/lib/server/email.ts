@@ -8,3 +8,12 @@ const transporter = nodemailer.createTransport({
 		pass: GOOGLE_APP_PASSWORD
 	}
 });
+
+export async function testNodemailer() {
+	try {
+		await transporter.verify();
+		console.log('Server is ready to take our messages');
+	} catch (e) {
+		console.error('Verification failed:', e);
+	}
+}
