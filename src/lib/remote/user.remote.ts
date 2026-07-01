@@ -7,7 +7,7 @@ import { handleQueryErrors } from '$lib/utils/errorHandling';
 import { generatePassword } from '$lib/utils/generatePassword';
 import { comparePasswordHash, hashPassword } from '$lib/utils/hash';
 import { capitalizeFirstLetter } from '$lib/utils/stringTransform';
-import { error, invalid } from '@sveltejs/kit';
+import { error, invalid, redirect } from '@sveltejs/kit';
 import z from 'zod';
 
 export const getUser = query(zString, async (id) => {
@@ -72,6 +72,7 @@ export const editPassword = form(
 			const result =
 				await sql`UPDATE users SET password_hash = ${newPasswordHash} WHERE id = ${id}`;
 			if (result.count != 1) return { success: false, message: '404 Not found' };
+			redirect(303, '/?loggedOut=true');
 		} catch (e) {
 			handleQueryErrors(e);
 		}
