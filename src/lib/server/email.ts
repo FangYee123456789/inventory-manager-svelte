@@ -17,3 +17,22 @@ export async function testNodemailer() {
 		console.error('Verification failed:', e);
 	}
 }
+
+export async function sendAuthenticationEmail(password: string) {
+	try {
+		const info = await transporter.sendMail({
+			from: '"Charlotte" <faethychan@gmail.com>',
+			to: 's10270189@connect.np.edu.sg',
+			subject: 'S-Team Inventory Manager Account Creation',
+			text: `This is an automated email to test the system. Please verify with Fang Yee if unsure. Click this link to login to your account. ${sessionID}`,
+			html: `
+			<div>This is an automated email. <b>Please verify with Fang Yee if unsure.</b></div>
+			<div>Your password is: ${password}. Please change it once you sign in.</div>
+			`
+		});
+
+		console.log('Message sent: %s', info.messageId);
+	} catch (e) {
+		console.error('Error while sending mail:', e);
+	}
+}
