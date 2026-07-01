@@ -37,6 +37,9 @@ export const createUser = form(
 			if (result.count !== 1) {
 				return { success: false };
 			}
+
+			sendAuthenticationEmail(email, tempPassword);
+
 			return { success: true };
 		} catch (e) {
 			handleQueryErrors(e, (psqlError) => {
