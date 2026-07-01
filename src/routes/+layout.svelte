@@ -61,7 +61,7 @@
 				</div>
 				<ul
 					tabindex="-1"
-					class="dropdown-content menu z-1 w-52 rounded-box bg-base-100 p-2 shadow-sm">
+					class="dropdown-content menu z-1 w-52 rounded-box bg-blue-500 p-2 shadow-sm">
 					<li>
 						<a
 							class="justify-between"
