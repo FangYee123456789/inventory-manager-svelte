@@ -25,6 +25,10 @@
 	function sortItems(list: DetailedItem[], sortOption: SortOption): DetailedItem[] {
 		if (sortOption === 'lastStocked') {
 			return list.toSorted((a, b) => b.lastStocked.getTime() - a.lastStocked.getTime());
+		} else if (sortOption === 'quantity') {
+			return list.toSorted((a, b) => a.quantity - b.quantity);
+		} else if (sortOption === 'quantityReverse') {
+			return list.toSorted((a, b) => b.quantity - a.quantity);
 		} else if (sortOption === 'minimumQuantity') {
 			return list.toSorted(
 				(a, b) => a.quantity / a.minimumQuantity - b.quantity / b.minimumQuantity
