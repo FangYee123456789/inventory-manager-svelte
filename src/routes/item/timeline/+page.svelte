@@ -44,19 +44,11 @@
 <div class="mt-5 ml-5 space-x-2">
 	<button onclick={toggleReverse} class="btn btn-primary">
 		Date
-		{#if isReverse}
-			<span class="icon-[mdi--arrow-left]"></span>
-		{:else}
-			<span class="icon-[mdi--arrow-right]"></span>
-		{/if}
+		<span class={isReverse ? 'icon-[mdi--arrow-left]' : 'icon-[mdi--arrow-right]'}></span>
 	</button>
-	<button onclick={toggleNameColumn} class="btn btn-primary"
-		>Name
-		{#if isNameHidden}
-			<span class="icon-[mdi--hide]"></span>
-		{:else}
-			<span class="icon-[mdi--show]"></span>
-		{/if}
+	<button onclick={toggleNameColumn} class="btn btn-primary">
+		Name
+		<span class={isNameHidden ? 'icon-[mdi--hide]' : 'icon-[mdi--show]'}></span>
 	</button>
 	<button onclick={exportTable} class="btn btn-secondary" aria-label="export"
 		><span class="icon-[uil--export]"></span></button>
