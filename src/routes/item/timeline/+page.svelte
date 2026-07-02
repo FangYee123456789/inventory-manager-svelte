@@ -17,6 +17,8 @@
 		dateList.splice(0, 1);
 		return dateList;
 	});
+	const datesReversed = $derived(dates?.toReversed());
+	const datesToDisplay = $derived(isReverse ? datesReversed : dates);
 
 	const sortedTimeline = $derived.by(() => {
 		const list = Object.entries(data.timeline);
@@ -62,15 +64,9 @@
 				<th class="sticky top-0 z-20 bg-[#2a9d8f] text-white">Name</th>
 			{/if}
 
-			{#if isReverse}
-				{#each dates!.toReversed() as { week } (week)}
-					<th scope="col" class="sticky top-0 z-20 bg-[#2a9d8f] text-white">{week}</th>
-				{/each}
-			{:else}
-				{#each dates as { week } (week)}
-					<th scope="col" class="sticky top-0 z-20 bg-[#2a9d8f] text-white">{week}</th>
-				{/each}
-			{/if}
+			{#each datesToDisplay as { week } (week)}
+				<th scope="col" class="sticky top-0 z-20 bg-[#2a9d8f] text-white">{week}</th>
+			{/each}
 		</tr>
 	</thead>
 	<tbody>
