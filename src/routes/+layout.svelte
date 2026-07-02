@@ -59,9 +59,14 @@
 	<div class="me-2 navbar-end">
 		{#if data.user}
 			<div class="dropdown dropdown-end">
-				<span>{data.user.role}</span>
-				<div tabindex="0" role="button" class="btn avatar btn-circle btn-ghost">
-					<div class="w-10 rounded-full bg-green-600"></div>
+				<div class="flex flex-row">
+					<div class="mr-2 flex flex-col text-center">
+						<span class="align-middle text-xl">{data.user.name}</span>
+						<span class="text-sm">{data.user.role}</span>
+					</div>
+					<div tabindex="0" role="button" class="btn avatar btn-circle btn-ghost">
+						<span class="icon-[radix-icons--avatar] h-full w-full"></span>
+					</div>
 				</div>
 				<ul
 					tabindex="-1"
