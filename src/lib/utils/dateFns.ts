@@ -24,3 +24,7 @@ export function formatYearMonthDay(date: Date): string {
 export function formatYearMonthDayDash(date: Date): string {
 	return format(date, 'yyyy-MM-dd');
 }
+
+export function isBeforeToday(date: Date | string): boolean {
+	return isBefore(date, new Date());
+}
