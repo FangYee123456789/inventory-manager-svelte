@@ -19,7 +19,7 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href={faviconWhite} />
+	<link rel="icon" href={faviconBlack} />
 </svelte:head>
 
 <div class="navbar z-999 bg-base-100 shadow-sm">
