@@ -66,11 +66,11 @@ export const editPassword = form(
 		const { id, passwordHash } = locals.user;
 		const isValid = await comparePasswordHash(oldPassword, passwordHash);
 		if (!isValid) invalid(issue.oldPassword('Current password is wrong.'));
-		const newPasswordHash = await hashPassword(newPassword);
+		const newHashedPassword = await hashPassword(newPassword);
 
 		try {
 			const result =
-				await sql`UPDATE users SET password_hash = ${newPasswordHash} WHERE id = ${id}`;
+				await sql`UPDATE users SET password_hash = ${newHashedPassword} WHERE id = ${id}`;
 			if (result.count != 1) return { success: false, message: '404 Not found' };
 			return { success: true };
 		} catch (e) {
