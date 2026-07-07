@@ -18,6 +18,8 @@
 		deliveryDate,
 		supplier,
 		deliveryRef,
+		purchaseRef,
+		invoiceRef,
 		expendDate,
 		expender,
 		remarks,
@@ -74,6 +76,10 @@
 		</div>
 	</summary>
 	<div class="text-md collapse-content">
+		{#if isIncoming}
+			<div>PO: {purchaseRef}</div>
+			<div class="mb-2">Invoice: {invoiceRef}</div>
+		{/if}
 		<ul>
 			{#each sortedItems as item, i (i)}
 				<li class="mb-2 list-none">

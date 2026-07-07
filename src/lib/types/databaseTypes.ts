@@ -61,6 +61,8 @@ export type Transaction = {
 	supplier?: string;
 	deliveryRef?: string;
 	expendDate?: Date;
+	purchaseRef?: string;
+	invoiceRef?: string;
 	expender?: string;
 	remarks?: string;
 };

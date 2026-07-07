@@ -117,7 +117,9 @@ export const getIncomingTransactions = query(async () => {
 			i.master_number AS master,
 			inc_i.item_id AS "itemID",
 			i.name AS "itemName",
-			inc_i.quantity
+			inc_i.quantity,
+			inc_t.purchase_ref AS "purchaseRef",
+			inc_t.invoice_ref AS "invoiceRef"
 		FROM incoming_transactions inc_t
 		JOIN incoming_items inc_i
 		ON inc_t.id = inc_i.transaction_id
@@ -235,7 +237,6 @@ function sortTransactions(transactions: IndividualTransaction[]): CompleteTransa
 	let count: number = -1;
 	let currentID: string = '';
 	const completeList: CompleteTransaction[] = [];
-
 	for (let i = 0; i < transactions.length; i++) {
 		const {
 			id,
@@ -243,6 +244,8 @@ function sortTransactions(transactions: IndividualTransaction[]): CompleteTransa
 			deliveryDate,
 			supplier,
 			deliveryRef,
+			purchaseRef,
+			invoiceRef,
 			expendDate,
 			expender,
 			remarks,
@@ -263,6 +266,8 @@ function sortTransactions(transactions: IndividualTransaction[]): CompleteTransa
 					deliveryDate,
 					supplier,
 					deliveryRef,
+					purchaseRef,
+					invoiceRef,
 					items: [item]
 				};
 			} else {
