@@ -15,6 +15,7 @@
 	};
 
 	const { transaction, isIncoming, elementID }: Props = $props();
+
 	const {
 		id,
 		createdAt,
@@ -28,12 +29,9 @@
 		remarks,
 		items
 	} = $derived(transaction);
-
-	const sortedItems = $derived.by(() =>
-		items.sort((a, b) => localeCompareSort(a.master, b.master))
-	);
-
+	const sortedItems = $derived(items.sort((a, b) => localeCompareSort(a.master, b.master)));
 	const uniqueForm = $derived(deleteTransaction.for(elementID));
+
 	let accordionRef: SvelteComponent;
 </script>
 
