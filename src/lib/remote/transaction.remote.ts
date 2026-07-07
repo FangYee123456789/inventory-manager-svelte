@@ -20,9 +20,11 @@ import { getOrCreateSupplier } from './supplier.remote';
 export const createIncomingTransaction = form(
 	z
 		.object({
+			purchaseRef: z.string().trim(),
 			date: z.iso.date(),
 			supplier: zString,
 			deliveryID: z.string().trim(),
+			invoiceRef: z.string().trim(),
 			ids: z.array(master, 'Please add an item.'),
 			quantities: z.array(zNumber.min(1, 'Quantity must be at least 1.'))
 		})
@@ -30,7 +32,7 @@ export const createIncomingTransaction = form(
 			error: 'Date cannot be in the future.',
 			path: ['date']
 		}),
-	async ({ date, supplier, deliveryID, ids, quantities }, issue) => {
+	async ({ purchaseRef, date, supplier, deliveryID, invoiceRef, ids, quantities }, issue) => {
 		const { locals } = getRequestEvent();
 		if (!locals.user) error(403, 'Forbidden');
 
@@ -42,8 +44,8 @@ export const createIncomingTransaction = form(
 
 				const [transactionResult] = await sql<{ id: string }[]>`
 					INSERT INTO incoming_transactions(
-					logger_id, created_at, delivery_date, supplier_id, delivery_ref)
-					VALUES(${locals.user!.id}, ${new Date()}, ${date}, ${supplierResult.id}, ${deliveryID}) RETURNING id`;
+					logger_id, created_at, delivery_date, supplier_id, delivery_ref, purchase_ref, invoice_ref)
+					VALUES(${locals.user!.id}, ${new Date()}, ${date}, ${supplierResult.id}, ${deliveryID}, ${purchaseRef}, ${invoiceRef}) RETURNING id`;
 
 				const items = generateDB_StockArray(ids, quantities, transactionResult.id);
 				await updateMultipleLastStocked(ids);
