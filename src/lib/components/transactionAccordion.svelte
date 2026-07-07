@@ -42,7 +42,7 @@
 	const uniqueForm = $derived(deleteTransaction.for(uniqueID));
 </script>
 
-<details class="collapse border border-base-300 bg-base-100" name="my-accordion-det-1">
+<details class="collapse border border-base-300" name="my-accordion-det-1">
 	<summary class="collapse-title font-semibold">
 		<div class="flex items-center justify-between gap-10">
 			{#if isIncoming}
