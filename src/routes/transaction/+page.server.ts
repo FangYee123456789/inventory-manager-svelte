@@ -12,7 +12,7 @@ export async function load() {
 }
 
 function sortByDate(transactions: CompleteTransaction[]) {
-	return transactions.toSorted((b, a) => {
+	return transactions.toSorted((a, b) => {
 		const aTime = (a.deliveryDate || a.expendDate)!.getTime();
 		const bTime = (b.deliveryDate || b.expendDate)!.getTime();
 		return numberSort(aTime, bTime);
