@@ -387,3 +387,58 @@ function sortQuantityTrendTimeline(list: WeekCumulativeQuantity[]) {
 	}
 	return timeline;
 }
+
+export const editPurchaseRef = form(
+	z.object({ id: zString, purchaseRef: zString }),
+	async ({ id, purchaseRef }, issue) => {
+		try {
+			const result =
+				await sql`UPDATE incoming_items SET purchase_ref = ${purchaseRef} WHERE id = ${id}`;
+			if (result.count !== 1) invalid(issue.purchaseRef('Failed to update.'));
+			return { success: true };
+		} catch (e) {
+			return handleQueryErrors(e);
+		}
+	}
+);
+
+export const editSupplier = form(
+	z.object({ id: zString, supplier: zString }),
+	async ({ id, supplier }, issue) => {
+		try {
+			const result = await sql`UPDATE incoming_items SET supplier = ${supplier} WHERE id = ${id}`;
+			if (result.count !== 1) invalid(issue.supplier('Failed to update.'));
+			return { success: true };
+		} catch (e) {
+			return handleQueryErrors(e);
+		}
+	}
+);
+
+export const editDeliveryRef = form(
+	z.object({ id: zString, deliveryRef: zString }),
+	async ({ id, deliveryRef }, issue) => {
+		try {
+			const result =
+				await sql`UPDATE incoming_items SET delivery_ref = ${deliveryRef} WHERE id = ${id}`;
+			if (result.count !== 1) invalid(issue.deliveryRef('Failed to update.'));
+			return { success: true };
+		} catch (e) {
+			return handleQueryErrors(e);
+		}
+	}
+);
+
+export const editInvoiceRef = form(
+	z.object({ id: zString, invoiceRef: zString }),
+	async ({ id, invoiceRef }, issue) => {
+		try {
+			const result =
+				await sql`UPDATE incoming_items SET invoice_ref = ${invoiceRef} WHERE id = ${id}`;
+			if (result.count !== 1) invalid(issue.invoiceRef('Failed to update.'));
+			return { success: true };
+		} catch (e) {
+			return handleQueryErrors(e);
+		}
+	}
+);
