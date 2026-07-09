@@ -40,6 +40,6 @@
 		<option value="outgoing">Outgoing</option>
 	</select>
 </div>
-<div class="m-10">
+<div class="m-5">
 	<TransactionAccordionGroup transactions={transactionsToDisplay as CompleteTransaction[]} />
 </div>
