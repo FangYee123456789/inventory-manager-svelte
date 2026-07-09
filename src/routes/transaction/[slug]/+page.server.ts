@@ -3,7 +3,8 @@ import type { IndividualTransaction } from '$lib/types/databaseTypes';
 import { error } from '@sveltejs/kit';
 
 export async function load({ locals, params, url }) {
-	if (!locals.user || locals.user.role !== 'Procurement') error(403, 'Forbidden');
+	if (!locals.user || !(locals.user.role === 'Procurement' || locals.user.role === 'Admin'))
+		error(403, 'Forbidden');
 
 	const transactionType = url.searchParams.get('type');
 	let transaction: IndividualTransaction;
