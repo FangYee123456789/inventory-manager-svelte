@@ -14,5 +14,9 @@ export async function load() {
 }
 
 function sortByDate(transactions: CompleteTransaction[]) {
-	return transactions.toSorted((b, a) => numberSort(b.createdAt.getTime(), a.createdAt.getTime()));
+	return transactions.toSorted((b, a) => {
+		const aTime = (a.deliveryDate || a.expendDate)!.getTime();
+		const bTime = (b.deliveryDate || b.expendDate)!.getTime();
+		return numberSort(aTime, bTime);
+	});
 }
