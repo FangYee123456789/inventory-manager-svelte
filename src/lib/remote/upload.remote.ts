@@ -1,11 +1,11 @@
-import { zImgFile, zString } from '$lib/types/schemaTypes';
 import { command } from '$app/server';
-import sharp from 'sharp';
 import { supabase } from '$lib/server/supabase';
-import { error } from '@sveltejs/kit';
-import z from 'zod';
-import { handleQueryErrors } from '$lib/utils/errorHandling';
 import type { Gallery } from '$lib/types/databaseTypes';
+import { zImgFile, zString } from '$lib/types/schemaTypes';
+import { handleQueryErrors } from '$lib/utils/errorHandling';
+import { error } from '@sveltejs/kit';
+import sharp from 'sharp';
+import z from 'zod';
 
 export const uploadImage = command(
 	z.object({ file: zImgFile, name: zString }),
@@ -16,7 +16,7 @@ export const uploadImage = command(
 			const url = await getPublicUrl(uploadData.path);
 			return url;
 		} catch (e) {
-			handleQueryErrors(e);
+			return handleQueryErrors(e);
 		}
 	}
 );
