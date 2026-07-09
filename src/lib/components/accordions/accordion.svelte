@@ -23,7 +23,7 @@
 	}
 </script>
 
-<details class="collapse border border-base-300" name="accordion" open>
+<details class="collapse border border-base-300" name="accordion">
 	<summary class="collapse-title font-semibold">
 		<div class="flex items-center justify-between gap-10">
 			{@render summaryStart()}

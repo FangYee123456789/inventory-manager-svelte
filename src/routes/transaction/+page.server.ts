@@ -4,9 +4,7 @@ import { numberSort } from '$lib/utils/arraySort';
 
 export async function load() {
 	const incomingTransactions = await getIncomingTransactions();
-	if (!incomingTransactions) throw new Error('getIncomingTransactions returned undefined');
 	const outgoingTransactions = await getOutgoingTransactions();
-	if (!outgoingTransactions) throw new Error('getOutgoingTransactions returned undefined');
 
 	return {
 		transactions: sortByDate([...incomingTransactions, ...outgoingTransactions])
@@ -14,5 +12,9 @@ export async function load() {
 }
 
 function sortByDate(transactions: CompleteTransaction[]) {
-	return transactions.toSorted((b, a) => numberSort(b.createdAt.getTime(), a.createdAt.getTime()));
+	return transactions.toSorted((a, b) => {
+		const aTime = (a.deliveryDate || a.expendDate)!.getTime();
+		const bTime = (b.deliveryDate || b.expendDate)!.getTime();
+		return numberSort(aTime, bTime);
+	});
 }
