@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { deleteTransaction } from '$lib/remote/transaction.remote';
 	import type { CompleteTransaction } from '$lib/types/databaseTypes';
 	import type { EnhanceParams } from '$lib/types/types';
@@ -47,17 +48,21 @@
 
 {#snippet summaryStart()}
 	{#if isIncoming}
-		<span>
-			{supplier}
-			{formatYearMonthDay(deliveryDate!)}
-			{deliveryRef}
-		</span>
+		<a href={resolve('/transaction/[slug]?type=incoming', { slug: id })} class="underline">
+			<span>
+				{supplier}
+				{formatYearMonthDay(deliveryDate!)}
+				{deliveryRef}
+			</span>
+		</a>
 	{:else}
-		<span>
-			{expender}
-			{formatYearMonthDay(expendDate!)}
-			{remarks}
-		</span>
+		<a href={resolve('/transaction/[slug]?type=outgoing', { slug: id })} class="underline">
+			<span>
+				{expender}
+				{formatYearMonthDay(expendDate!)}
+				{remarks}
+			</span>
+		</a>
 	{/if}
 {/snippet}
 
