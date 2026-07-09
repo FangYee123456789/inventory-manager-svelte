@@ -29,8 +29,8 @@
 	);
 </script>
 
-<div class="flex">
-	<div class="max-w-75">
+<div class="mt-2 flex">
+	<div class="ms-5 max-w-75">
 		{@render editForm({
 			remoteForm: editPurchaseRef,
 			errorMsg: 'Failed to update PO number.',
