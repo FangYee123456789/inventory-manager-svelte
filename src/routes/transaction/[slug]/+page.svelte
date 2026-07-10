@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Combobox from '$lib/components/base/combobox.svelte';
 	import Form from '$lib/components/base/form.svelte';
 	import Input from '$lib/components/base/input.svelte';
 	import {
@@ -7,12 +8,12 @@
 		editPurchaseRef,
 		editQuantity,
 		editRemarks,
+		editSupplier,
 		editUser
 	} from '$lib/remote/transaction.remote.js';
 	import type { Generic } from '$lib/types/databaseTypes.js';
 	import { formatYearMonthDay } from '$lib/utils/dateFns.js';
 	import { truncateString } from '$lib/utils/stringTransform';
-	import {} from 'os';
 
 	type SnippetArgs = {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,10 +39,10 @@
 		expendDate,
 		expender,
 		remarks,
-		items
+		items,
+		supplierID,
+		supplier
 	} = $derived(data.transaction);
-
-	$inspect(data.transaction);
 </script>
 
 <svelte:head>
@@ -58,6 +59,15 @@
 				label: 'PO',
 				field: editPurchaseRef.fields.purchaseRef,
 				placeholder: purchaseRef
+			})}
+			{@render editComboboxForm({
+				remoteForm: editSupplier,
+				errorMsg: 'Failed to update supplier.',
+				successMsg: 'Successfully updated supplier.',
+				label: 'Supplier',
+				field: editSupplier.fields.supplier,
+				placeholder: supplier,
+				list: data.suppliers
 			})}
 			{@render editForm({
 				remoteForm: editDeliveryRef,
@@ -79,7 +89,7 @@
 		<div class="ms-5 mt-1">
 			<div>Purchase: {purchaseRef}</div>
 			<div>Date: {formatYearMonthDay(deliveryDate!)}</div>
-			<!-- <div>Supplier: {supplierID}</div> -->
+			<div>Supplier: {supplier}</div>
 			<div>Delivery: {deliveryRef}</div>
 			<div>Invoice: {invoiceRef}</div>
 		</div>
@@ -167,5 +177,20 @@
 	<Form {remoteForm} {errorMsg} {successMsg}>
 		<input {...remoteForm.fields.id.as('hidden', id)} />
 		<Input {field} {type} {placeholder} {label} rightButton="Edit" />
+	</Form>
+{/snippet}
+
+{#snippet editComboboxForm({
+	remoteForm,
+	errorMsg,
+	successMsg,
+	label,
+	field,
+	placeholder,
+	list
+}: SnippetArgs)}
+	<Form {remoteForm} {errorMsg} {successMsg}>
+		<input {...remoteForm.fields.id.as('hidden', id)} />
+		<Combobox {label} {field} {list} rightButton="Edit" {placeholder} />
 	</Form>
 {/snippet}

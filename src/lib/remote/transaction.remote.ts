@@ -140,6 +140,7 @@ export const getIncomingTransaction = query(zString, async (id) => {
 		SELECT inc_t.id,
 			inc_t.created_at AS "createdAt",
 			inc_t.delivery_date AS "deliveryDate",
+			s.id AS "supplierID",
 			s.name AS "supplier",
 			inc_t.delivery_ref AS "deliveryRef",
 			i.master_number AS master,
