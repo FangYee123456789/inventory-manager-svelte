@@ -4,7 +4,9 @@
 	import {
 		editDeliveryRef,
 		editInvoiceRef,
-		editPurchaseRef
+		editPurchaseRef,
+		editRemarks,
+		editUser
 	} from '$lib/remote/transaction.remote.js';
 	import type { Generic } from '$lib/types/databaseTypes.js';
 	import { formatYearMonthDay } from '$lib/utils/dateFns.js';
@@ -24,9 +26,17 @@
 	};
 
 	const { data } = $props();
-	const { id, purchaseRef, deliveryDate, supplierID, deliveryRef, invoiceRef } = $derived(
-		data.transaction
-	);
+	const {
+		id,
+		purchaseRef,
+		deliveryDate,
+		supplierID,
+		deliveryRef,
+		invoiceRef,
+		expendDate,
+		expender,
+		remarks
+	} = $derived(data.transaction);
 </script>
 
 <div class="mt-2 flex">
