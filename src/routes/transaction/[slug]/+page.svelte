@@ -39,44 +39,73 @@
 	} = $derived(data.transaction);
 </script>
 
-<div class="mt-2 flex">
-	<div class="ms-5 max-w-75">
-		{@render editForm({
-			remoteForm: editPurchaseRef,
-			errorMsg: 'Failed to update PO number.',
-			successMsg: 'Successfully updated PO number.',
-			label: 'PO',
-			field: editPurchaseRef.fields.purchaseRef,
-			placeholder: purchaseRef
-		})}
-		{@render editForm({
-			remoteForm: editDeliveryRef,
-			errorMsg: 'Failed to update DO number.',
-			successMsg: 'Successfully updated DO number.',
-			label: 'DO',
-			field: editDeliveryRef.fields.deliveryRef,
-			placeholder: deliveryRef
-		})}
-		{@render editForm({
-			remoteForm: editInvoiceRef,
-			errorMsg: 'Failed to update invoice.',
-			successMsg: 'Successfully updated invoice.',
-			label: 'Invoice',
-			field: editInvoiceRef.fields.invoiceRef,
-			placeholder: invoiceRef
-		})}
 <svelte:head>
 	<title>Edit transaction</title>
 </svelte:head>
+
+{#if data.isIncoming}
+	<div class="mt-2 flex">
+		<div class="ms-5 max-w-75">
+			{@render editForm({
+				remoteForm: editPurchaseRef,
+				errorMsg: 'Failed to update PO number.',
+				successMsg: 'Successfully updated PO number.',
+				label: 'PO',
+				field: editPurchaseRef.fields.purchaseRef,
+				placeholder: purchaseRef
+			})}
+			{@render editForm({
+				remoteForm: editDeliveryRef,
+				errorMsg: 'Failed to update DO number.',
+				successMsg: 'Successfully updated DO number.',
+				label: 'DO',
+				field: editDeliveryRef.fields.deliveryRef,
+				placeholder: deliveryRef
+			})}
+			{@render editForm({
+				remoteForm: editInvoiceRef,
+				errorMsg: 'Failed to update invoice.',
+				successMsg: 'Successfully updated invoice.',
+				label: 'Invoice',
+				field: editInvoiceRef.fields.invoiceRef,
+				placeholder: invoiceRef
+			})}
+		</div>
+		<div class="ms-5 mt-1">
+			<div>Purchase: {purchaseRef}</div>
+			<div>Date: {formatYearMonthDay(deliveryDate!)}</div>
+			<div>Supplier: {supplierID}</div>
+			<div>Delivery: {deliveryRef}</div>
+			<div>Invoice: {invoiceRef}</div>
+		</div>
 	</div>
-	<div class="ms-5 mt-1">
-		<div>Purchase: {purchaseRef || 'EMPTY'}</div>
-		<div>Date: {formatYearMonthDay(deliveryDate!) || 'EMPTY'}</div>
-		<div>Supplier: {supplierID || 'EMPTY'}</div>
-		<div>Delivery: {deliveryRef || 'EMPTY'}</div>
-		<div>Invoice: {invoiceRef || 'EMPTY'}</div>
+{:else}
+	<div class="mt-2 flex">
+		<div class="ms-5 max-w-75">
+			{@render editForm({
+				remoteForm: editUser,
+				errorMsg: 'Failed to update user.',
+				successMsg: 'Successfully updated user.',
+				label: 'User',
+				field: editUser.fields.user,
+				placeholder: expender
+			})}
+			{@render editForm({
+				remoteForm: editRemarks,
+				errorMsg: 'Failed to update remarks.',
+				successMsg: 'Successfully updated remarks.',
+				label: 'Remarks',
+				field: editRemarks.fields.remarks,
+				placeholder: remarks
+			})}
+		</div>
+		<div class="ms-5 mt-1">
+			<div>Date: {formatYearMonthDay(expendDate!)}</div>
+			<div>User: {expender}</div>
+			<div>Remarks: {remarks}</div>
+		</div>
 	</div>
-</div>
+{/if}
 
 {#snippet editForm({
 	remoteForm,
