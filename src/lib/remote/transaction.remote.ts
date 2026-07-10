@@ -6,7 +6,6 @@ import type {
 	IndividualTransaction,
 	Item,
 	QuantityTimeline,
-	Transaction,
 	WeekCumulativeQuantity,
 	WeeklyNetQuantity
 } from '$lib/types/databaseTypes';
@@ -135,6 +134,36 @@ export const getIncomingTransactions = query(async () => {
 	}
 });
 
+export const getIncomingTransaction = query(zString, async (id) => {
+	try {
+		const result = await sql<IndividualTransaction[]>`
+		SELECT inc_t.id,
+			inc_t.created_at AS "createdAt",
+			inc_t.delivery_date AS "deliveryDate",
+			s.name AS "supplier",
+			inc_t.delivery_ref AS "deliveryRef",
+			i.master_number AS master,
+			inc_i.item_id AS "itemID",
+			i.name AS "itemName",
+			inc_i.quantity,
+			inc_t.purchase_ref AS "purchaseRef",
+			inc_t.invoice_ref AS "invoiceRef"
+		FROM incoming_transactions inc_t
+		JOIN incoming_items inc_i
+		ON inc_t.id = inc_i.transaction_id
+		JOIN items i
+		ON inc_i.item_id = i.id
+		JOIN suppliers s
+		ON inc_t.supplier_id = s.id
+		WHERE inc_t.id = ${id}
+		ORDER BY inc_t.created_at DESC, i.id ASC`;
+		const array = sortTransactions(result);
+		return array[0];
+	} catch (e) {
+		return handleQueryErrors(e);
+	}
+});
+
 export const getOutgoingTransactions = query(async () => {
 	try {
 		const result = await sql<IndividualTransaction[]>`
@@ -159,39 +188,27 @@ export const getOutgoingTransactions = query(async () => {
 	}
 });
 
-export const getIncomingTransactionSimple = query(zString, async (id) => {
+export const getOutgoingTransaction = query(zString, async (id) => {
 	try {
-		const result = await sql<Transaction[]>`
-		SELECT id,
-			logger_id AS "loggerID", 
-			created_at AS "createdAs", 
-			delivery_date AS "deliveryDate", 
-			supplier_id AS "supplierID", 
-			delivery_ref AS "deliveryRef",
-			purchase_ref AS "purchaseRef",
-			invoice_ref AS "invoiceRef"
-		FROM incoming_transactions 
-		WHERE id = ${id}`;
-		if (result.count !== 1) error(404, 'Transaction not found');
-		return result[0];
-	} catch (e) {
-		return handleQueryErrors(e);
-	}
-});
-export const getOutgoingTransactionSimple = query(zString, async (id) => {
-	try {
-		const result = await sql<Transaction[]>`
-		SELECT 
-			id,
-			logger_id AS "loggerID", 
-		 	created_at AS "createdAs", 
-		 	expend_date AS "expendDate", 
-		 	expender,
-		 	remarks
-		FROM outgoing_transactions 
-		WHERE id = ${id}`;
-		if (result.count !== 1) error(404, 'Transaction not found');
-		return result[0];
+		const result = await sql<IndividualTransaction[]>`
+		SELECT out_t.id,
+			out_t.created_at AS "createdAt",
+			out_t.expend_date AS "expendDate",
+			out_t.expender,
+			out_t.remarks,
+			i.master_number AS "master",
+			i.id AS "itemID",
+			i.name AS "itemName",
+			out_i.quantity
+		FROM outgoing_transactions out_t
+		JOIN outgoing_items out_i
+		ON out_t.id = out_i.transaction_id
+		JOIN items i
+		ON out_i.item_id = i.id
+		WHERE out_t.id = ${id}
+		ORDER BY out_t.created_at DESC, i.id ASC`;
+		const array = sortTransactions(result);
+		return array[0];
 	} catch (e) {
 		return handleQueryErrors(e);
 	}
