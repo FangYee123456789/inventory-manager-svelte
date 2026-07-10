@@ -20,5 +20,5 @@ export async function load({ locals, params, url }) {
 			error(400, 'Bad request');
 	}
 
-	return { transaction };
+	return { transaction, isIncoming: transactionType === 'incoming' };
 }
