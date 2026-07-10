@@ -3,7 +3,6 @@ import { sql } from '$lib/server/postgres';
 import type {
 	CompleteTransaction,
 	DB_Stock,
-	DetailedItem,
 	IndividualTransaction,
 	Item,
 	QuantityTimeline,
@@ -15,7 +14,6 @@ import { formatMonthDay, isBeforeToday } from '$lib/utils/dateFns';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
 import { error, invalid } from '@sveltejs/kit';
 import z from 'zod';
-import { getOrCreateCategory } from './category.remote';
 import { updateMultipleLastStocked } from './item.remote';
 import { getOrCreateSupplier } from './supplier.remote';
 
@@ -478,6 +476,54 @@ export const editQuantity = form(
 			return { success: true };
 		} catch (e) {
 			return handleQueryErrors(e);
+		}
+	}
+);
+
+export const deleteTransactionItem = form(
+	z.object({ transactionID: zString, itemID: zString, isIncoming: zBoolean }),
+	async ({ transactionID, itemID, isIncoming }) => {
+		try {
+			console.log('DELETIN');
+			let result;
+			if (isIncoming) {
+				result =
+					await sql`DELETE FROM incoming_items WHERE transaction_id = ${transactionID} AND item_id = ${itemID}`;
+			} else {
+				result =
+					await sql`DELETE FROM outgoing_items WHERE transaction_id = ${transactionID} AND item_id = ${itemID}`;
+			}
+			if (result.count !== 1) return { success: false };
+			return { success: true };
+		} catch (e) {
+			return handleQueryErrors(e);
+		}
+	}
+);
+
+export const addTransactionItem = form(
+	z.object({ transactionID: zString, master: zString, quantity: zNumber, isIncoming: zBoolean }),
+	async ({ transactionID, master, quantity, isIncoming }, issue) => {
+		try {
+			let result;
+			const [item] = await sql`SELECT id FROM items WHERE master_number =${master}`;
+			if (!item) invalid(issue.master('Master number not found in master list'));
+			if (isIncoming) {
+				result =
+					await sql`INSERT INTO incoming_items (transaction_id, item_id, quantity) VALUES(${transactionID}, ${item.id}, ${quantity})`;
+			} else {
+				result =
+					await sql`INSERT INTO outgoing_items (transaction_id, item_id, quantity) VALUES(${transactionID}, ${item.id}, ${quantity})`;
+			}
+			if (result.count !== 1) invalid(issue.master('Failed to add new item'));
+			return { success: true };
+		} catch (e) {
+			handleQueryErrors(e, (e) => {
+				if (e.code === '23505') {
+					if (e.constraint_name === 'outgoing_items_pkey')
+						throw invalid(issue.master('Already in transaction.'));
+				}
+			});
 		}
 	}
 );

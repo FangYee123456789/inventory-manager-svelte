@@ -29,8 +29,10 @@ export async function load({ locals, params, url }) {
 	) {
 		transaction = await getOutgoingTransaction(params.slug);
 	} else {
-		error(403, 'Forbidden or bad request');
+		error(403, 'Forbidden');
 	}
+
+	if (!transaction) error(404, 'Transaction not found');
 
 	return {
 		transaction,
