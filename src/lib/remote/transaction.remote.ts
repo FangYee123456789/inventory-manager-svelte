@@ -3,6 +3,7 @@ import { sql } from '$lib/server/postgres';
 import type {
 	CompleteTransaction,
 	DB_Stock,
+	DetailedItem,
 	IndividualTransaction,
 	Item,
 	QuantityTimeline,
@@ -14,6 +15,7 @@ import { formatMonthDay, isBeforeToday } from '$lib/utils/dateFns';
 import { handleQueryErrors } from '$lib/utils/errorHandling';
 import { error, invalid } from '@sveltejs/kit';
 import z from 'zod';
+import { getOrCreateCategory } from './category.remote';
 import { updateMultipleLastStocked } from './item.remote';
 import { getOrCreateSupplier } from './supplier.remote';
 
@@ -385,8 +387,15 @@ export const editSupplier = form(
 	z.object({ id: zString, supplier: zString }),
 	async ({ id, supplier }, issue) => {
 		try {
-			const result =
-				await sql`UPDATE incoming_transactions SET supplier = ${supplier} WHERE id = ${id}`;
+			const result = await sql.begin(async (sql) => {
+				const supplierResult = await getOrCreateSupplier(supplier);
+
+				if (!supplierResult) throw new Error('Edit supplier: Supplier result is undefined');
+				const transactionResult =
+					await sql`UPDATE incoming_transactions SET supplier_id = ${supplierResult.id} WHERE id = ${id}`;
+				return transactionResult;
+			});
+
 			if (result.count !== 1) invalid(issue.supplier('Failed to update.'));
 			return { success: true };
 		} catch (e) {
