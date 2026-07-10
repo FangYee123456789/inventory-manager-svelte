@@ -175,12 +175,12 @@
 							<input {...deleteForm.fields.transactionID.as('hidden', id)} />
 							<input {...deleteForm.fields.itemID.as('hidden', itemID)} />
 							<button aria-label="delete" type="submit">
-								<span class="icon-[tabler--trash]"></span>
+								<span class="icon-[tabler--trash] text-red-500"></span>
 							</button>
 						</form>
 					</th>
 					<th class="w-15">{itemMaster}</th>
-					<th>{truncateString(itemName, 50)}</th>
+					<th>{truncateString(itemName, 100)}</th>
 					<th>
 						<form
 							{...quantityForm.enhance(async ({ form, submit }) => {
