@@ -65,6 +65,9 @@
 			field: editInvoiceRef.fields.invoiceRef,
 			placeholder: invoiceRef
 		})}
+<svelte:head>
+	<title>Edit transaction</title>
+</svelte:head>
 	</div>
 	<div class="ms-5 mt-1">
 		<div>Purchase: {purchaseRef || 'EMPTY'}</div>
